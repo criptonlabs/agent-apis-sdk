@@ -1,0 +1,14 @@
+{
+  "asset_a": "XRP",
+  "asset_b": "USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "reserve_a": "3495.362718",
+  "reserve_b": "4553.888407745065",
+  "trading_fee": "0.0022",
+  "meta": {
+    "ledger_index": 107738131,
+    "as_of": "2026-10-18T10:58:49.904Z",
+    "age_seconds": 0,
+    "cache": "hit",
+    "stale": false
+  }
+}

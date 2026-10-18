@@ -1,0 +1,51 @@
+title = "agent-apis-sdk gitleaks rules"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "xrpl-family-seed-secp256k1"
+description = "XRPL family seed (secp256k1): s + 28 base58 characters"
+regex = '''\bs[1-9A-HJ-NP-Za-km-z]{28}\b'''
+keywords = ["s"]
+
+[[rules]]
+id = "xrpl-family-seed-ed25519"
+description = "XRPL family seed (ed25519): sEd + 28 base58 characters"
+regex = '''\bsEd[1-9A-HJ-NP-Za-km-z]{28}\b'''
+keywords = ["sed"]
+
+[[rules]]
+id = "hex-private-key-near-keyword"
+description = "64-hex private key next to a seed, secret or private keyword"
+regex = '''(?i)(?:seed|secret|private)[a-z0-9_ .-]{0,30}["'=: ]{1,5}[0-9a-f]{64}\b'''
+keywords = ["seed", "secret", "private"]
+
+[[rules]]
+id = "solana-keypair-base58"
+description = "Solana 64-byte keypair as a base58 secret key (87 or 88 characters)"
+regex = '''\b[1-9A-HJ-NP-Za-km-z]{87,88}\b'''
+
+[[rules]]
+id = "solana-keypair-json-array"
+description = "Solana 64-byte keypair as a JSON array of 64 integers"
+regex = '''\[\s*(?:\d{1,3}\s*,\s*){63}\d{1,3}\s*\]'''
+keywords = ["["]
+
+[[rules]]
+id = "criptonlabs-prepaid-token"
+description = "Criptonlabs prepaid credit token (clc_ prefix)"
+regex = '''\bclc_[A-Za-z0-9_-]{16,}\b'''
+keywords = ["clc_"]
+
+[[rules]]
+id = "cripton-seed-or-secret-assignment"
+description = "CRIPTON_*_SEED= or CRIPTON_*_SECRET= assignment with a value"
+regex = '''(?i)\bCRIPTON_[A-Z0-9_]*(?:SEED|SECRET)[ \t]*=[ \t]*["']?[^\s"'#<]+'''
+keywords = ["cripton_"]
+
+[[allowlists]]
+description = "Placeholder lines in .env.example"
+condition = "AND"
+paths = ['''^\.env\.example$''']
+regexes = ['''(?i)=\s*<[^>]*>\s*$''']

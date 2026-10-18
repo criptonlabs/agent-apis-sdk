@@ -1,0 +1,12 @@
+{
+  "ledger_index": 107738131,
+  "close_time": "2026-10-18T10:58:41Z",
+  "ledger_hash": "D24F612FB7409D2B7B9D06EAFB2E43204FC04740A21C454C6B0FF5C9A42C5F19",
+  "meta": {
+    "ledger_index": 107738131,
+    "as_of": "2026-10-18T10:58:47.797Z",
+    "age_seconds": 0,
+    "cache": "miss",
+    "stale": false
+  }
+}

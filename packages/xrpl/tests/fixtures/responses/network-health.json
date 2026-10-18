@@ -1,0 +1,44 @@
+{
+  "status": "ok",
+  "nodes": [
+    {
+      "member": "honeycluster",
+      "state": "up",
+      "latency_ms": 449,
+      "ledger_index": 107738129,
+      "ledger_age_s": 8,
+      "load_factor": 1,
+      "error": null,
+      "sampled_at": "2026-10-18T10:58:38.977Z"
+    },
+    {
+      "member": "ripple-s1",
+      "state": "up",
+      "latency_ms": 196,
+      "ledger_index": 107738129,
+      "ledger_age_s": 7,
+      "load_factor": 1,
+      "error": null,
+      "sampled_at": "2026-10-18T10:58:38.977Z"
+    },
+    {
+      "member": "ripple-s2",
+      "state": "up",
+      "latency_ms": 233,
+      "ledger_index": 107738129,
+      "ledger_age_s": 8,
+      "load_factor": 1,
+      "error": null,
+      "sampled_at": "2026-10-18T10:58:38.977Z"
+    }
+  ],
+  "ledger_index": 107738129,
+  "last_probe_at": "2026-10-18T10:58:38.977Z",
+  "meta": {
+    "ledger_index": 107738129,
+    "as_of": "2026-10-18T10:58:45.606Z",
+    "age_seconds": 0,
+    "cache": "hit",
+    "stale": false
+  }
+}

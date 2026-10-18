@@ -1,0 +1,50 @@
+{
+  "x402Version": 2,
+  "resource": {
+    "url": "https://api.criptonlabs.com/v1/pro/xrpl/fee",
+    "description": "Current XRPL fee tiers in drops with a congestion score.",
+    "mimeType": "application/json"
+  },
+  "accepts": [],
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": { "type": "http", "method": "GET" },
+        "output": {
+          "type": "json",
+          "example": {
+            "fee": { "economy": "10", "standard": "10", "priority": "11" },
+            "congestion": { "score": 4, "band": "low", "load_factor_assumed": false }
+          }
+        }
+      },
+      "schema": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "object",
+            "properties": {
+              "type": { "const": "http" },
+              "method": { "enum": ["GET"] },
+              "queryParams": { "type": "object", "properties": {} }
+            },
+            "required": ["type", "method"]
+          },
+          "output": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "example": {
+                "type": "object",
+                "properties": { "fee": { "type": "object" }, "congestion": { "type": "object" } }
+              }
+            },
+            "required": ["type"]
+          }
+        },
+        "required": ["input"]
+      }
+    }
+  },
+  "payments_mode": "off"
+}

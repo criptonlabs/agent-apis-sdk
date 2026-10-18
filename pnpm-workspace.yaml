@@ -1,0 +1,9 @@
+packages:
+  - packages/*
+minimumReleaseAge: 1440
+blockExoticSubdeps: true
+strictDepBuilds: true
+allowBuilds: {}
+overrides:
+  # @elizaos/core 1.7.2 pins pdfjs-dist ^5 (GHSA high, fixed in >=6.2.108); dev-only optional peer, never shipped
+  pdfjs-dist: ^6.2.108

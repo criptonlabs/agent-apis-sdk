@@ -1,0 +1,20 @@
+{
+  "verdict": "not_ready",
+  "reasons": ["destination_tag_required"],
+  "warnings": [],
+  "checks_failed": [],
+  "spendable_xrp": "412525.886965",
+  "transfer_fee_pct": null,
+  "source": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "destination": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+  "asset": "XRP",
+  "amount": "10",
+  "destination_tag": null,
+  "meta": {
+    "ledger_index": 107738129,
+    "as_of": "2026-10-18T10:58:51.080Z",
+    "age_seconds": 1,
+    "cache": "miss",
+    "stale": false
+  }
+}

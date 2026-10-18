@@ -1,0 +1,12 @@
+{
+  "paths_may_be_non_optimal": true,
+  "warnings": [],
+  "alternatives": [],
+  "meta": {
+    "ledger_index": 107738132,
+    "as_of": "2026-10-18T10:58:53.789Z",
+    "age_seconds": 0,
+    "cache": "miss",
+    "stale": false
+  }
+}

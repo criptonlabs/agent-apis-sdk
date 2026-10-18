@@ -1,0 +1,43 @@
+{
+  "base": "XRP",
+  "quote": "USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "side": "buy",
+  "depth": 10,
+  "amount": "1000",
+  "filled": "1000",
+  "partial": false,
+  "insufficient_liquidity": false,
+  "best_price": "1.3618463814000002",
+  "avg_price": "1.36187791511112124",
+  "slippage_pct": "0.002315511613624353",
+  "transfer_fee_applied": false,
+  "transfer_fee": null,
+  "avg_price_after_fees": null,
+  "venues": {
+    "best": "clob",
+    "amm_status": "ok",
+    "clob": {
+      "avg_price": "1.36187791511112124",
+      "cost": "1361.877915111121240003",
+      "slippage_pct": "0.002315511613624353",
+      "insufficient_liquidity": false,
+      "avg_price_after_fees": null
+    },
+    "amm": {
+      "avg_price": "1.828964189749794191",
+      "cost": "1828.964189749794190512",
+      "slippage_pct": "40.383177386071648661",
+      "insufficient_liquidity": false,
+      "avg_price_after_fees": null,
+      "spot_price": "1.302837151719332666",
+      "trading_fee": "0.0022"
+    }
+  },
+  "meta": {
+    "ledger_index": 107738131,
+    "as_of": "2026-10-18T10:58:48.615Z",
+    "age_seconds": 0,
+    "cache": "hit",
+    "stale": false
+  }
+}

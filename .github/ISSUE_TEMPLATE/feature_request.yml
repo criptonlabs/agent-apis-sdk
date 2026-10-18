@@ -1,0 +1,33 @@
+name: Feature request
+description: Suggest an improvement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: Never paste seeds, private keys or tokens.
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      options:
+        - "@criptonlabs/agent-apis-core"
+        - "@criptonlabs/xrpl-agent-kit"
+        - Other or unsure
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

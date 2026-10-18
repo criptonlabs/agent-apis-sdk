@@ -1,0 +1,317 @@
+{
+  "address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "balance_xrp": "412602.491965",
+  "sequence": 4827,
+  "owner_count": 378,
+  "transfer_rate": 1001500000,
+  "trust_lines": [
+    {
+      "currency": "BTC",
+      "issuer": "rKUK9omZqVEnraCipKNFb5q4tuNTeqEDZS",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rngJ9Co6MPZxJcyepRv2hMPV1HqaeGCdVU",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rGgEwKunXUypZEXvPnyM6bqXb3LVVVnPw6",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rpykP6AUy6ZQzxvZa6MTvYSPMAg5SgLi15",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rHovVjpXrB7hVTTLz9QFMHC7qWMpdq28VU",
+      "balance": "-0.000068000005885",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rhMb2LRHvyouHMF9WoWMJ29mdDTUgEdiA5",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rEaaL2rhur9XQhTizUo46Eq2WZxkkpRKiF",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rP7UZgvJTmDiPKQD3bvbTQqopJP1UBtjVv",
+      "balance": "-10",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rDP4cLmzMsPkRz7vzpwHt2xep2EB7GmDR5",
+      "balance": "-0.001662844463398812",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rPsgSSsNJv94avAQxojBLtZJLL2w1KSjzk",
+      "balance": "-0.00000866259124757",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rwMVjCPUo1W374mkkYL2HbktswzinzY6zq",
+      "balance": "-0.000041075195176",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rJsPTSSKqgUrihbMjxJ5PkKEPv1hnABQmw",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rwyzB8ChxXHYyohgPsAyDZEFA16vaRJTGA",
+      "balance": "-0.00000016",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rKRz7ApZkEUNkeMPQtnMrBLj1nNDH5XQGB",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rLif41Z5FAd5sUZpnY3e5DNC3aPsStVXVh",
+      "balance": "-0.1357142842857143",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rPqnPbY4RNYeoUFpPxxWkDixbfYP3ruDTu",
+      "balance": "-0.019",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rEx9aixkPDiWZpKE66fJeDQmpUSyeVzLkB",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rsoaDwv8M6UhNy3jCGfsgDJj8jBb5dtukM",
+      "balance": "-0.99",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rDp4bLQCcDdcQYNuvDC7gsUwdYwBJXnjNV",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rM6MKghzDy7QNAnt62dKi1hQMLQ2JBvhnS",
+      "balance": "-0.0000039434620027",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rL8dWedJoE99trErh71hr8BM22WnvTopTm",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rsgKssuWnginG43iaZABdbs6WS7ob7xw6i",
+      "balance": "-0.00914980458663",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rEh2dVaqaEouWXePr7xWTGatJigg9KGigM",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rU3vj2nq6HwcUnfPLmzCcTxoFb8PZoymQt",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rEKuxCbhavpuHrE5kY2mrmNTSmUcMfVmNQ",
+      "balance": "-1",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rJqpb3eExwUwC89L2atbPqXmGxUoSir9Xp",
+      "balance": "-0.0099999999998",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rJA6mGHsw5yCynLFRe3rjGqaCMk2YpmuMy",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rQNe3dH3D8Mzoh1kUoBuaoahwBSKdRwBaU",
+      "balance": "-0.0000775865813885",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rpWca8z9ZPgWFUzehk94DExSE8eMpiJoNE",
+      "balance": "-0.000954198864131257",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rhJdSXEzt5j8ALQo5e7hPNzHKdwmiHKTtq",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rQnLSAJEmB8g6sd1xmUP9aGxmy7ZbW6tAv",
+      "balance": "-0.0000816727432243",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "r98uqLUnrv9TggCjwoUCjQMnsZirEL6aV6",
+      "balance": "-0.013245610526316",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rptANXJfQbqELFUCGzA3w1nL8x1zfokmXM",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rQsdJS9HJDmr7qkvnxXgHQwMmpABCR7owc",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "r9tirhuKqJ8hSyPJyeUBgeeA5vsk2MDUYQ",
+      "balance": "-0.3023456",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rQhmfZZ73NQUxSPF5c8AL6h5CUzhVTBtjE",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rG37fnMJXmTbx9bCrG1bZtFRzcBo4YeJbE",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rN4RFpzHCearXwhrWTF1uknhD4wGHAwYT2",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rE2f4i2j8ooUBUKM6jZmwmkjLigwsy5yvP",
+      "balance": "-0.0000451623794572",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rBVL1xHyDd3gka7QH2nvXAZEW2cbYFaN4f",
+      "balance": "-0.1100000076209764",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rH4atJs1JwBsorgpgAMBpi44R5zVe3H9Uf",
+      "balance": "-0.7358485432939",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rM7qmghoc3en9WwRA8BWoLSdokiMj7vZaw",
+      "balance": "-0.27658",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rs2UmDA126TkBzw6f2NY28fbcn8YW572ig",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "ram4N9y2k2Vtv3g3fWiTep9gkuqBQYG7oX",
+      "balance": "-0.124274077015425",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rMZKeAt1vMjhuNCWDiB4SdzJRiymdpERw4",
+      "balance": "-17651.09704977037",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "r4MdceDesjyRB6g6wkiURinfVhMvPKK5RY",
+      "balance": "-0.001830045499009697",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rP723BpeYtfTwrPSFZBnPDMnUXZSiATCnB",
+      "balance": "0",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rNPJy24bP3UQGoxFajfePg4zmBnTeHkkZ7",
+      "balance": "-0.00000185917078419",
+      "limit": "0"
+    },
+    {
+      "currency": "USD",
+      "issuer": "rn964ijXjqm59m3qCPhJjBJzBg7q5161We",
+      "balance": "-20",
+      "limit": "0"
+    },
+    {
+      "currency": "BTC",
+      "issuer": "rLaEJzmBY27tZ63Cp5KrJaFEuWJVboBWDV",
+      "balance": "-1.545675713040349",
+      "limit": "0"
+    }
+  ],
+  "lines_truncated": true,
+  "meta": {
+    "ledger_index": 107738132,
+    "as_of": "2026-10-18T10:58:51.080Z",
+    "age_seconds": 0,
+    "cache": "miss",
+    "stale": false
+  }
+}

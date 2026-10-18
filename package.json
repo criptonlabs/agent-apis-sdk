@@ -1,0 +1,26 @@
+{
+  "name": "agent-apis-sdk",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "typecheck": "vp run -r typecheck",
+    "lint": "vp check",
+    "test": "vp run -r test",
+    "build": "vp run -r build",
+    "test:exports": "node --test tests/exports/consumer.test.mjs",
+    "prepare": "git config core.hooksPath .githooks"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^3.0.3",
+    "@modelcontextprotocol/client": "^2.3.1",
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "5.0.5",
+    "typescript": "^7.0.2",
+    "vite-plus": "1.3.0"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "packageManager": "pnpm@11.28.4"
+}

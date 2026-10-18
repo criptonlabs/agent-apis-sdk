@@ -1,0 +1,14 @@
+# Rules for coding agents using @criptonlabs/xrpl-agent-kit
+
+Applies when writing XRP Ledger payment or DEX code.
+
+- Query the kit (or the API) before building or submitting a transaction: `xrpl_payment_readiness`, `xrpl_paths`, `xrpl_fee`, `xrpl_dex_quote`.
+- Use `xrpl_prepare_payment` to get an unsigned `Payment`; the kit never signs or submits it.
+- Check readiness first and surface its reasons; do not submit when the verdict is not ready.
+- Read `meta.stale` on every response and treat stale data as possibly out of date.
+- Amounts are decimal strings; never use floats. Assets are `"XRP"` or `"<currency>.<issuer>"`.
+- Free routes live under `/v1/xrpl/*`; paid routes under `/v1/pro/xrpl/*`.
+- Payment is opt-in: `CRIPTON_TIER=pro`, `CRIPTON_XRPL_PAYER_SEED` and a mandatory `CRIPTON_MAX_PER_CALL`; `CRIPTON_SESSION_BUDGET` is optional.
+- Never hardcode prices or amounts to pay; read them from the API (`GET /v1/pro/requirements`).
+- Never hardcode, log or commit a seed or private key; read it from the environment only.
+- Handle errors by their `{ code, message }` shape.

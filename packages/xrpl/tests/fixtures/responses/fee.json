@@ -1,0 +1,17 @@
+{
+  "fee": { "economy": "10", "standard": "5000", "priority": "5000" },
+  "congestion": { "score": 0, "band": "low", "load_factor_assumed": false },
+  "base_fee": "10",
+  "median_fee": "5000",
+  "minimum_fee": "10",
+  "open_ledger_fee": "10",
+  "current_queue_size": "0",
+  "max_queue_size": "54320",
+  "meta": {
+    "ledger_index": 107738131,
+    "as_of": "2026-10-18T10:58:44.624Z",
+    "age_seconds": 0,
+    "cache": "miss",
+    "stale": false
+  }
+}
