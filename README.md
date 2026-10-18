@@ -1,3 +1,7 @@
+<p align="center">
+  <img src=".github/assets/banner.png" alt="Criptonlabs Agent APIs SDK" width="100%">
+</p>
+
 # Criptonlabs Agent APIs SDK
 
 TypeScript SDK for AI agents to use the hosted Criptonlabs Agent APIs (https://api.criptonlabs.com): read-only, agent-friendly data endpoints with optional pay-per-call access.
