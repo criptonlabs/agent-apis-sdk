@@ -10,6 +10,7 @@ const load = (pkg, entry) => import(pathToFileURL(dist(pkg, entry).pathname).hre
 const ENTRIES = {
   core: ["index", "mcp", "ai-sdk", "mastra", "eliza", "cli"],
   xrpl: ["index", "mcp", "ai-sdk", "mastra", "eliza"],
+  solana: ["index", "mcp", "ai-sdk", "mastra", "eliza"],
 };
 
 const NAMED = {
@@ -19,6 +20,11 @@ const NAMED = {
   "xrpl/ai-sdk": ["createCriptonXrplTools"],
   "xrpl/mastra": ["createMastraXrplTools"],
   "xrpl/eliza": ["createCriptonXrplPlugin", "criptonXrplPlugin"],
+  "solana/index": ["createSolanaAgentKit", "TransferNotReadyError", "createSolanaPayer"],
+  "solana/mcp": ["createSolanaMcpServer", "startSolanaMcpServer"],
+  "solana/ai-sdk": ["createCriptonSolanaTools"],
+  "solana/mastra": ["createMastraSolanaTools"],
+  "solana/eliza": ["createCriptonSolanaPlugin", "criptonSolanaPlugin"],
 };
 
 for (const [pkg, entries] of Object.entries(ENTRIES)) {

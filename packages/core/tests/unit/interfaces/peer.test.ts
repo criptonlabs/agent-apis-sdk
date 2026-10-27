@@ -41,7 +41,7 @@ describe("Optional framework dependencies", () => {
     };
     const fake = new FakeTransport().respond({ body: feeBody });
     const client = new ApiClient(
-      { network: "xrpl", productToken: "xrpl-agent-kit/0.1.0" },
+      { network: "xrpl", productToken: "agent-apis-xrpl/0.1.0" },
       { transport: fake.transport },
     );
     const result = await client.request({ route: "fee", schema: z.object({}).passthrough() });

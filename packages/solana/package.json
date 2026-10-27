@@ -1,0 +1,100 @@
+{
+  "name": "@criptonlabs/agent-apis-solana",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Solana client of the Criptonlabs Agent APIs for AI agents: typed data routes, transfer preparation, opt-in USDC or EURC x402 pay-per-call, and tools for MCP, AI SDK, Mastra and ElizaOS.",
+  "keywords": [
+    "ai-agents",
+    "ai-sdk",
+    "criptonlabs",
+    "elizaos",
+    "eurc",
+    "mastra",
+    "mcp",
+    "model-context-protocol",
+    "solana",
+    "spl-token",
+    "usdc",
+    "x402"
+  ],
+  "license": "Apache-2.0",
+  "bin": {
+    "agent-apis-solana": "bin/agent-apis-solana.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "SKILL.md",
+    ".cursorrules",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./mcp": {
+      "types": "./dist/mcp.d.ts",
+      "default": "./dist/mcp.js"
+    },
+    "./ai-sdk": {
+      "types": "./dist/ai-sdk.d.ts",
+      "default": "./dist/ai-sdk.js"
+    },
+    "./mastra": {
+      "types": "./dist/mastra.d.ts",
+      "default": "./dist/mastra.js"
+    },
+    "./eliza": {
+      "types": "./dist/eliza.d.ts",
+      "default": "./dist/eliza.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vp test run --coverage",
+    "build": "vp pack",
+    "test:e2e": "CRIPTON_E2E=1 vp test run tests/e2e"
+  },
+  "dependencies": {
+    "@criptonlabs/agent-apis-core": "workspace:^",
+    "@solana-program/system": "~0.10.0",
+    "@solana-program/token": "~0.9.0",
+    "@solana/kit": "5.5.1",
+    "@x402/core": "~2.28.0",
+    "@x402/svm": "~2.28.0",
+    "zod": "^4.3.5"
+  },
+  "devDependencies": {
+    "@elizaos/core": "^1.7.2",
+    "@mastra/core": "^1.78.0",
+    "@modelcontextprotocol/server": "^2.3.1",
+    "ai": "^7.0.0"
+  },
+  "peerDependencies": {
+    "@elizaos/core": "^1.7.2",
+    "@mastra/core": "^1.78.0",
+    "@modelcontextprotocol/server": "^2.3.1",
+    "ai": "^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@modelcontextprotocol/server": {
+      "optional": true
+    },
+    "ai": {
+      "optional": true
+    },
+    "@mastra/core": {
+      "optional": true
+    },
+    "@elizaos/core": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  }
+}

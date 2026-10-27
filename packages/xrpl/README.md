@@ -1,4 +1,4 @@
-# @criptonlabs/xrpl-agent-kit
+# @criptonlabs/agent-apis-xrpl
 
 Typed client and agent tools for the XRP Ledger endpoints of the hosted Criptonlabs Agent APIs (https://api.criptonlabs.com). It answers pre-transaction questions (fees, readiness, liquidity, paths) before an agent builds or submits a transaction. It never signs or submits a transaction for your own transfers.
 
@@ -8,8 +8,8 @@ Pre-release. The package is private and not yet published to npm (version `0.0.0
 
 ## Install
 
-```
-pnpm add @criptonlabs/xrpl-agent-kit
+```bash
+pnpm add @criptonlabs/agent-apis-xrpl
 ```
 
 Requires Node.js >= 22.18. Framework packages (`@modelcontextprotocol/server`, `ai`, `@mastra/core`, `@elizaos/core`) are optional peer dependencies; install only the one you use.
@@ -17,7 +17,7 @@ Requires Node.js >= 22.18. Framework packages (`@modelcontextprotocol/server`, `
 ## Quick start
 
 ```ts
-import { createXrplAgentKit } from "@criptonlabs/xrpl-agent-kit";
+import { createXrplAgentKit } from "@criptonlabs/agent-apis-xrpl";
 
 const kit = createXrplAgentKit(); // free tier, hosted API
 
@@ -72,9 +72,11 @@ Assets are written `"XRP"` or `"<currency>.<issuer>"`; amounts are decimal strin
 
 `depth` is 10, 50, 100 or 200. `sendMaxTolerancePct` is required for cross-currency payments.
 
+The `limit` of `xrpl_account_lines` is an integer from 10 to 400 and the `limit` of `xrpl_account_transactions` an integer from 1 to 50. Both are checked before the request; a value out of range fails with `invalid-input`.
+
 ## CLI
 
-`xrpl-agent-kit <command> [options]`. Add `--json` for compact JSON output (errors also go to stdout as JSON). Secrets are rejected as arguments.
+`agent-apis-xrpl <command> [options]`. Add `--json` for compact JSON output (errors also go to stdout as JSON). Secrets are rejected as arguments.
 
 | Command                                                                                                                     | Purpose                    |
 | --------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
@@ -104,7 +106,7 @@ Exit codes:
   "mcpServers": {
     "xrpl": {
       "command": "npx",
-      "args": ["-y", "@criptonlabs/xrpl-agent-kit", "mcp"],
+      "args": ["-y", "@criptonlabs/agent-apis-xrpl", "mcp"],
       "env": { "CRIPTON_TIER": "free" }
     }
   }
@@ -117,15 +119,15 @@ For the paid tier add `CRIPTON_MAX_PER_CALL`, `CRIPTON_XRPL_PAYER_SEED` (and opt
 
 Each entry accepts a kit or a config (the environment when omitted).
 
-| Framework          | Import                               | Function                                                  |
-| ------------------ | ------------------------------------ | --------------------------------------------------------- |
-| Vercel AI SDK      | `@criptonlabs/xrpl-agent-kit/ai-sdk` | `createCriptonXrplTools(kitOrConfig?)`                    |
-| Mastra             | `@criptonlabs/xrpl-agent-kit/mastra` | `createMastraXrplTools(kitOrConfig?)` (async)             |
-| ElizaOS            | `@criptonlabs/xrpl-agent-kit/eliza`  | `criptonXrplPlugin`, `createCriptonXrplPlugin`            |
-| MCP (programmatic) | `@criptonlabs/xrpl-agent-kit/mcp`    | `createXrplMcpServer(kit)`, `startXrplMcpServer(config?)` |
+| Framework          | Import                                | Function                                                  |
+| ------------------ | ------------------------------------- | --------------------------------------------------------- |
+| Vercel AI SDK      | `@criptonlabs/agent-apis-xrpl/ai-sdk` | `createCriptonXrplTools(kitOrConfig?)`                    |
+| Mastra             | `@criptonlabs/agent-apis-xrpl/mastra` | `createMastraXrplTools(kitOrConfig?)` (async)             |
+| ElizaOS            | `@criptonlabs/agent-apis-xrpl/eliza`  | `criptonXrplPlugin`, `createCriptonXrplPlugin`            |
+| MCP (programmatic) | `@criptonlabs/agent-apis-xrpl/mcp`    | `createXrplMcpServer(kit)`, `startXrplMcpServer(config?)` |
 
 ```ts
-import { createCriptonXrplTools } from "@criptonlabs/xrpl-agent-kit/ai-sdk";
+import { createCriptonXrplTools } from "@criptonlabs/agent-apis-xrpl/ai-sdk";
 
 const tools = createCriptonXrplTools(); // pass to generateText({ tools, ... })
 ```
@@ -157,18 +159,18 @@ const kit = createXrplAgentKit({
 
 Tool and CLI errors have the shape `{ code, message, ... }` (plus `status`, `retryAfterSeconds` or `details` when relevant).
 
-| Code                                                                                              | Meaning                                                                                                                        |
-| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `invalid-input`                                                                                   | Invalid argument or environment variable (`details.field`)                                                                     |
-| `invalid-response`                                                                                | The API response did not match the expected shape                                                                              |
-| `timeout`, `network-error`                                                                        | Request timed out or failed                                                                                                    |
-| `payment-disabled`, `no-supported-payment-option`, `payment-over-cap`, `payment-budget-exhausted` | Payment is not configured, unsupported or over a limit                                                                         |
-| `payment-outcome-unknown`                                                                         | The paid retry got no answer; the amount is counted as spent and the call is not retried                                       |
-| `credits-required`                                                                                | The route is paid only with prepaid credits (`details.prepaidOffer`)                                                           |
-| `payment-not-ready`, `payment-readiness-unknown`, `no-path-found`, `fee-over-cap`                 | `prepare-payment` refused (`details.reasons`)                                                                                  |
-| `slippage-over-limit`                                                                             | `quote-dex` refused above `maxSlippagePct`                                                                                     |
-| `missing-peer-dependency`                                                                         | An optional framework package is not installed                                                                                 |
-| other slugs                                                                                       | RFC 9457 problem returned by the API, with its `status` (and `details.reason`, `details.prepaidOffer` when the API sends them) |
+| Code                                                                                              | Meaning                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `invalid-input`                                                                                   | Invalid argument or environment variable (`details.field`)                                                                                       |
+| `invalid-response`                                                                                | The API response did not match the expected shape                                                                                                |
+| `timeout`, `network-error`                                                                        | Request timed out or failed                                                                                                                      |
+| `payment-disabled`, `no-supported-payment-option`, `payment-over-cap`, `payment-budget-exhausted` | Payment is not configured, unsupported or over a limit                                                                                           |
+| `payment-outcome-unknown`                                                                         | The paid retry got no answer; the amount is counted as spent and the call is not retried                                                         |
+| `credits-required`                                                                                | The route is paid only with prepaid credits (`details.prepaidOffer`)                                                                             |
+| `payment-not-ready`, `payment-readiness-unknown`, `no-path-found`, `fee-over-cap`                 | `prepare-payment` refused (`details.reasons`)                                                                                                    |
+| `slippage-over-limit`                                                                             | `quote-dex` refused above `maxSlippagePct`                                                                                                       |
+| `missing-peer-dependency`                                                                         | An optional framework package is not installed                                                                                                   |
+| other slugs                                                                                       | RFC 9457 problem returned by the API, with its `status` (and `details.reason`, `details.prepaidOffer`, `details.errors` when the API sends them) |
 
 ## Security notes
 

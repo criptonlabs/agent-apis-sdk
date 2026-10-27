@@ -44,6 +44,13 @@ description = "CRIPTON_*_SEED= or CRIPTON_*_SECRET= assignment with a value"
 regex = '''(?i)\bCRIPTON_[A-Z0-9_]*(?:SEED|SECRET)[ \t]*=[ \t]*["']?[^\s"'#<]+'''
 keywords = ["cripton_"]
 
+[[rules]]
+id = "cripton-key-assignment"
+description = "CRIPTON_*_KEY= assignment with a value (Solana payer key and future keys)"
+# A value starting with $ is a shell substitution (for example "$(cat id.json)"), not a secret.
+regex = '''(?i)\bCRIPTON_[A-Z0-9_]*_KEY[ \t]*=[ \t]*["']?[^\s"'#<$][^\s"'#<]*'''
+keywords = ["cripton_"]
+
 [[allowlists]]
 description = "Placeholder lines in .env.example"
 condition = "AND"

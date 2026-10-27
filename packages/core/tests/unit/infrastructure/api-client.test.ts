@@ -14,7 +14,7 @@ const coreVersion = (
     version: string;
   }
 ).version;
-const descriptor = { network: "xrpl", productToken: "xrpl-agent-kit/0.1.0" };
+const descriptor = { network: "xrpl", productToken: "agent-apis-xrpl/0.1.0" };
 const meta = {
   ledger_index: 100,
   as_of: "2026-10-18T10:00:00Z",
@@ -74,7 +74,7 @@ describe("api client", () => {
     expect(fake.requests[0]?.method).toBe("GET");
     expect(fake.requests[0]?.url).toBe("http://localhost:8787/v1/xrpl/ledger/latest");
     const userAgent = fake.requests[0]?.headers["user-agent"] ?? "";
-    expect(userAgent).toContain(`xrpl-agent-kit/0.1.0 agent-apis-core/${coreVersion}`);
+    expect(userAgent).toContain(`agent-apis-xrpl/0.1.0 agent-apis-core/${coreVersion}`);
   });
 
   it("Stale data surfaced", async () => {

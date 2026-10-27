@@ -32,7 +32,7 @@ describe("common environment", () => {
 
     const fake = new FakeTransport().respond(challenge(xrplOption()));
     const client = new ApiClient(
-      { network: "xrpl", productToken: "xrpl-agent-kit/0.1.0" },
+      { network: "xrpl", productToken: "agent-apis-xrpl/0.1.0" },
       { tier: common.tier, transport: fake.transport, ...(payment ? { payment } : {}) },
     );
     const error = await client

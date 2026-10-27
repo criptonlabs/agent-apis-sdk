@@ -4,7 +4,7 @@ Network-independent core for the typed clients of the hosted Criptonlabs Agent A
 
 ## Who it is for
 
-Authors of network kits. End users who want tools for a specific network should install the kit instead, today `@criptonlabs/xrpl-agent-kit`.
+Authors of network kits. End users who want tools for a specific network should install a kit instead: `@criptonlabs/agent-apis-xrpl` (XRP Ledger) or `@criptonlabs/agent-apis-solana` (Solana).
 
 ## Status
 
@@ -12,17 +12,17 @@ Pre-release. The package is private and not yet published to npm (version `0.0.0
 
 ## API surface
 
-| Area               | Exports                                                                                                                                                                                                          |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| HTTP client        | `ApiClient` (free and pro route namespaces, response validation, `meta`, timeouts, `priceOf`, `spent`); types `RouteCall`, `KitConfig`, `KitResponse`, `Transport`                                               |
-| Network descriptor | `NetworkDescriptor` (`network`, `productToken`, `routeTimeoutsMs?`); each kit supplies its own                                                                                                                   |
-| x402 payer         | `X402Payer` contract (`selectOption`, `createPaymentHeaders`), `PaymentConfig` (`payer`, `maxPerCall`, `sessionBudget?`), `PaymentReceipt`, `PaymentOption`                                                      |
-| Errors             | `CriptonKitError` and `CriptonValidationError`, `CriptonProblemError`, `CriptonPaymentError`, `CriptonRefusalError`, `CriptonNetworkError`, `CriptonResponseError`, `MissingPeerDependencyError`; `KitErrorJson` |
-| Money helpers      | `add`, `sub`, `cmp`, `isDecimal`, `assertDecimal`, `maxDecimals`, `mulPow10`, `addPercentFloor` (decimal strings, never floats)                                                                                  |
-| Environment        | `readCommonEnv`, `buildPaymentConfig`                                                                                                                                                                            |
-| Tools              | `ToolDefinition`, `ToolAnnotations`; `loadPeer`, `PeerImporter`                                                                                                                                                  |
-| Adapters           | `createMcpServer`, `startMcpServer` (`/mcp`); `toAiSdkTools` (`/ai-sdk`); `toMastraTools` (`/mastra`); `toElizaResult` (`/eliza`)                                                                                |
-| CLI runner         | `runCli`, `exitCodeFor`, `CliCommand`, `CliIo` (`/cli`)                                                                                                                                                          |
+| Area               | Exports                                                                                                                                                                                                                                                                                       |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| HTTP client        | `ApiClient` (free and pro route namespaces, response validation, `meta`, timeouts, `priceOf`, `spent`); types `RouteCall`, `KitConfig`, `KitResponse`, `Transport`                                                                                                                            |
+| Network descriptor | `NetworkDescriptor` (`network`, `productToken`, `routeTimeoutsMs?`); each kit supplies its own                                                                                                                                                                                                |
+| x402 payer         | `X402Payer` contract (`selectOption`, `createPaymentHeaders`, optional `decimalAmount(option)`: the option's amount in decimal asset units; absent means the offered amount already is decimal), `PaymentConfig` (`payer`, `maxPerCall`, `sessionBudget?`), `PaymentReceipt`, `PaymentOption` |
+| Errors             | `CriptonKitError` and `CriptonValidationError`, `CriptonProblemError`, `CriptonPaymentError`, `CriptonRefusalError`, `CriptonNetworkError`, `CriptonResponseError`, `MissingPeerDependencyError`; `KitErrorJson`, `PrepaidSignals`, `ProblemFieldError`, `PrepaidOffer`, `PrepaidBundle`      |
+| Money helpers      | `add`, `sub`, `cmp`, `isDecimal`, `assertDecimal`, `maxDecimals`, `mulPow10`, `divPow10`, `addPercentFloor` (decimal strings, never floats)                                                                                                                                                   |
+| Environment        | `readCommonEnv`, `buildPaymentConfig`                                                                                                                                                                                                                                                         |
+| Tools              | `ToolDefinition`, `ToolAnnotations`; `loadPeer`, `PeerImporter`                                                                                                                                                                                                                               |
+| Adapters           | `createMcpServer`, `startMcpServer` (`/mcp`); `toAiSdkTools` (`/ai-sdk`); `toMastraTools` (`/mastra`); `toElizaResult` (`/eliza`)                                                                                                                                                             |
+| CLI runner         | `runCli`, `exitCodeFor`, `CliCommand`, `CliIo` (`/cli`)                                                                                                                                                                                                                                       |
 
 Entry points: `@criptonlabs/agent-apis-core` (also re-exports every symbol above), `/mcp`, `/ai-sdk`, `/mastra`, `/eliza`, `/cli`.
 
@@ -53,6 +53,34 @@ The client does not buy or spend prepaid credits, but it reports the API's prepa
 
 - A route paid only with prepaid credits raises `CriptonPaymentError` with code `credits-required`, whatever the payment configuration; nothing is signed.
 - `CriptonPaymentError` and `CriptonProblemError` carry `prepaidOffer` (bundle version, top-up URL, bundles with id, amount, credited units and approximate calls) when the API offers credits, for example on an exhausted daily free quota (429 `rate-limited`), and `reason` with the problem's `error` member (for example `credits_insufficient`). Both appear in the error JSON `details`.
+
+## Problem field errors
+
+`CriptonProblemError` carries `errors` (entries with `field` and `message`) when the API names the failing fields, for example on `invalid-parameters`. They appear in the error JSON as `details.errors`.
+
+## CLI
+
+`runCli` refuses secrets passed as arguments: `--seed`, `--secret`, `--private-key`, `--key` and `--payer-key` (also in the `--flag=value` form) fail with exit code 2. Supply secrets only through the environment.
+
+## Building a kit
+
+A kit supplies a network descriptor, the route operations with their response schemas and, optionally, an x402 payer; the core does HTTP, problem errors, payment and limits.
+
+```ts
+import { ApiClient, type X402Payer } from "@criptonlabs/agent-apis-core";
+import { z } from "zod";
+
+const api = new ApiClient(
+  { network: "mynet", productToken: "my-kit/0.1.0" }, // calls /v1/mynet/* (or /v1/pro/mynet/*)
+  { tier: "free" },
+);
+const slot = await api.request({
+  route: "slot/latest",
+  schema: z.object({ slot: z.number(), meta: z.object({ stale: z.boolean() }) }),
+});
+```
+
+A payer implements `X402Payer`: `selectOption` picks one of the API's options (or `null`), `createPaymentHeaders` signs it, and `decimalAmount` converts an atomic offer to decimal units so `maxPerCall` and `sessionBudget` compare like for like. See `packages/xrpl` and `packages/solana` for complete kits.
 
 ## Network-specific code
 

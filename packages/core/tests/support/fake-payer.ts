@@ -5,6 +5,8 @@ export interface FakePayerOptions {
   selectOption?: (accepts: readonly PaymentOption[]) => PaymentOption | null;
   delayMs?: number;
   secret?: string;
+  /** When given, the payer defines `decimalAmount`; absent means the method is not defined. */
+  decimalAmount?: (option: PaymentOption) => string;
 }
 
 /** Fixed-signature payer; records what it signed and never exposes its secret. */
@@ -14,11 +16,15 @@ export class FakePayer implements X402Payer {
   readonly #secret: string | undefined;
   readonly #select: (accepts: readonly PaymentOption[]) => PaymentOption | null;
   readonly #delayMs: number;
+  declare readonly decimalAmount?: (option: PaymentOption) => string;
 
   constructor(options: FakePayerOptions = {}) {
     this.#secret = options.secret;
     this.#select = options.selectOption ?? ((accepts) => accepts[0] ?? null);
     this.#delayMs = options.delayMs ?? 0;
+    if (options.decimalAmount) {
+      Object.defineProperty(this, "decimalAmount", { value: options.decimalAmount });
+    }
   }
 
   selectOption(accepts: readonly PaymentOption[]): PaymentOption | null {

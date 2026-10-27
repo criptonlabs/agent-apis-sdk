@@ -1,10 +1,24 @@
 {
-  "name": "@criptonlabs/xrpl-agent-kit",
+  "name": "@criptonlabs/agent-apis-xrpl",
   "version": "0.0.0",
   "private": true,
+  "description": "XRP Ledger client of the Criptonlabs Agent APIs for AI agents: typed data routes, payment preparation, DEX quotes, opt-in RLUSD x402 pay-per-call, and tools for MCP, AI SDK, Mastra and ElizaOS.",
+  "keywords": [
+    "ai-agents",
+    "ai-sdk",
+    "criptonlabs",
+    "elizaos",
+    "mastra",
+    "mcp",
+    "model-context-protocol",
+    "rlusd",
+    "x402",
+    "xrp-ledger",
+    "xrpl"
+  ],
   "license": "Apache-2.0",
   "bin": {
-    "xrpl-agent-kit": "bin/xrpl-agent-kit.js"
+    "agent-apis-xrpl": "bin/agent-apis-xrpl.js"
   },
   "files": [
     "dist",

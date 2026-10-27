@@ -4,7 +4,7 @@ import pkg from "../../package.json" with { type: "json" };
 /** The XRPL network descriptor handed to the core ApiClient. */
 export const XRPL_DESCRIPTOR: NetworkDescriptor = {
   network: "xrpl",
-  productToken: `xrpl-agent-kit/${pkg.version}`,
+  productToken: `agent-apis-xrpl/${pkg.version}`,
   routeTimeoutsMs: { paths: 30000 },
 };
 

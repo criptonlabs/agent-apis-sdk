@@ -8,6 +8,8 @@ export interface X402Payer {
     paymentRequired: unknown,
     option: PaymentOption,
   ): Promise<Record<string, string>>;
+  /** Decimal amount of the option in the asset's units; absent means `option.amount` already is. */
+  decimalAmount?(option: PaymentOption): string;
 }
 
 export interface PaymentReceipt {

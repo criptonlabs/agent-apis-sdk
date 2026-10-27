@@ -1,0 +1,14 @@
+# Rules for coding agents using @criptonlabs/agent-apis-solana
+
+Applies when writing Solana SOL or SPL token transfer code.
+
+- Query the kit (or the API) before building or sending a transfer: `solana_transfer_readiness`, `solana_token`, `solana_network_health`.
+- Use `solana_prepare_transfer` to get an unsigned transfer description; the kit never signs or sends it. The wallet sets the recent blockhash (`recentBlockhash` is `null`), signs and sends.
+- Check readiness first and surface its blockers; do not send when the verdict is not ready (`transfer-not-ready`).
+- Read `meta.stale` on every response and treat stale data as possibly out of date.
+- Amounts are decimal strings in the asset's units; never use floats. SOL amounts have at most 9 decimals. Addresses and mints are base58 decoding to 32 bytes; `mint` is a mint address or `"SOL"`.
+- Free routes live under `/v1/solana/*`; paid routes under `/v1/pro/solana/*` (mostly prepaid credits; per-call x402 where the API offers it).
+- Payment is opt-in: `CRIPTON_TIER=pro`, `CRIPTON_SOLANA_PAYER_KEY` and a mandatory `CRIPTON_MAX_PER_CALL`; `CRIPTON_SESSION_BUDGET`, `CRIPTON_SOLANA_PAY_ASSET`, `CRIPTON_SOLANA_NETWORK` and `CRIPTON_SOLANA_RPC_URL` are optional.
+- Never hardcode prices or amounts to pay; read them from the API (`kit.priceOf(resource)`).
+- Never hardcode, log or commit a secret key; read it from the environment only.
+- Handle errors by their `{ code, message }` shape.

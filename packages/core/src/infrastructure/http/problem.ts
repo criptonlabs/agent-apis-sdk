@@ -1,4 +1,8 @@
-import { CriptonProblemError, type PrepaidSignals } from "../../domain/errors.js";
+import {
+  CriptonProblemError,
+  type PrepaidSignals,
+  type ProblemFieldError,
+} from "../../domain/errors.js";
 import { readPrepaidOffer } from "../x402/prepaid-offer.js";
 
 function str(value: unknown): string | undefined {
@@ -24,6 +28,22 @@ function retryAfter(response: Response): number | undefined {
   return Number(raw.trim());
 }
 
+function fieldErrorOf(entry: unknown): ProblemFieldError | undefined {
+  if (typeof entry !== "object" || entry === null) return undefined;
+  const { field, message } = entry as Record<string, unknown>;
+  if (typeof field !== "string" || typeof message !== "string") return undefined;
+  return { field, message };
+}
+
+/** The valid entries of a problem's `errors` member, or `undefined` when none remain. */
+function fieldErrorsOf(value: unknown): ProblemFieldError[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const errors = value
+    .map(fieldErrorOf)
+    .filter((entry): entry is ProblemFieldError => entry !== undefined);
+  return errors.length > 0 ? errors : undefined;
+}
+
 /** The problem's `error` member and the prepaid offer of its `extensions` member, when valid. */
 export function signalsOf(body: unknown): PrepaidSignals {
   const record =
@@ -31,9 +51,11 @@ export function signalsOf(body: unknown): PrepaidSignals {
   if (record === undefined) return {};
   const reason = str(record.error);
   const prepaidOffer = readPrepaidOffer(record.extensions);
+  const errors = fieldErrorsOf(record.errors);
   return {
     ...(reason !== undefined ? { reason } : {}),
     ...(prepaidOffer !== undefined ? { prepaidOffer } : {}),
+    ...(errors !== undefined ? { errors } : {}),
   };
 }
 

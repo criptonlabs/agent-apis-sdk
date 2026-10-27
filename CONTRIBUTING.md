@@ -10,7 +10,7 @@ Thanks for helping. This repository is pre-release and private; the rules below 
 
 ## Setup
 
-```
+```bash
 pnpm install
 ```
 
@@ -50,7 +50,7 @@ Do one scenario at a time. Never write code and tests together. Amounts are deci
 
 Every pull request that changes behavior adds a changeset:
 
-```
+```bash
 pnpm changeset
 ```
 
@@ -64,9 +64,9 @@ Conventional commits: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, and so on. Ke
 
 - Never commit seeds, private keys, tokens or `.env` files with values.
 - Tests generate any key material at runtime; no real or sample secret is committed.
-- The gitleaks hook and CI scan reject XRPL seeds, Solana keys, `clc_` tokens and `CRIPTON_*_SEED=` style assignments. Do not bypass the hook.
+- The gitleaks hook and CI scan reject XRPL seeds, Solana keys, `clc_` tokens and `CRIPTON_*_SEED=`, `CRIPTON_*_SECRET=` or `CRIPTON_*_KEY=` style assignments. Do not bypass the hook.
 
-## Testnet end-to-end check (human-run only)
+## XRPL testnet end-to-end check (human-approved only)
 
 `pnpm -C packages/xrpl test:e2e` is an opt-in check excluded from `pnpm test` and CI. It must be run by a person, never by an automated agent. It needs:
 
@@ -75,6 +75,15 @@ Conventional commits: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, and so on. Ke
 - `CRIPTON_XRPL_PAYER_SEED`: a testnet seed, taken from the environment and never written to a file.
 
 The payer needs a trust line to the official testnet RLUSD issuer and some testnet RLUSD; the kit pays only official RLUSD. If the Worker's environment sets an own test issuer (`XRPL_TESTNET_ISSUER_OVERRIDE`), start it with a last `--env-file` that clears that variable. The check calls `payment-readiness`, a route paid per call.
+
+## Solana devnet end-to-end check (human-approved only)
+
+`pnpm -C packages/solana test:e2e` is opt-in and excluded from `pnpm test` and CI. It pays one `transfer-readiness` call on Solana devnet through a local Worker and needs:
+
+- `CRIPTON_E2E_BASE_URL`: URL of a local Worker with Solana payments on devnet and Solana data configured (localhost, 127.0.0.1 or [::1] only).
+- `CRIPTON_SOLANA_NETWORK=devnet`, optional `CRIPTON_SOLANA_PAY_ASSET` (`USDC` default or `EURC`).
+- `CRIPTON_SOLANA_PAYER_KEY`: a devnet key funded with devnet USDC or EURC, taken from the environment and never written to a file.
+- `CRIPTON_E2E_SOLANA_SOURCE`: the payer's address, used as the readiness source.
 
 ## Reporting security issues
 

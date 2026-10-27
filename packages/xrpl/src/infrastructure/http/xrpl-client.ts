@@ -6,11 +6,20 @@ import {
   assertDepth,
   assertDestinationTag,
   assertHistoryWindow,
+  assertLimit,
 } from "../../domain/validation.js";
 import { PATHS_TIMEOUT_MS } from "../descriptor.js";
 import { RESPONSE_SCHEMAS } from "./schemas.js";
 
 const enc = encodeURIComponent;
+
+// Page-size ranges enforced by the API (400 `invalid-parameters` outside them); checked locally first.
+export const LINES_LIMIT = { min: 10, max: 400 } as const;
+export const TX_LIMIT = { min: 1, max: 50 } as const;
+
+function limit(value: number | undefined, range: { min: number; max: number }): string | undefined {
+  return opt(value, (v) => String(assertLimit("limit", v, range.min, range.max)));
+}
 
 function asset(field: string, value: string): string {
   parseAsset(field, value);
@@ -82,18 +91,20 @@ export function createXrplDataClient(
       }),
     accountLines: async (address, q) => {
       const checked = assertClassicAddress("address", address);
+      const lines = limit(q?.limit, LINES_LIMIT);
       const peer = opt(q?.peer, (p) => assertClassicAddress("peer", p));
       return api.request({
         route: `account/${checked}/lines`,
-        query: { limit: opt(q?.limit, String), peer, marker: q?.marker },
+        query: { limit: lines, peer, marker: q?.marker },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/account/{address}/lines"],
       });
     },
     accountTransactions: async (address, q) => {
       const checked = assertClassicAddress("address", address);
+      const txLimit = limit(q?.limit, TX_LIMIT);
       return api.request({
         route: `account/${checked}/transactions`,
-        query: { limit: opt(q?.limit, String), marker: q?.marker },
+        query: { limit: txLimit, marker: q?.marker },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/account/{address}/transactions"],
       });
     },

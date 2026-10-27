@@ -18,7 +18,7 @@ export interface CliCommand {
   ): Promise<unknown>;
 }
 
-const SECRET_FLAGS = ["--seed", "--secret", "--private-key"];
+const SECRET_FLAGS = ["--seed", "--secret", "--private-key", "--key", "--payer-key"];
 
 function usage(commands: readonly CliCommand[]): string {
   const lines = commands.map((c) => `  ${c.name}  ${c.description}`);

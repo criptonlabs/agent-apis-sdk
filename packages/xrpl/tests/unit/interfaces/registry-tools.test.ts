@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vite-plus/test";
+import { z } from "zod";
 import { FakeTransport } from "../../../../core/tests/support/fake-transport.js";
 import { createCriptonXrplTools } from "../../../src/interfaces/ai-sdk/tools.js";
+import { createXrplTools } from "../../../src/interfaces/tools/registry.js";
 import { createXrplAgentKit } from "../../../src/index.js";
 import accountLines from "../../fixtures/responses/account-lines.json" with { type: "json" };
 import accountSummary from "../../fixtures/responses/account-summary.json" with { type: "json" };
@@ -114,14 +116,14 @@ describe("XRPL tools send the right request and return the API data", () => {
     const { call, last } = setup();
     const result = await call("xrpl_account_lines", {
       address: SOURCE,
-      limit: 5,
+      limit: 10,
       peer: DESTINATION,
       marker: "m1",
     });
     expect(result).toEqual(accountLines);
     expect(last()).toMatchObject({
       path: `/v1/xrpl/account/${SOURCE}/lines`,
-      query: { limit: "5", peer: DESTINATION, marker: "m1" },
+      query: { limit: "10", peer: DESTINATION, marker: "m1" },
     });
     await call("xrpl_account_lines", { address: SOURCE });
     expect(last().query).toEqual({});
@@ -213,5 +215,21 @@ describe("XRPL tools send the right request and return the API data", () => {
     const { call, fake } = setup();
     await expect(call("xrpl_account_summary", {})).rejects.toThrow(/address/);
     expect(fake.requests).toHaveLength(0);
+  });
+});
+
+describe("XRPL tool input schemas", () => {
+  it("account tools advertise the limit ranges", () => {
+    const tools = createXrplTools(createXrplAgentKit({ transport: new FakeTransport().transport }));
+    const limitOf = (name: string) => {
+      const tool = tools.find((t) => t.name === name);
+      if (tool === undefined) throw new Error(`no tool ${name}`);
+      const json = z.toJSONSchema(tool.inputSchema) as {
+        properties: Record<string, { minimum?: number; maximum?: number }>;
+      };
+      return json.properties["limit"];
+    };
+    expect(limitOf("xrpl_account_lines")).toMatchObject({ minimum: 10, maximum: 400 });
+    expect(limitOf("xrpl_account_transactions")).toMatchObject({ minimum: 1, maximum: 50 });
   });
 });

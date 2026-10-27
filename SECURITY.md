@@ -19,7 +19,7 @@ Never include real seeds, private keys or tokens in a report. Use throwaway test
 
 ## Scope
 
-- This SDK: `@criptonlabs/agent-apis-core` and `@criptonlabs/xrpl-agent-kit`, including the CLI, the MCP server and the framework adapters.
+- This SDK: `@criptonlabs/agent-apis-core`, `@criptonlabs/agent-apis-xrpl` and `@criptonlabs/agent-apis-solana`, including the CLI, the MCP server and the framework adapters.
 - Issues in the hosted Criptonlabs Agent APIs may also be reported through this channel.
 
 ## What to expect
@@ -32,8 +32,8 @@ We consider good-faith research that follows this policy, avoids harm to others 
 
 ## Key handling for users
 
-- Provide the payer seed only through the environment (`CRIPTON_XRPL_PAYER_SEED`), never in code, prompts, logs or command-line arguments.
+- Provide the payer secret only through the environment (`CRIPTON_XRPL_PAYER_SEED` or `CRIPTON_SOLANA_PAYER_KEY`), never in code, prompts, logs or command-line arguments; the CLIs refuse `--seed`, `--secret`, `--private-key`, `--key` and `--payer-key`.
 - Use a dedicated payer wallet holding only what you are willing to spend.
 - Always set `CRIPTON_MAX_PER_CALL` (mandatory to pay) and consider `CRIPTON_SESSION_BUDGET`.
-- Prepared payments are unsigned; review them before signing elsewhere.
-- If a seed may have leaked, move the funds and stop using that wallet.
+- Prepared payments and transfers are unsigned; review them before signing elsewhere. The Solana kit refuses a transfer readiness that does not match the intent (`invalid-response`) instead of building from it.
+- If a seed or key may have leaked, move the funds and stop using that wallet.

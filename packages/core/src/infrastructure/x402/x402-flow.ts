@@ -18,6 +18,8 @@ type PaymentRequired = ReturnType<typeof decodePaymentRequiredHeader>;
 
 interface Chosen {
   option: PaymentOption;
+  /** Decimal amount in asset units: the payer's conversion, or the offered amount as is. */
+  amount: string;
   payment: PaymentConfig;
   ledger: SpendLedger;
   signals: PrepaidSignals;
@@ -33,6 +35,11 @@ function decodeRequired(header: string): PaymentRequired {
   } catch {
     throw new CriptonResponseError("Invalid PAYMENT-REQUIRED header");
   }
+}
+
+/** The option's amount in decimal asset units; without a payer conversion the offer already is decimal. */
+function decimalAmountOf(payment: PaymentConfig, option: PaymentOption): string {
+  return payment.payer.decimalAmount?.(option) ?? option.amount;
 }
 
 /** Picks the option to pay, or raises the payment error that explains why nothing is paid. */
@@ -60,7 +67,7 @@ async function chooseOption(
   if (option === null) {
     throw new CriptonPaymentError("no-supported-payment-option", summaries(accepts), signals);
   }
-  return { option, payment, ledger, signals };
+  return { option, amount: decimalAmountOf(payment, option), payment, ledger, signals };
 }
 
 /** Sends the signed retry; without an answer the payment may have settled, so it counts as spent. */
@@ -83,8 +90,8 @@ async function sendSigned(
   }
 }
 
-/** The receipt of a successful settlement; asset and amount come from the paid option. */
-function readReceipt(paid: Response, option: PaymentOption): PaymentReceipt | null {
+/** The receipt of a successful settlement; asset comes from the paid option, amount is the decimal paid. */
+function readReceipt(paid: Response, chosen: Chosen): PaymentReceipt | null {
   const settleHeader = paid.headers.get("payment-response");
   if (settleHeader === null) return null;
   try {
@@ -93,8 +100,8 @@ function readReceipt(paid: Response, option: PaymentOption): PaymentReceipt | nu
     return {
       transaction: settle.transaction,
       network: settle.network,
-      asset: option.asset,
-      amount: option.amount,
+      asset: chosen.option.asset,
+      amount: chosen.amount,
       ...(settle.payer !== undefined ? { payer: settle.payer } : {}),
     };
   } catch {
@@ -114,12 +121,12 @@ export async function handlePaymentRequired<T>(
   if (header === null) throw await parseProblem(response);
   const required = decodeRequired(header);
   const chosen = await chooseOption(response, required, payment, ledger);
-  const reservation = chosen.ledger.reserve(chosen.option.amount);
+  const reservation = chosen.ledger.reserve(chosen.amount);
   try {
     const headers = await chosen.payment.payer.createPaymentHeaders(required, chosen.option);
     const paid = await sendSigned(retry, headers, chosen, reservation);
     if (!paid.ok) throw await parseProblem(paid);
-    const receipt = readReceipt(paid, chosen.option);
+    const receipt = readReceipt(paid, chosen);
     if (receipt !== null) chosen.ledger.commit(reservation);
     const data = await parse(paid);
     if (receipt === null) chosen.ledger.release(reservation);

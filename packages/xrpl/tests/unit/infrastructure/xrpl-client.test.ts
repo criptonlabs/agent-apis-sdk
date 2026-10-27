@@ -30,7 +30,7 @@ const BASE = "https://api.criptonlabs.com";
 function setup(body: object, tier?: "free" | "pro") {
   const fake = new FakeTransport().respond({ body });
   const api = new ApiClient(
-    { network: "xrpl", productToken: "xrpl-agent-kit/0.0.0" },
+    { network: "xrpl", productToken: "agent-apis-xrpl/0.0.0" },
     { transport: fake.transport, ...(tier ? { tier } : {}) },
   );
   return { fake, client: createXrplDataClient(api) };
@@ -235,11 +235,11 @@ describe("XRPL data client", () => {
 
   it("sends account lines limit, peer and marker", async () => {
     const { fake, client } = setup(linesFixture);
-    await client.accountLines(ADDRESS, { limit: 5, peer: OTHER, marker: "abc" });
+    await client.accountLines(ADDRESS, { limit: 20, peer: OTHER, marker: "abc" });
     const url = sent(fake);
     expect(url.pathname).toBe(`/v1/xrpl/account/${ADDRESS}/lines`);
     expect(Object.fromEntries(url.searchParams)).toEqual({
-      limit: "5",
+      limit: "20",
       peer: OTHER,
       marker: "abc",
     });
@@ -251,6 +251,51 @@ describe("XRPL data client", () => {
     const url = sent(fake);
     expect(url.pathname).toBe(`/v1/xrpl/account/${ADDRESS}/transactions`);
     expect(Object.fromEntries(url.searchParams)).toEqual({ limit: "3", marker: "m" });
+  });
+
+  it("Account lines limit out of range", async () => {
+    const { fake, client } = setup(linesFixture);
+    expect(await field(() => client.accountLines(ADDRESS, { limit: 5 }))).toBe("limit");
+    expect(fake.requests).toHaveLength(0);
+  });
+
+  it("Account transactions limit out of range", async () => {
+    const { fake, client } = setup(txFixture);
+    expect(await field(() => client.accountTransactions(ADDRESS, { limit: 51 }))).toBe("limit");
+    expect(fake.requests).toHaveLength(0);
+  });
+
+  it.each([10, 400])("accepts account lines limit %i", async (limit) => {
+    const { fake, client } = setup(linesFixture);
+    await client.accountLines(ADDRESS, { limit });
+    expect(sent(fake).searchParams.get("limit")).toBe(String(limit));
+  });
+
+  it.each([9, 401, 10.5])("rejects account lines limit %j locally", async (limit) => {
+    const { fake, client } = setup(linesFixture);
+    expect(await field(() => client.accountLines(ADDRESS, { limit }))).toBe("limit");
+    expect(fake.requests).toHaveLength(0);
+  });
+
+  it.each([1, 50])("accepts account transactions limit %i", async (limit) => {
+    const { fake, client } = setup(txFixture);
+    await client.accountTransactions(ADDRESS, { limit });
+    expect(sent(fake).searchParams.get("limit")).toBe(String(limit));
+  });
+
+  it.each([0, 51, 10.5])("rejects account transactions limit %j locally", async (limit) => {
+    const { fake, client } = setup(txFixture);
+    expect(await field(() => client.accountTransactions(ADDRESS, { limit }))).toBe("limit");
+    expect(fake.requests).toHaveLength(0);
+  });
+
+  it("omits the limit param when no limit is given", async () => {
+    const lines = setup(linesFixture);
+    await lines.client.accountLines(ADDRESS);
+    expect(sent(lines.fake).searchParams.has("limit")).toBe(false);
+    const txs = setup(txFixture);
+    await txs.client.accountTransactions(ADDRESS);
+    expect(sent(txs.fake).searchParams.has("limit")).toBe(false);
   });
 
   it("sends token asset in the path", async () => {

@@ -18,16 +18,17 @@ Pre-release. The repository is private and nothing is published to npm yet; pack
 
 ## Packages
 
-| Package                        | Purpose                                                                    | Entry points                                                          |
-| ------------------------------ | -------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `@criptonlabs/agent-apis-core` | Network-independent core for kit authors: HTTP client, x402 flow, adapters | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`, `./cli`              |
-| `@criptonlabs/xrpl-agent-kit`  | XRP Ledger kit: 14 tools, payment preparation, DEX quote, CLI              | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`; bin `xrpl-agent-kit` |
+| Package                          | Purpose                                                                    | Entry points                                                             |
+| -------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `@criptonlabs/agent-apis-core`   | Network-independent core for kit authors: HTTP client, x402 flow, adapters | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`, `./cli`                 |
+| `@criptonlabs/agent-apis-xrpl`   | XRP Ledger kit: 14 tools, payment preparation, DEX quote, CLI              | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`; bin `agent-apis-xrpl`   |
+| `@criptonlabs/agent-apis-solana` | Solana kit: 6 tools, transfer preparation, CLI                             | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`; bin `agent-apis-solana` |
 
-End users want a network kit (today `@criptonlabs/xrpl-agent-kit`); the core is for people who build kits.
+End users want a network kit (`@criptonlabs/agent-apis-xrpl` or `@criptonlabs/agent-apis-solana`); the core is for people who build kits.
 
 ## Features
 
-- Typed data client for the `/v1/xrpl/*` routes, with the `meta` freshness block on every response.
+- Typed data clients for the `/v1/xrpl/*` and `/v1/solana/*` routes, with the `meta` freshness block on every response.
 - 14 agent tools from one definition list, served over MCP (stdio), Vercel AI SDK, Mastra, ElizaOS and CLI.
 - Opt-in pay-per-call with x402, with mandatory per-call and optional session spend limits.
 - Unsigned payment preparation (readiness check, path, fee) and DEX quotes with a slippage limit.
@@ -44,22 +45,27 @@ End users want a network kit (today `@criptonlabs/xrpl-agent-kit`); the core is 
 Pre-release: clone the repository and run `pnpm install`, then:
 
 ```ts
-import { createXrplAgentKit } from "@criptonlabs/xrpl-agent-kit";
+import { createXrplAgentKit } from "@criptonlabs/agent-apis-xrpl";
+import { createSolanaAgentKit } from "@criptonlabs/agent-apis-solana";
 
-const kit = createXrplAgentKit(); // free tier, hosted API
-const fee = await kit.data.fee();
+const xrpl = createXrplAgentKit(); // free tier, hosted API
+const fee = await xrpl.data.fee();
 console.log(fee.data, fee.data.meta);
+
+const solana = createSolanaAgentKit();
+const slot = await solana.data.latestSlot();
+console.log(slot.data.slot, slot.data.meta);
 ```
 
 ## How payment works
 
-- The free tier (`/v1/xrpl/*`) needs no configuration or payment.
-- The paid tier (`/v1/pro/xrpl/*`) is charged per call with x402, in RLUSD on the XRP Ledger, only when you opt in.
-- Opt-in requires `CRIPTON_TIER=pro`, `CRIPTON_XRPL_PAYER_SEED` and `CRIPTON_MAX_PER_CALL`. `maxPerCall` is mandatory: without it the client never pays.
+- The free tier (`/v1/xrpl/*`, `/v1/solana/*`) needs no configuration or payment.
+- The paid tier (`/v1/pro/xrpl/*`, `/v1/pro/solana/*`) is charged with x402 only when you opt in: RLUSD on the XRP Ledger, or USDC / EURC on Solana. Routes the API sells only for prepaid credits raise `credits-required`.
+- Opt-in requires `CRIPTON_TIER=pro`, the kit's payer key (`CRIPTON_XRPL_PAYER_SEED` or `CRIPTON_SOLANA_PAYER_KEY`) and `CRIPTON_MAX_PER_CALL`. `maxPerCall` is mandatory: without it the client never pays.
 - `CRIPTON_SESSION_BUDGET` is an optional cap on the total spent in a session.
 - Prices come from the API at runtime (`GET /v1/pro/requirements`, `kit.priceOf`); the SDK stores none.
 
-See [packages/xrpl/README.md](packages/xrpl/README.md) for details.
+See [packages/xrpl/README.md](packages/xrpl/README.md) and [packages/solana/README.md](packages/solana/README.md) for details.
 
 ## Security
 
@@ -71,18 +77,20 @@ Report vulnerabilities as described in [SECURITY.md](SECURITY.md).
 
 ## Repository layout
 
-| Path            | Content                                         |
-| --------------- | ----------------------------------------------- |
-| `packages/core` | `@criptonlabs/agent-apis-core`                  |
-| `packages/xrpl` | `@criptonlabs/xrpl-agent-kit`                   |
-| `tests/exports` | Built-entry import check for both packages      |
-| `scripts/`      | Repository tooling (secret-rule verification)   |
-| `.github/`      | CI workflow, issue forms, pull request template |
-| `.changeset/`   | Pending version changes                         |
+| Path              | Content                                             |
+| ----------------- | --------------------------------------------------- |
+| `packages/core`   | `@criptonlabs/agent-apis-core`                      |
+| `packages/xrpl`   | `@criptonlabs/agent-apis-xrpl`                      |
+| `packages/solana` | `@criptonlabs/agent-apis-solana`                    |
+| `tests/exports`   | Built-entry import check for every package          |
+| `tests/fixtures`  | OpenAPI snapshot shared by the kits' contract tests |
+| `scripts/`        | Repository tooling (secret-rule verification)       |
+| `.github/`        | CI workflow, issue forms, pull request template     |
+| `.changeset/`     | Pending version changes                             |
 
 ## Development
 
-```
+```bash
 pnpm install
 pnpm typecheck
 pnpm lint
@@ -99,6 +107,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow and rules.
 - [SECURITY.md](SECURITY.md)
 - [packages/core/README.md](packages/core/README.md)
 - [packages/xrpl/README.md](packages/xrpl/README.md)
+- [packages/solana/README.md](packages/solana/README.md)
 
 ## License
 

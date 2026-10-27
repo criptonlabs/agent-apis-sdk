@@ -9,7 +9,7 @@ import { resolveKit } from "../tools/kit.js";
 import { XRPL_KIT_VERSION } from "../../infrastructure/config/version.js";
 
 function info(): { name: string; version: string } {
-  return { name: "criptonlabs-xrpl-agent-kit", version: XRPL_KIT_VERSION };
+  return { name: "criptonlabs-agent-apis-xrpl", version: XRPL_KIT_VERSION };
 }
 
 export async function createXrplMcpServer(

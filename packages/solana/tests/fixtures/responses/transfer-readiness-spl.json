@@ -1,0 +1,24 @@
+{
+  "source": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+  "destination": "2wKupLR9q6wXYppw8Gr2NvWxKBUqm4PPJKkQfoxHDBg4",
+  "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "amount": "1",
+  "amount_raw": "1000000",
+  "decimals": 6,
+  "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "ready": true,
+  "blockers": [],
+  "warnings": [],
+  "requires_ata_creation": false,
+  "ata_creation_lamports": null,
+  "transfer_fee": null,
+  "net_amount": "1000000",
+  "meta": {
+    "slot": 462121563,
+    "commitment": "finalized",
+    "as_of": "2026-10-27T15:29:12.689Z",
+    "age_seconds": 0,
+    "cache": "miss",
+    "stale": false
+  }
+}

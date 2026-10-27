@@ -39,3 +39,10 @@ export function assertHistoryWindow(field: string, value: unknown): "1h" | "24h"
   }
   return found;
 }
+
+export function assertLimit(field: string, value: unknown, min: number, max: number): number {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < min || value > max) {
+    throw new CriptonValidationError(field, `${field} must be an integer from ${min} to ${max}`);
+  }
+  return value;
+}

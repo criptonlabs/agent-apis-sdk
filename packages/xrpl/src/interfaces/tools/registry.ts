@@ -1,6 +1,7 @@
 import type { KitResponse, ToolDefinition } from "@criptonlabs/agent-apis-core";
 import { z } from "zod";
 import type { XrplAgentKit } from "../../index.js";
+import { LINES_LIMIT, TX_LIMIT } from "../../infrastructure/http/xrpl-client.js";
 
 const ANNOTATIONS = {
   readOnlyHint: true,
@@ -14,6 +15,14 @@ const asset = (what: string) =>
   z.string().describe(`${what}: "XRP" or "<currency>.<issuer>", for example "USD.rIssuer...".`);
 const address = (what: string) => z.string().describe(`${what}: a classic XRPL address (r...).`);
 const amount = (what: string) => z.string().describe(`${what}: a decimal string, never a float.`);
+const ranged = (range: { readonly min: number; readonly max: number }, what: string) =>
+  z
+    .number()
+    .int()
+    .min(range.min)
+    .max(range.max)
+    .optional()
+    .describe(`Maximum number of ${what} per page, ${range.min} to ${range.max}.`);
 
 /** Drops undefined fields so optional kit parameters stay absent (exactOptionalPropertyTypes). */
 function strip<R extends object>(value: object): R {
@@ -98,7 +107,7 @@ export function createXrplTools(kit: XrplAgentKit): ToolDefinition<unknown, unkn
       "Trust lines of an XRPL account, paginated with a marker. Read-only.",
       z.object({
         address: address("Account"),
-        limit: z.number().int().optional().describe("Maximum number of lines per page."),
+        limit: ranged(LINES_LIMIT, "lines"),
         peer: z.string().optional().describe("Only the lines with this counterparty address."),
         marker: z.string().optional().describe("Opaque page marker from a previous response."),
       }),
@@ -112,7 +121,7 @@ export function createXrplTools(kit: XrplAgentKit): ToolDefinition<unknown, unkn
       "Recent transactions of an XRPL account, paginated with a marker. Read-only.",
       z.object({
         address: address("Account"),
-        limit: z.number().int().optional().describe("Maximum number of transactions per page."),
+        limit: ranged(TX_LIMIT, "transactions"),
         marker: z.string().optional().describe("Opaque page marker from a previous response."),
       }),
       async (i) => {

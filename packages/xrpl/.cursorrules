@@ -1,4 +1,4 @@
-# Rules for coding agents using @criptonlabs/xrpl-agent-kit
+# Rules for coding agents using @criptonlabs/agent-apis-xrpl
 
 Applies when writing XRP Ledger payment or DEX code.
 

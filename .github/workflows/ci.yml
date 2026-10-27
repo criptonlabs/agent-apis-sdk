@@ -72,3 +72,7 @@ jobs:
       - name: Pack xrpl (dry run)
         run: npm pack --dry-run
         working-directory: packages/xrpl
+
+      - name: Pack solana (dry run)
+        run: npm pack --dry-run
+        working-directory: packages/solana

@@ -1,10 +1,17 @@
 import type { PaymentOptionSummary } from "./payment-option.js";
 import type { PrepaidOffer } from "./prepaid-offer.js";
 
-/** Prepaid signals of an API answer: the problem's `error` member and the prepaid offer. */
+/** One entry of a problem's `errors` member: which input field failed and why. */
+export interface ProblemFieldError {
+  field: string;
+  message: string;
+}
+
+/** Signals of an API answer: the problem's `error` member, the prepaid offer and the field errors. */
 export interface PrepaidSignals {
   reason?: string;
   prepaidOffer?: PrepaidOffer;
+  errors?: readonly ProblemFieldError[];
 }
 
 export type KitErrorJson = {
@@ -66,6 +73,7 @@ export class CriptonResponseError extends CriptonKitError {
 export class CriptonProblemError extends CriptonKitError {
   readonly reason?: string;
   readonly prepaidOffer?: PrepaidOffer;
+  readonly errors?: readonly ProblemFieldError[];
 
   constructor(
     readonly code: string,
@@ -79,6 +87,7 @@ export class CriptonProblemError extends CriptonKitError {
     super(detail ?? title ?? code);
     if (signals.reason !== undefined) this.reason = signals.reason;
     if (signals.prepaidOffer !== undefined) this.prepaidOffer = signals.prepaidOffer;
+    if (signals.errors !== undefined) this.errors = signals.errors;
   }
 
   protected override topMembers(): Record<string, unknown> {
@@ -86,7 +95,12 @@ export class CriptonProblemError extends CriptonKitError {
   }
 
   protected override detailMembers(): Record<string, unknown> {
-    return { instance: this.instance, reason: this.reason, prepaidOffer: this.prepaidOffer };
+    return {
+      instance: this.instance,
+      reason: this.reason,
+      prepaidOffer: this.prepaidOffer,
+      errors: this.errors,
+    };
   }
 }
 

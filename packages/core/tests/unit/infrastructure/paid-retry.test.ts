@@ -7,7 +7,7 @@ import { FakePayer } from "../../support/fake-payer.js";
 import { FakeTransport, type ScriptedResponse } from "../../support/fake-transport.js";
 import { challenge, paid, xrplOption } from "../../support/x402-fixtures.js";
 
-const descriptor = { network: "xrpl", productToken: "xrpl-agent-kit/0.1.0" };
+const descriptor = { network: "xrpl", productToken: "agent-apis-xrpl/0.1.0" };
 const schema = z.object({ fee: z.object({ standard: z.string() }) });
 
 function toResponse(scripted: ScriptedResponse): Response {

@@ -36,6 +36,10 @@ export function mulPow10(value: string, exp: number): string {
   return out(result);
 }
 
+export function divPow10(value: string, exp: number): string {
+  return out(new Big(value).div(new Big(10).pow(exp)));
+}
+
 export function addPercentFloor(value: string, pct: string, significantDigits: number): string {
   const raw = new Big(value).times(new Big(1).plus(new Big(pct).div(100)));
   if (raw.eq(0)) return "0";

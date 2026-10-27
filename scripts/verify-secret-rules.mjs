@@ -49,6 +49,7 @@ const samples = {
   "solana-keypair-json-array": `${JSON.stringify([...kp.bytes])}\n`,
   "criptonlabs-prepaid-token": `Authorization: Bearer ${prepaidToken()}\n`,
   "cripton-seed-or-secret-assignment": `${["CRIPTON_XRPL_PAYER", "SEED"].join("_")}=${randomBytes(12).toString("hex")}\n`,
+  "cripton-key-assignment": `${["CRIPTON_SOLANA_PAYER", "KEY"].join("_")}=${randomBytes(12).toString("hex")}\n`,
 };
 const clean = { "clean-text-control": "const answer = 42;\nCRIPTON_TIER=free\n" };
 

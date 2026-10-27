@@ -8,7 +8,10 @@ import { RESPONSE_SCHEMAS, XRPL_ROUTE_PATHS } from "../../src/infrastructure/htt
 
 type Json = Record<string, any>;
 const here = new URL("../fixtures/", import.meta.url);
-const openapi = JSON.parse(readFileSync(new URL("openapi.json", here), "utf8")) as Json;
+// Shared with the Solana kit (kit-solana design D10).
+const openapi = JSON.parse(
+  readFileSync(new URL("../../../../tests/fixtures/openapi.json", import.meta.url), "utf8"),
+) as Json;
 
 function resolve(node: Json | undefined): Json {
   let current = node ?? {};
@@ -93,7 +96,7 @@ describe("OpenAPI snapshot contract", () => {
       return { body: JSON.parse(readFileSync(new URL(`responses/${name}.json`, here), "utf8")) };
     });
     const api = new ApiClient(
-      { network: "xrpl", productToken: "xrpl-agent-kit/0.0.0" },
+      { network: "xrpl", productToken: "agent-apis-xrpl/0.0.0" },
       { transport: fake.transport },
     );
     const c = createXrplDataClient(api);
@@ -106,7 +109,7 @@ describe("OpenAPI snapshot contract", () => {
     await c.slippage({ base: "XRP", quote: I, amount: "1", depth: 10 });
     await c.amm("XRP", I);
     await c.accountSummary(A);
-    await c.accountLines(A, { limit: 1, peer: B, marker: "m" });
+    await c.accountLines(A, { limit: 10, peer: B, marker: "m" });
     await c.accountTransactions(A, { limit: 1, marker: "m" });
     await c.token(I);
     await c.paymentReadiness({

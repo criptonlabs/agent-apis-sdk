@@ -3,6 +3,7 @@ import {
   add,
   addPercentFloor,
   cmp,
+  divPow10,
   isDecimal,
   maxDecimals,
   mulPow10,
@@ -34,6 +35,12 @@ describe("money", () => {
   });
   it("mulPow10 throws RangeError on a fractional result", () => {
     expect(() => mulPow10("0.0000001", 6)).toThrow(RangeError);
+  });
+  it("divPow10 shifts down exactly and trims trailing zeros", () => {
+    expect(divPow10("14520", 6)).toBe("0.01452");
+    expect(divPow10("1000000", 6)).toBe("1");
+    expect(divPow10("0", 6)).toBe("0");
+    expect(divPow10("5", 0)).toBe("5");
   });
   it("addPercentFloor adds the percentage at the given significant digits", () => {
     expect(addPercentFloor("1.394", "1", 15)).toBe("1.40794");

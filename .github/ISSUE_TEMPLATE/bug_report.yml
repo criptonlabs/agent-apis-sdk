@@ -12,7 +12,8 @@ body:
       label: Package
       options:
         - "@criptonlabs/agent-apis-core"
-        - "@criptonlabs/xrpl-agent-kit"
+        - "@criptonlabs/agent-apis-xrpl"
+        - "@criptonlabs/agent-apis-solana"
         - Other or unsure
     validations:
       required: true

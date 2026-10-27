@@ -1,9 +1,9 @@
 ---
-name: xrpl-agent-kit
-description: Check XRP Ledger payments, DEX liquidity and fees against the Criptonlabs Agent APIs before building or submitting a transaction, using the 14 tools of @criptonlabs/xrpl-agent-kit.
+name: agent-apis-xrpl
+description: Check XRP Ledger payments, DEX liquidity and fees against the Criptonlabs Agent APIs before building or submitting a transaction, using the 14 tools of @criptonlabs/agent-apis-xrpl.
 ---
 
-# XRPL Agent Kit
+# Criptonlabs Agent APIs: XRP Ledger
 
 Typed, read-only access to the hosted Criptonlabs Agent APIs for the XRP Ledger. The kit answers pre-transaction questions (fees, readiness, liquidity, paths) so an agent can avoid failures such as `tecPATH_DRY`, `tecNO_LINE` or a missing destination tag. The packages are pre-release and not yet published to npm.
 

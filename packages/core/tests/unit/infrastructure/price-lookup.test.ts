@@ -11,7 +11,7 @@ describe("price lookup", () => {
   it("Prices while payments are off", async () => {
     const fake = new FakeTransport().respond({ body: fixture });
     const client = new ApiClient(
-      { network: "xrpl", productToken: "xrpl-agent-kit/0.1.0" },
+      { network: "xrpl", productToken: "agent-apis-xrpl/0.1.0" },
       { tier: "pro", transport: fake.transport },
     );
     const result = await client.priceOf("/v1/pro/xrpl/fee");
