@@ -21,7 +21,7 @@ const TOOLS = [
   "xrpl_dex_quote",
 ];
 
-const PRICE = /\d+(\.\d+)?\s*(EURC|EUR|USDC|USD|RLUSD|€|\$)|(€|\$)\s*\d/;
+const PRICE = /(?:\d+|\d+\.\d+)\s*(?:EURC|EUR|USDC|USD|RLUSD|€|\$)|(?:€|\$)\s*\d/;
 const RETIRED_PRO_PATH = /\/v1\/pro\/(?!xrpl\/|requirements)/;
 
 describe("Guidance files", () => {

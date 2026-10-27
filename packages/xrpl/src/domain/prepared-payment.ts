@@ -85,49 +85,68 @@ function oldestMeta(metas: readonly Meta[]): Meta {
   return oldest;
 }
 
+type PathAlternative = PathsResponse["alternatives"][number];
+
+function isCrossCurrency(intent: PaymentIntent): boolean {
+  return intent.sourceAsset !== undefined && intent.sourceAsset !== intent.asset;
+}
+
+/** Validates the parties and the amount, in the order errors are reported. */
+function validatedAmount(intent: PaymentIntent): TxAmount {
+  assertClassicAddress("source", intent.source);
+  assertClassicAddress("destination", intent.destination);
+  if (intent.destinationTag !== undefined) {
+    assertDestinationTag("destinationTag", intent.destinationTag);
+  }
+  return toTxAmount("amount", intent.asset, intent.amount);
+}
+
+function cappedFee(intent: PaymentIntent, fee: FeeResponse): { tier: FeeTier; drops: string } {
+  const tier: FeeTier = intent.feeTier ?? "standard";
+  const drops = fee.fee[tier];
+  if (intent.maxFeeDrops !== undefined && cmp(drops, intent.maxFeeDrops) > 0) {
+    throw new PaymentNotReadyError("fee-over-cap", [], [], []);
+  }
+  return { tier, drops };
+}
+
+/** The path and SendMax of a cross-currency payment; null when source and destination assets match. */
+function crossCurrencyLeg(
+  intent: PaymentIntent,
+  paths: PathsResponse | null,
+): { alternative: PathAlternative; sendMax: TxAmount } | null {
+  if (!isCrossCurrency(intent)) return null;
+  const tolerance = intent.sendMaxTolerancePct;
+  if (tolerance === undefined) {
+    throw new CriptonValidationError(
+      "sendMaxTolerancePct",
+      "sendMaxTolerancePct is required for a cross-currency payment",
+    );
+  }
+  const alternative = paths?.alternatives.find(
+    (alt) => alt.source_amount.asset === intent.sourceAsset,
+  );
+  if (alternative === undefined) throw new PaymentNotReadyError("no-path-found", [], [], []);
+  const value = addPercentFloor(alternative.source_amount.value, tolerance, 15);
+  return { alternative, sendMax: toTxAmount("sourceAsset", intent.sourceAsset as string, value) };
+}
+
 export function buildPreparedPayment(
   intent: PaymentIntent,
   readiness: ReadinessResponse,
   paths: PathsResponse | null,
   fee: FeeResponse,
 ): PreparedPayment {
-  assertClassicAddress("source", intent.source);
-  assertClassicAddress("destination", intent.destination);
-  if (intent.destinationTag !== undefined) {
-    assertDestinationTag("destinationTag", intent.destinationTag);
-  }
-  const amount = toTxAmount("amount", intent.asset, intent.amount);
-
-  const tier: FeeTier = intent.feeTier ?? "standard";
-  const drops = fee.fee[tier];
-  if (intent.maxFeeDrops !== undefined && cmp(drops, intent.maxFeeDrops) > 0) {
-    throw new PaymentNotReadyError("fee-over-cap", [], [], []);
-  }
-
-  let sendMax: TxAmount | undefined;
-  let alternative: PathsResponse["alternatives"][number] | null = null;
-  if (intent.sourceAsset !== undefined && intent.sourceAsset !== intent.asset) {
-    if (intent.sendMaxTolerancePct === undefined) {
-      throw new CriptonValidationError(
-        "sendMaxTolerancePct",
-        "sendMaxTolerancePct is required for a cross-currency payment",
-      );
-    }
-    alternative =
-      paths?.alternatives.find((alt) => alt.source_amount.asset === intent.sourceAsset) ?? null;
-    if (alternative === null) throw new PaymentNotReadyError("no-path-found", [], [], []);
-    const value = addPercentFloor(alternative.source_amount.value, intent.sendMaxTolerancePct, 15);
-    sendMax = toTxAmount("sourceAsset", intent.sourceAsset, value);
-  }
+  const amount = validatedAmount(intent);
+  const { tier, drops } = cappedFee(intent, fee);
+  const leg = crossCurrencyLeg(intent, paths);
 
   const transaction: UnsignedPayment = {
     TransactionType: "Payment",
     Account: intent.source,
     Destination: intent.destination,
     Amount: amount,
-    ...(sendMax !== undefined && alternative !== null
-      ? { SendMax: sendMax, Paths: alternative.paths }
-      : {}),
+    ...(leg !== null ? { SendMax: leg.sendMax, Paths: leg.alternative.paths } : {}),
     ...(intent.destinationTag !== undefined ? { DestinationTag: intent.destinationTag } : {}),
     Fee: drops,
     Flags: 0,
@@ -136,7 +155,7 @@ export function buildPreparedPayment(
   return {
     transaction,
     readiness,
-    path: alternative,
+    path: leg?.alternative ?? null,
     fee: { tier, drops, congestionBand: fee.congestion.band },
     meta: oldestMeta([readiness.meta, ...(paths ? [paths.meta] : []), fee.meta]),
   };

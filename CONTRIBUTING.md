@@ -14,7 +14,12 @@ Thanks for helping. This repository is pre-release and private; the rules below 
 pnpm install
 ```
 
-`pnpm install` runs the `prepare` script, which sets `git config core.hooksPath .githooks` and enables the gitleaks pre-commit hook.
+`pnpm install` runs the `prepare` script, which sets `git config core.hooksPath .githooks` and enables the hooks:
+
+- `pre-commit`: gitleaks on the staged changes, `pnpm lint` and `pnpm typecheck`.
+- `pre-push`: `pnpm test` (with coverage thresholds), `pnpm build` and `pnpm test:exports`.
+
+Both fail closed. Lint enforces cyclomatic complexity <= 8, nesting depth <= 2, no dynamic code evaluation and the `eslint-plugin-security` rules (see `vite.config.ts`); refactor rather than disable a rule. CI runs the same checks plus the history scan, the secret rule verification, the dependency audit and `npm pack`.
 
 ## Commands
 

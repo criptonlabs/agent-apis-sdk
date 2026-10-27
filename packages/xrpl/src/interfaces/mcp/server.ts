@@ -1,6 +1,3 @@
-import { existsSync, readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import {
   createMcpServer,
   startMcpServer,
@@ -9,25 +6,10 @@ import {
 import type { XrplAgentKit, XrplKitConfig } from "../../index.js";
 import { createXrplTools } from "../tools/registry.js";
 import { resolveKit } from "../tools/kit.js";
-
-const PACKAGE_NAME = "@criptonlabs/xrpl-agent-kit";
-
-function packageVersion(): string {
-  let dir = dirname(fileURLToPath(import.meta.url));
-  for (;;) {
-    const file = join(dir, "package.json");
-    if (existsSync(file)) {
-      const pkg = JSON.parse(readFileSync(file, "utf8")) as { name?: string; version?: string };
-      if (pkg.name === PACKAGE_NAME && pkg.version !== undefined) return pkg.version;
-    }
-    const parent = dirname(dir);
-    if (parent === dir) throw new Error(`package.json of ${PACKAGE_NAME} not found`);
-    dir = parent;
-  }
-}
+import { XRPL_KIT_VERSION } from "../../infrastructure/config/version.js";
 
 function info(): { name: string; version: string } {
-  return { name: "criptonlabs-xrpl-agent-kit", version: packageVersion() };
+  return { name: "criptonlabs-xrpl-agent-kit", version: XRPL_KIT_VERSION };
 }
 
 export async function createXrplMcpServer(

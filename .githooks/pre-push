@@ -1,0 +1,7 @@
+#!/bin/sh
+# Fails closed: a push is refused unless tests (with coverage thresholds), build and the
+# package exports check pass. The testnet e2e stays human-run (see CONTRIBUTING.md).
+set -e
+pnpm test
+pnpm build
+pnpm test:exports

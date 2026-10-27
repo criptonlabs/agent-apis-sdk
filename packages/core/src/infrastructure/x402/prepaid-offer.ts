@@ -25,23 +25,29 @@ function bundleOf(value: unknown): PrepaidBundle | undefined {
   };
 }
 
-/** Reads the prepaid offer from an `extensions` object; anything malformed yields `undefined`. */
-export function readPrepaidOffer(extensions: unknown): PrepaidOffer | undefined {
-  const info = record(record(record(extensions)?.[PREPAID_EXTENSION_KEY])?.info);
-  if (info === undefined || typeof info.bundle_version !== "string") return undefined;
-  if (!Array.isArray(info.bundles)) return undefined;
-  const bundles: PrepaidBundle[] = [];
-  for (const raw of info.bundles) {
-    const bundle = bundleOf(raw);
-    if (bundle === undefined) return undefined;
-    bundles.push(bundle);
-  }
+/** Every bundle must be valid; one malformed entry drops the whole list. */
+function bundlesOf(value: unknown): PrepaidBundle[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const bundles = value.map(bundleOf);
+  return bundles.every((b): b is PrepaidBundle => b !== undefined) ? bundles : undefined;
+}
+
+function optionalUrls(
+  info: Record<string, unknown>,
+): Pick<PrepaidOffer, "topupUrl" | "requirementsUrl"> {
   return {
-    bundleVersion: info.bundle_version,
     ...(typeof info.topup_url === "string" ? { topupUrl: info.topup_url } : {}),
     ...(typeof info.requirements_url === "string"
       ? { requirementsUrl: info.requirements_url }
       : {}),
-    bundles,
   };
+}
+
+/** Reads the prepaid offer from an `extensions` object; anything malformed yields `undefined`. */
+export function readPrepaidOffer(extensions: unknown): PrepaidOffer | undefined {
+  const info = record(record(record(extensions)?.[PREPAID_EXTENSION_KEY])?.info);
+  if (info === undefined || typeof info.bundle_version !== "string") return undefined;
+  const bundles = bundlesOf(info.bundles);
+  if (bundles === undefined) return undefined;
+  return { bundleVersion: info.bundle_version, ...optionalUrls(info), bundles };
 }

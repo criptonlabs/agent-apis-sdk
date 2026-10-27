@@ -13,37 +13,35 @@ export interface CommonEnv {
 const urlSchema = z.url();
 const tierSchema = z.enum(["free", "pro"]);
 
+function present(value: string | undefined): value is string {
+  return value !== undefined && value !== "";
+}
+
+function parseUrl(url: string): string {
+  if (!urlSchema.safeParse(url).success) {
+    throw new CriptonValidationError("CRIPTON_API_URL", "CRIPTON_API_URL must be a valid URL");
+  }
+  return url;
+}
+
+function parseTier(tier: string | undefined): CommonEnv["tier"] {
+  if (!present(tier)) return "free";
+  const parsed = tierSchema.safeParse(tier);
+  if (!parsed.success) {
+    throw new CriptonValidationError("CRIPTON_TIER", "CRIPTON_TIER must be either 'free' or 'pro'");
+  }
+  return parsed.data;
+}
+
 export function readCommonEnv(env: NodeJS.ProcessEnv): CommonEnv {
-  const common: CommonEnv = { tier: "free" };
-
+  // Validation order (URL, tier, cap, budget) decides which field an error names.
   const url = env.CRIPTON_API_URL;
-  if (url !== undefined && url !== "") {
-    if (!urlSchema.safeParse(url).success) {
-      throw new CriptonValidationError("CRIPTON_API_URL", "CRIPTON_API_URL must be a valid URL");
-    }
-    common.baseUrl = url;
-  }
-
-  const tier = env.CRIPTON_TIER;
-  if (tier !== undefined && tier !== "") {
-    const parsed = tierSchema.safeParse(tier);
-    if (!parsed.success) {
-      throw new CriptonValidationError(
-        "CRIPTON_TIER",
-        "CRIPTON_TIER must be either 'free' or 'pro'",
-      );
-    }
-    common.tier = parsed.data;
-  }
-
-  const maxPerCall = env.CRIPTON_MAX_PER_CALL;
-  if (maxPerCall !== undefined && maxPerCall !== "") {
-    common.maxPerCall = assertDecimal("CRIPTON_MAX_PER_CALL", maxPerCall);
-  }
-  const budget = env.CRIPTON_SESSION_BUDGET;
-  if (budget !== undefined && budget !== "") {
-    common.sessionBudget = assertDecimal("CRIPTON_SESSION_BUDGET", budget);
-  }
+  const baseUrl = present(url) ? parseUrl(url) : undefined;
+  const common: CommonEnv = { tier: parseTier(env.CRIPTON_TIER) };
+  if (baseUrl !== undefined) common.baseUrl = baseUrl;
+  const { CRIPTON_MAX_PER_CALL: maxPerCall, CRIPTON_SESSION_BUDGET: budget } = env;
+  if (present(maxPerCall)) common.maxPerCall = assertDecimal("CRIPTON_MAX_PER_CALL", maxPerCall);
+  if (present(budget)) common.sessionBudget = assertDecimal("CRIPTON_SESSION_BUDGET", budget);
   return common;
 }
 

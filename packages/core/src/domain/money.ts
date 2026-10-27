@@ -3,7 +3,9 @@ import Big from "big.js";
 Big.DP = 40;
 Big.RM = 1;
 
-const DECIMAL_PATTERN = /^(?!0+(\.0+)?$)[0-9]+(\.[0-9]+)?$/;
+// Unsigned decimal, no nested quantifiers (ReDoS-safe); a non-zero digit makes it positive.
+const DECIMAL_FORMAT = /^(?:[0-9]+|[0-9]+\.[0-9]+)$/;
+const NON_ZERO_DIGIT = /[1-9]/;
 
 function out(value: Big): string {
   const text = value.toFixed();
@@ -11,7 +13,7 @@ function out(value: Big): string {
 }
 
 export function isDecimal(v: unknown): v is string {
-  return typeof v === "string" && DECIMAL_PATTERN.test(v);
+  return typeof v === "string" && DECIMAL_FORMAT.test(v) && NON_ZERO_DIGIT.test(v);
 }
 
 export function cmp(a: string, b: string): -1 | 0 | 1 {

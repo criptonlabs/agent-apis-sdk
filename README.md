@@ -64,7 +64,7 @@ See [packages/xrpl/README.md](packages/xrpl/README.md) for details.
 ## Security
 
 - Seeds are read only from the environment. The CLI rejects `--seed`, `--secret` and `--private-key`.
-- gitleaks runs as a fail-closed pre-commit hook and in CI, with extra rules for XRPL seeds, Solana keys and `clc_` tokens.
+- gitleaks runs as a fail-closed pre-commit hook (with lint and typecheck; tests, build and exports run in pre-push) and in CI, with extra rules for XRPL seeds, Solana keys and `clc_` tokens.
 - Prepared payments are unsigned; review them before signing elsewhere.
 
 Report vulnerabilities as described in [SECURITY.md](SECURITY.md).

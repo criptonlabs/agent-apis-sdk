@@ -29,6 +29,24 @@ function toNetworkError(error: unknown): CriptonKitError {
   return new CriptonNetworkError("network-error", "Network request failed");
 }
 
+/** Parses a JSON body; a syntax error becomes `invalid-response`. */
+async function jsonBody(response: Response): Promise<unknown> {
+  try {
+    return await response.json();
+  } catch (error) {
+    if (error instanceof SyntaxError)
+      throw new CriptonResponseError("Response body is not valid JSON");
+    throw error;
+  }
+}
+
+function withQuery(url: URL, query: Record<string, string | undefined> = {}): URL {
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined) url.searchParams.set(key, value);
+  }
+  return url;
+}
+
 export class ApiClient {
   private readonly ledger: SpendLedger | undefined;
 
@@ -45,35 +63,31 @@ export class ApiClient {
       : undefined;
   }
 
-  async request<T>(call: RouteCall<T>): Promise<KitResponse<T>> {
+  private routeUrl(route: string, query?: Record<string, string | undefined>): string {
     const base = this.config.baseUrl ?? DEFAULT_BASE_URL;
-    const prefix =
-      this.config.tier === "pro"
-        ? `/v1/pro/${this.descriptor.network}`
-        : `/v1/${this.descriptor.network}`;
-    const url = new URL(`${base}${prefix}/${call.route}`);
-    for (const [key, value] of Object.entries(call.query ?? {})) {
-      if (value !== undefined) url.searchParams.set(key, value);
-    }
-    const timeoutMs =
+    const { network } = this.descriptor;
+    const prefix = this.config.tier === "pro" ? `/v1/pro/${network}` : `/v1/${network}`;
+    return withQuery(new URL(`${base}${prefix}/${route}`), query).toString();
+  }
+
+  private timeoutFor(call: RouteCall<unknown>): number {
+    return (
       call.timeoutMs ??
       this.descriptor.routeTimeoutsMs?.[call.route] ??
       this.config.timeoutMs ??
-      DEFAULT_TIMEOUT_MS;
+      DEFAULT_TIMEOUT_MS
+    );
+  }
+
+  async request<T>(call: RouteCall<T>): Promise<KitResponse<T>> {
+    const url = this.routeUrl(call.route, call.query);
+    const timeoutMs = this.timeoutFor(call);
     const send = (extra: Record<string, string>): Promise<Response> =>
-      this.send(url.toString(), timeoutMs, extra);
+      this.send(url, timeoutMs, extra);
     const paidSend = (extra: Record<string, string>): Promise<Response> =>
-      this.send(url.toString(), Math.max(timeoutMs, PAID_RETRY_TIMEOUT_MS), extra);
+      this.send(url, Math.max(timeoutMs, PAID_RETRY_TIMEOUT_MS), extra);
     const parse = async (response: Response): Promise<T> => {
-      let body: unknown;
-      try {
-        body = await response.json();
-      } catch (error) {
-        if (error instanceof SyntaxError)
-          throw new CriptonResponseError("Response body is not valid JSON");
-        throw error;
-      }
-      const parsed = call.schema.safeParse(body);
+      const parsed = call.schema.safeParse(await jsonBody(response));
       if (!parsed.success) {
         throw new CriptonResponseError("Response does not match the expected schema");
       }
@@ -103,15 +117,7 @@ export class ApiClient {
     try {
       const response = await this.send(url, this.config.timeoutMs ?? DEFAULT_TIMEOUT_MS, {});
       if (!response.ok) throw await parseProblem(response);
-      let body: unknown;
-      try {
-        body = await response.json();
-      } catch (error) {
-        if (error instanceof SyntaxError)
-          throw new CriptonResponseError("Response body is not valid JSON");
-        throw error;
-      }
-      return toPriceLookup(body);
+      return toPriceLookup(await jsonBody(response));
     } catch (error) {
       throw toNetworkError(error);
     }

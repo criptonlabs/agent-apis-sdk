@@ -46,12 +46,10 @@ describe("XRPL MCP server", () => {
     const client = await connect(kitOver(readinessFake(readiness())));
     const { tools } = await client.listTools();
     const prepare = tools.find((t) => t.name === "xrpl_prepare_payment");
-    expect(prepare?.annotations?.readOnlyHint).toBe(true);
-    expect(prepare?.annotations?.destructiveHint).toBe(false);
+    const readOnly = { readOnlyHint: true, destructiveHint: false };
+    expect(prepare?.annotations).toMatchObject(readOnly);
     for (const tool of tools) {
-      expect(tool.annotations?.readOnlyHint).toBe(true);
-      expect(tool.annotations?.destructiveHint).toBe(false);
-      expect(tool.annotations?.openWorldHint).toBe(true);
+      expect(tool.annotations).toMatchObject({ ...readOnly, openWorldHint: true });
     }
   });
 
