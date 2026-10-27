@@ -46,7 +46,7 @@ Payment is off unless configured. The free tier needs no configuration. To use t
 
 - `CRIPTON_TIER=pro`
 - `CRIPTON_XRPL_PAYER_SEED`: the payer seed (RLUSD on the XRP Ledger only).
-- `CRIPTON_MAX_PER_CALL`: mandatory cap per call, decimal string.
+- `CRIPTON_MAX_PER_CALL`: mandatory cap per call, decimal string, compared with the gross amount the API offers.
 - `CRIPTON_SESSION_BUDGET`: optional total budget for the session.
 - `CRIPTON_XRPL_NETWORK`: `mainnet` (default) or `testnet`.
 - `CRIPTON_XRPL_WS_URL`: optional XRPL WebSocket node used while paying.
@@ -59,7 +59,7 @@ Every response carries `meta` (`ledger_index`, `as_of`, `age_seconds`, `cache`, 
 
 ## Errors
 
-Tool errors have the shape `{ code, message, ... }` (for example validation, problem, payment, refusal or network errors). Read `code` and `message`; do not retry blindly.
+Tool errors have the shape `{ code, message, ... }` (for example validation, problem, payment, refusal or network errors). Read `code` and `message`; do not retry blindly. `credits-required` means the route is paid only with prepaid credits; when `details.prepaidOffer` is present (also on a free-tier 429), tell the user about the offer instead of retrying. The kit never buys credits.
 
 ## Safety
 

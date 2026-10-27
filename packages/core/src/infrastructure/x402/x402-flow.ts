@@ -3,7 +3,8 @@ import type { KitResponse, PaymentConfig, PaymentReceipt } from "../../applicati
 import { CriptonPaymentError, CriptonResponseError } from "../../domain/errors.js";
 import type { PaymentOption, PaymentOptionSummary } from "../../domain/payment-option.js";
 import type { SpendLedger } from "../../domain/spend-ledger.js";
-import { parseProblem } from "../http/problem.js";
+import { parseProblem, readJson, signalsOf } from "../http/problem.js";
+import { readPrepaidOffer } from "./prepaid-offer.js";
 
 export interface PaidRetry {
   (extraHeaders: Record<string, string>): Promise<Response>;
@@ -30,17 +31,35 @@ export async function handlePaymentRequired<T>(
     throw new CriptonResponseError("Invalid PAYMENT-REQUIRED header");
   }
   const accepts = required.accepts as unknown as PaymentOption[];
+  const prepaidOffer = readPrepaidOffer(required.extensions);
+  const signals = prepaidOffer !== undefined ? { prepaidOffer } : {};
+  // A credits-only route offers no per-call option, only prepaid credits (API prepaid-credits D0b).
+  if (accepts.length === 0 && prepaidOffer !== undefined) {
+    const { reason } = signalsOf(await readJson(response));
+    throw new CriptonPaymentError("credits-required", [], {
+      ...signals,
+      ...(reason !== undefined ? { reason } : {}),
+    });
+  }
   if (payment === undefined || ledger === undefined) {
-    throw new CriptonPaymentError("payment-disabled", summaries(accepts));
+    throw new CriptonPaymentError("payment-disabled", summaries(accepts), signals);
   }
   const option = payment.payer.selectOption(accepts);
   if (option === null) {
-    throw new CriptonPaymentError("no-supported-payment-option", summaries(accepts));
+    throw new CriptonPaymentError("no-supported-payment-option", summaries(accepts), signals);
   }
   const reservation = ledger.reserve(option.amount);
   try {
     const headers = await payment.payer.createPaymentHeaders(required, option);
-    const paid = await retry(headers);
+    let paid: Response;
+    try {
+      paid = await retry(headers);
+    } catch {
+      // The signed request left without an answer: the API may have settled it, so the amount
+      // counts as spent and the call is never retried (no double payment).
+      ledger.commit(reservation);
+      throw new CriptonPaymentError("payment-outcome-unknown", summaries([option]), signals);
+    }
     if (!paid.ok) throw await parseProblem(paid);
     const settleHeader = paid.headers.get("payment-response");
     let receipt: PaymentReceipt | null = null;

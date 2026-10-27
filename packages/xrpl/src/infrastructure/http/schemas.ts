@@ -1,4 +1,4 @@
-// Zod response schemas per OpenAPI path (snapshot 0.19.1), typed against the generated api-types.
+// Zod response schemas per OpenAPI path (snapshot 0.19.2), typed against the generated api-types.
 import { z } from "zod";
 import type {
   AccountLinesResponse,

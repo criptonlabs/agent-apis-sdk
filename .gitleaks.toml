@@ -34,8 +34,8 @@ keywords = ["["]
 
 [[rules]]
 id = "criptonlabs-prepaid-token"
-description = "Criptonlabs prepaid credit token (clc_ prefix)"
-regex = '''\bclc_[A-Za-z0-9_-]{16,}\b'''
+description = "Criptonlabs prepaid credit token: clc_<kid>.<rid>.<rnd>.<mac>, base64url parts"
+regex = '''\bclc_[A-Za-z0-9_-]{1,64}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{16,}'''
 keywords = ["clc_"]
 
 [[rules]]

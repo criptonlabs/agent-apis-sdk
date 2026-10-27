@@ -17,6 +17,8 @@ export interface RouteCall<T> {
 
 const DEFAULT_BASE_URL = "https://api.criptonlabs.com";
 const DEFAULT_TIMEOUT_MS = 10_000;
+/** Floor of the signed retry: the API waits for settlement (~8.5 s measured on testnet). */
+const PAID_RETRY_TIMEOUT_MS = 30_000;
 
 function toNetworkError(error: unknown): CriptonKitError {
   if (error instanceof CriptonKitError) return error;
@@ -60,6 +62,8 @@ export class ApiClient {
       DEFAULT_TIMEOUT_MS;
     const send = (extra: Record<string, string>): Promise<Response> =>
       this.send(url.toString(), timeoutMs, extra);
+    const paidSend = (extra: Record<string, string>): Promise<Response> =>
+      this.send(url.toString(), Math.max(timeoutMs, PAID_RETRY_TIMEOUT_MS), extra);
     const parse = async (response: Response): Promise<T> => {
       let body: unknown;
       try {
@@ -79,7 +83,13 @@ export class ApiClient {
       const response = await send({});
       if (response.ok) return { data: await parse(response), receipt: null };
       if (response.status === 402) {
-        return await handlePaymentRequired(response, this.config.payment, this.ledger, send, parse);
+        return await handlePaymentRequired(
+          response,
+          this.config.payment,
+          this.ledger,
+          paidSend,
+          parse,
+        );
       }
       throw await parseProblem(response);
     } catch (error) {

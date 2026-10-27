@@ -1,4 +1,5 @@
-import { CriptonProblemError } from "../../domain/errors.js";
+import { CriptonProblemError, type PrepaidSignals } from "../../domain/errors.js";
+import { readPrepaidOffer } from "../x402/prepaid-offer.js";
 
 function str(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
@@ -23,15 +24,32 @@ function retryAfter(response: Response): number | undefined {
   return Number(raw.trim());
 }
 
+/** The problem's `error` member and the prepaid offer of its `extensions` member, when valid. */
+export function signalsOf(body: unknown): PrepaidSignals {
+  const record =
+    typeof body === "object" && body !== null ? (body as Record<string, unknown>) : undefined;
+  if (record === undefined) return {};
+  const reason = str(record.error);
+  const prepaidOffer = readPrepaidOffer(record.extensions);
+  return {
+    ...(reason !== undefined ? { reason } : {}),
+    ...(prepaidOffer !== undefined ? { prepaidOffer } : {}),
+  };
+}
+
+/** Body of a response as JSON, or `undefined` when it is not JSON. */
+export async function readJson(response: Response): Promise<unknown> {
+  try {
+    return JSON.parse(await response.text());
+  } catch {
+    return undefined;
+  }
+}
+
 /** Maps a non-2xx response to a CriptonProblemError (RFC 9457 body, else `unexpected-status`). */
 export async function parseProblem(response: Response): Promise<CriptonProblemError> {
   const retryAfterSeconds = retryAfter(response);
-  let body: unknown;
-  try {
-    body = JSON.parse(await response.text());
-  } catch {
-    body = undefined;
-  }
+  const body = await readJson(response);
   const record =
     typeof body === "object" && body !== null ? (body as Record<string, unknown>) : undefined;
   const type = record ? str(record.type) : undefined;
@@ -53,5 +71,6 @@ export async function parseProblem(response: Response): Promise<CriptonProblemEr
     str(record.detail),
     str(record.instance),
     retryAfterSeconds,
+    signalsOf(record),
   );
 }

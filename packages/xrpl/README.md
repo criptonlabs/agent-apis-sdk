@@ -157,16 +157,18 @@ const kit = createXrplAgentKit({
 
 Tool and CLI errors have the shape `{ code, message, ... }` (plus `status`, `retryAfterSeconds` or `details` when relevant).
 
-| Code                                                                                              | Meaning                                                    |
-| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `invalid-input`                                                                                   | Invalid argument or environment variable (`details.field`) |
-| `invalid-response`                                                                                | The API response did not match the expected shape          |
-| `timeout`, `network-error`                                                                        | Request timed out or failed                                |
-| `payment-disabled`, `no-supported-payment-option`, `payment-over-cap`, `payment-budget-exhausted` | Payment is not configured, unsupported or over a limit     |
-| `payment-not-ready`, `payment-readiness-unknown`, `no-path-found`, `fee-over-cap`                 | `prepare-payment` refused (`details.reasons`)              |
-| `slippage-over-limit`                                                                             | `quote-dex` refused above `maxSlippagePct`                 |
-| `missing-peer-dependency`                                                                         | An optional framework package is not installed             |
-| other slugs                                                                                       | RFC 9457 problem returned by the API, with its `status`    |
+| Code                                                                                              | Meaning                                                                                                                        |
+| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `invalid-input`                                                                                   | Invalid argument or environment variable (`details.field`)                                                                     |
+| `invalid-response`                                                                                | The API response did not match the expected shape                                                                              |
+| `timeout`, `network-error`                                                                        | Request timed out or failed                                                                                                    |
+| `payment-disabled`, `no-supported-payment-option`, `payment-over-cap`, `payment-budget-exhausted` | Payment is not configured, unsupported or over a limit                                                                         |
+| `payment-outcome-unknown`                                                                         | The paid retry got no answer; the amount is counted as spent and the call is not retried                                       |
+| `credits-required`                                                                                | The route is paid only with prepaid credits (`details.prepaidOffer`)                                                           |
+| `payment-not-ready`, `payment-readiness-unknown`, `no-path-found`, `fee-over-cap`                 | `prepare-payment` refused (`details.reasons`)                                                                                  |
+| `slippage-over-limit`                                                                             | `quote-dex` refused above `maxSlippagePct`                                                                                     |
+| `missing-peer-dependency`                                                                         | An optional framework package is not installed                                                                                 |
+| other slugs                                                                                       | RFC 9457 problem returned by the API, with its `status` (and `details.reason`, `details.prepaidOffer` when the API sends them) |
 
 ## Security notes
 

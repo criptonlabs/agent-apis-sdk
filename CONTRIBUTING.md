@@ -69,6 +69,8 @@ Conventional commits: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, and so on. Ke
 - `CRIPTON_XRPL_NETWORK=testnet`.
 - `CRIPTON_XRPL_PAYER_SEED`: a testnet seed, taken from the environment and never written to a file.
 
+The payer needs a trust line to the official testnet RLUSD issuer and some testnet RLUSD; the kit pays only official RLUSD. If the Worker's environment sets an own test issuer (`XRPL_TESTNET_ISSUER_OVERRIDE`), start it with a last `--env-file` that clears that variable. The check calls `payment-readiness`, a route paid per call.
+
 ## Reporting security issues
 
 Do not open a public issue. Follow [SECURITY.md](SECURITY.md).

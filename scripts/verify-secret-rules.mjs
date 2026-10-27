@@ -33,6 +33,13 @@ function solanaKeypair() {
   }
 }
 
+// Same grammar as the API: `clc_<kid>.<rid>.<rnd>.<mac>`, short kid, base64url parts.
+function prepaidToken() {
+  const rid = Buffer.from(`xrpl:0:${Wallet.generate().address}`).toString("base64url");
+  const part = () => randomBytes(32).toString("base64url");
+  return ["clc_k1", rid, part(), part()].join(".");
+}
+
 const kp = solanaKeypair();
 const samples = {
   "xrpl-family-seed-ed25519": `payer: ${Wallet.generate(ECDSA.ed25519).seed}\n`,
@@ -40,7 +47,7 @@ const samples = {
   "hex-private-key-near-keyword": `private_key = ${randomBytes(32).toString("hex")}\n`,
   "solana-keypair-base58": `key: ${kp.text}\n`,
   "solana-keypair-json-array": `${JSON.stringify([...kp.bytes])}\n`,
-  "criptonlabs-prepaid-token": `token ${`clc_${randomBytes(24).toString("base64url")}`}\n`,
+  "criptonlabs-prepaid-token": `Authorization: Bearer ${prepaidToken()}\n`,
   "cripton-seed-or-secret-assignment": `${["CRIPTON_XRPL_PAYER", "SEED"].join("_")}=${randomBytes(12).toString("hex")}\n`,
 };
 const clean = { "clean-text-control": "const answer = 42;\nCRIPTON_TIER=free\n" };

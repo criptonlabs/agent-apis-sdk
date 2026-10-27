@@ -1,4 +1,4 @@
-// Generated from the API OpenAPI document 0.19.1 (fetched 2026-10-18): one type per 200 body of /v1/xrpl/*.
+// Generated from the API OpenAPI document 0.19.2 (fetched 2026-10-27; /v1/xrpl/* unchanged since 0.19.1): one type per 200 body of /v1/xrpl/*.
 // Refresh together with tests/fixtures/openapi.json (design D16).
 
 export type FeeResponse = {

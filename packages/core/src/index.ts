@@ -8,7 +8,8 @@ export {
   CriptonValidationError,
   MissingPeerDependencyError,
 } from "./domain/errors.js";
-export type { KitErrorJson } from "./domain/errors.js";
+export type { KitErrorJson, PrepaidSignals } from "./domain/errors.js";
+export type { PrepaidBundle, PrepaidOffer } from "./domain/prepaid-offer.js";
 export type { Meta } from "./domain/meta.js";
 export type { PaymentOption, PaymentOptionSummary } from "./domain/payment-option.js";
 export { ApiClient } from "./infrastructure/http/api-client.js";

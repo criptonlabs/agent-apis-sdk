@@ -43,7 +43,16 @@ Network-specific variables (payer seed and so on) are defined by each kit.
 
 ## Spend limits
 
-Payment is opt-in. Without a payer and `maxPerCall` the client never pays. It refuses a call whose price exceeds `maxPerCall` or would exceed `sessionBudget`. Prices are read from the API at runtime and are never stored in the package.
+Payment is opt-in. Without a payer and `maxPerCall` the client never pays. It refuses a call whose price exceeds `maxPerCall` or would exceed `sessionBudget`. The price compared is the amount the API offers, which is the gross price (VAT included when the API quotes it). Prices are read from the API at runtime and are never stored in the package.
+
+The signed retry waits at least 30 seconds, because the API answers only after settlement. If it fails without an answer (timeout or network error), the payment may have settled: the amount counts as spent, the call is never retried, and the client raises `CriptonPaymentError` with code `payment-outcome-unknown`.
+
+## Prepaid credits signals
+
+The client does not buy or spend prepaid credits, but it reports the API's prepaid answers:
+
+- A route paid only with prepaid credits raises `CriptonPaymentError` with code `credits-required`, whatever the payment configuration; nothing is signed.
+- `CriptonPaymentError` and `CriptonProblemError` carry `prepaidOffer` (bundle version, top-up URL, bundles with id, amount, credited units and approximate calls) when the API offers credits, for example on an exhausted daily free quota (429 `rate-limited`), and `reason` with the problem's `error` member (for example `credits_insufficient`). Both appear in the error JSON `details`.
 
 ## Network-specific code
 

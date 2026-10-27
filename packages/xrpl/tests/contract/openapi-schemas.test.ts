@@ -52,8 +52,8 @@ const FIXTURE_BY_PATH: Record<string, string> = {
 };
 
 describe("OpenAPI snapshot contract", () => {
-  it("snapshot is API 0.19.1", () => {
-    expect(openapi.info.version).toBe("0.19.1");
+  it("snapshot is API 0.19.2", () => {
+    expect(openapi.info.version).toBe("0.19.2");
   });
 
   for (const path of XRPL_ROUTE_PATHS) {
