@@ -4,7 +4,7 @@ import { createCriptonSolanaTools } from "../../../src/interfaces/ai-sdk/tools.j
 import { TOOL_NAMES, kitOver, slotFixture, solanaFake } from "../../support/interface-kit.js";
 
 describe("Solana AI SDK tools", () => {
-  it("exposes exactly the 6 Solana tool names", () => {
+  it("exposes exactly the 7 Solana tool names", () => {
     const map = createCriptonSolanaTools(kitOver(new FakeTransport()));
     expect(Object.keys(map).sort()).toEqual(TOOL_NAMES);
     for (const tool of Object.values(map)) {

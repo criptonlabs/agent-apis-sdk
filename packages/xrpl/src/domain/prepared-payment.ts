@@ -43,7 +43,7 @@ export interface PreparedPayment {
   transaction: UnsignedPayment;
   readiness: ReadinessResponse;
   path: PathsResponse["alternatives"][number] | null;
-  fee: { tier: FeeTier; drops: string; congestionBand: "low" | "medium" | "high" };
+  fee: { tier: FeeTier; drops: string; congestionBand: "low" | "medium" | "high" | (string & {}) };
   meta: Meta;
 }
 

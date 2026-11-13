@@ -17,7 +17,8 @@ describe("decimal amount", () => {
     const client = new ApiClient(descriptor, {
       tier: "pro",
       transport: fake.transport,
-      payment: { payer: reports("0.01452"), maxPerCall: "0.05" },
+      wallet: reports("0.01452"),
+      payment: { maxPerCall: "0.05" },
     });
     const result = await client.request({ route: "fee", schema });
     expect(result.receipt?.amount).toBe("0.01452");
@@ -31,7 +32,8 @@ describe("decimal amount", () => {
     const client = new ApiClient(descriptor, {
       tier: "pro",
       transport: fake.transport,
-      payment: { payer, maxPerCall: "0.01" },
+      wallet: payer,
+      payment: { maxPerCall: "0.01" },
     });
     const error = await client.request({ route: "fee", schema }).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(CriptonPaymentError);
@@ -46,7 +48,8 @@ describe("decimal amount", () => {
     const client = new ApiClient(descriptor, {
       tier: "pro",
       transport: fake.transport,
-      payment: { payer, maxPerCall: "0.05" },
+      wallet: payer,
+      payment: { maxPerCall: "0.05" },
     });
     await client.request({ route: "fee", schema });
     expect("decimalAmount" in payer).toBe(false);

@@ -21,6 +21,7 @@ export const TOOL_NAMES = [
   "xrpl_paths",
   "xrpl_prepare_payment",
   "xrpl_dex_quote",
+  "xrpl_credits_status",
 ].sort();
 
 export function readiness(overrides: Record<string, unknown> = {}): object {

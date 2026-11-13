@@ -27,7 +27,17 @@ describe("Solana CLI", () => {
   it("commands list", () => {
     const commands = solanaCommands(() => createSolanaAgentKit({}));
     expect(commands.map((c) => c.name).sort()).toEqual(
-      ["mcp", "slot", "health", "token", "readiness", "prepare-transfer"].sort(),
+      [
+        "mcp",
+        "slot",
+        "health",
+        "token",
+        "readiness",
+        "prepare-transfer",
+        "topup",
+        "rotate-token",
+        "credits",
+      ].sort(),
     );
   });
 

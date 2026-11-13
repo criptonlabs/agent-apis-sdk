@@ -1,5 +1,6 @@
 import type { PaymentOption } from "@criptonlabs/agent-apis-core";
 import { afterAll, beforeAll, describe, expect, it } from "vite-plus/test";
+import { loadFixture } from "../../../../core/tests/support/credit-fixtures.js";
 import { FakeTransport } from "../../../../core/tests/support/fake-transport.js";
 import { problem } from "../../../../core/tests/support/x402-fixtures.js";
 import { PAY_ASSET_MINTS, SOLANA_CAIP2, createSolanaAgentKit } from "../../../src/index.js";
@@ -59,6 +60,32 @@ describe("Solana kit price lookup and spend", () => {
     expect(result.options).toEqual([option]);
   });
 
+  it("prices reads the price index", async () => {
+    const recorded = loadFixture("price-index");
+    const fake = new FakeTransport().respond(recorded);
+    const kit = createSolanaAgentKit({ transport: fake.transport, tier: "pro" });
+    const index = await kit.prices();
+    expect(fake.requests).toHaveLength(1);
+    const request = fake.requests[0];
+    const url = new URL(request?.url ?? "");
+    expect(request?.method).toBe("GET");
+    expect(url.pathname).toBe("/v1/pro/requirements");
+    expect(url.searchParams.has("resource")).toBe(false);
+    expect(index.paymentsMode).toBe("x402");
+    const routes = recorded.body.routes as { resource: string }[];
+    expect(index.routes.map((entry) => entry.resource)).toEqual(
+      routes.map((route) => route.resource),
+    );
+    expect(index.routes).toContainEqual(
+      expect.objectContaining({
+        resource: "/v1/pro/xrpl/fee",
+        mode: "credits",
+        debit: { EUR: "0.0005", USD: "0.0006" },
+        prices: [],
+      }),
+    );
+  });
+
   it("spent is zero before any paid call", () => {
     expect(createSolanaAgentKit({ transport: new FakeTransport().transport }).spent()).toBe("0");
   });
@@ -70,13 +97,13 @@ describe("Solana kit price lookup and spend", () => {
     const kit = createSolanaAgentKit({
       transport: fake.transport,
       tier: "pro",
-      payment: {
+      wallet: {
         key: throwawayKey().base58,
         network: "devnet",
         asset: "EURC",
         rpcUrl: rpc.url,
-        maxPerCall: "0.05",
       },
+      payment: { maxPerCall: "0.05" },
     });
 
     const slot = await kit.data.latestSlot();

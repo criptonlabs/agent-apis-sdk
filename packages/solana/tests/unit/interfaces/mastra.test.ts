@@ -4,7 +4,7 @@ import { createMastraSolanaTools } from "../../../src/interfaces/mastra/tools.js
 import { TOOL_NAMES, kitOver } from "../../support/interface-kit.js";
 
 describe("Solana Mastra tools", () => {
-  it("exposes exactly the 6 Solana tool names", async () => {
+  it("exposes exactly the 7 Solana tool names", async () => {
     const map = await createMastraSolanaTools(kitOver(new FakeTransport()));
     expect(Object.keys(map).sort()).toEqual(TOOL_NAMES);
   });

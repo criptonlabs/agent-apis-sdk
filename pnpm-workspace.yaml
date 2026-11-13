@@ -7,11 +7,3 @@ allowBuilds: {}
 overrides:
   # @elizaos/core 1.7.2 pins pdfjs-dist ^5 (GHSA high, fixed in >=6.2.108); dev-only optional peer, never shipped
   pdfjs-dist: ^6.2.108
-auditConfig:
-  ignoreGhsas:
-    # GHSA-mrhx-c7xc-m3w5 (zod <4.6.6, high: memory exhaustion on oversized constrained collections).
-    # Our direct zod is 4.6.7 (patched). The vulnerable zod 3.25.76 comes only through @x402/core 2.28.0
-    # (latest, requires zod ^3.24.2; no patched 3.x exists). It validates x402 objects decoded from the
-    # API's PAYMENT-REQUIRED / PAYMENT-RESPONSE headers, which HTTP header limits keep small.
-    # Accepted 2026-10-27. Review by 2026-11-27, or as soon as @x402/core moves to zod >=4.6.6.
-    - GHSA-mrhx-c7xc-m3w5

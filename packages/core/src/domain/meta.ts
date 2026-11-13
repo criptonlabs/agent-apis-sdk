@@ -3,6 +3,6 @@ export interface Meta {
   slot?: number;
   as_of: string;
   age_seconds: number;
-  cache: "hit" | "miss" | "stale";
+  cache: "hit" | "miss" | "stale" | (string & {});
   stale: boolean;
 }

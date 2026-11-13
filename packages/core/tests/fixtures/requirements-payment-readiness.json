@@ -1,0 +1,169 @@
+{
+  "status": 200,
+  "headers": {
+    "content-type": "application/json",
+    "cache-control": "no-store"
+  },
+  "body": {
+    "x402Version": 2,
+    "resource": {
+      "url": "https://api.criptonlabs.com/v1/pro/xrpl/payment-readiness",
+      "description": "Pre-payment check: can this payment from source to destination succeed now?",
+      "mimeType": "application/json"
+    },
+    "accepts": [
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "14520",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "14520",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "DeXterR2kQm8AvRHnNPatWkE46TfAcMeBDjb6FySoAb8"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "14520",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "H97jMcyNsouCSe7sWoysD5nL1BcvpP8DHDzENHZV8svo"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+        "amount": "12100",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+        "amount": "12100",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "DeXterR2kQm8AvRHnNPatWkE46TfAcMeBDjb6FySoAb8"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+        "amount": "12100",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "H97jMcyNsouCSe7sWoysD5nL1BcvpP8DHDzENHZV8svo"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "xrpl:0",
+        "asset": "524C555344000000000000000000000000000000",
+        "amount": "0.01452",
+        "payTo": "rp6huNdpgV7jKTnkiH5ZtmNJn5mezrLtcw",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+          "areFeesSponsored": false,
+          "sourceTag": 804681468,
+          "invoiceId": "x402:/v1/pro/xrpl/payment-readiness"
+        }
+      }
+    ],
+    "extensions": {
+      "bazaar": {
+        "info": {
+          "input": {
+            "type": "http",
+            "method": "GET",
+            "queryParams": {
+              "source": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+              "destination": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+            }
+          },
+          "output": {
+            "type": "json",
+            "example": {
+              "verdict": "not_ready",
+              "reasons": ["destination_tag_required"]
+            }
+          }
+        },
+        "schema": {
+          "type": "object",
+          "properties": {
+            "input": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "http"
+                },
+                "method": {
+                  "enum": ["GET"]
+                },
+                "queryParams": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "string"
+                    },
+                    "destination": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["source", "destination"]
+                }
+              },
+              "required": ["type", "method"]
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "example": {
+                  "type": "object",
+                  "properties": {
+                    "verdict": {
+                      "type": "string"
+                    },
+                    "reasons": {
+                      "type": "array"
+                    }
+                  }
+                }
+              },
+              "required": ["type"]
+            }
+          },
+          "required": ["input"]
+        }
+      }
+    },
+    "payments_mode": "x402"
+  }
+}

@@ -12,7 +12,8 @@ import {
 import { afterAll, beforeAll, describe, expect, it } from "vite-plus/test";
 import { z } from "zod";
 import { FakeTransport } from "../../../../core/tests/support/fake-transport.js";
-import { challenge } from "../../../../core/tests/support/x402-fixtures.js";
+import { challenge, problem } from "../../../../core/tests/support/x402-fixtures.js";
+import { createSolanaAgentKit } from "../../../src/index.js";
 import { createSolanaPayer } from "../../../src/infrastructure/x402/solana-payer.js";
 import {
   FAKE_BLOCKHASH,
@@ -58,6 +59,7 @@ interface DecodedPayment {
   feePayer: string | undefined;
   signers: Record<string, boolean>;
   blockhash: string;
+  version: number | "legacy";
 }
 
 function decodePayment(header: string | undefined): DecodedPayment {
@@ -73,6 +75,7 @@ function decodePayment(header: string | undefined): DecodedPayment {
     feePayer: message.staticAccounts[0],
     signers,
     blockhash: message.lifetimeToken,
+    version: message.version,
   };
 }
 
@@ -190,7 +193,8 @@ describe("createSolanaPayer", () => {
     const client = new ApiClient(descriptor, {
       tier: "pro",
       transport: fake.transport,
-      payment: { payer, maxPerCall: "0.05" },
+      wallet: payer,
+      payment: { maxPerCall: "0.05" },
     });
     await client.request({ route: "transfer-readiness", schema: anyBody });
 
@@ -215,6 +219,22 @@ describe("createSolanaPayer", () => {
     expect(called).not.toContain("sendRawTransaction");
   });
 
+  it("signs a version 0 transaction when the challenge advertises versions 0 and 1", async () => {
+    const payer = createSolanaPayer({
+      key: throwawayKey().base58,
+      network: "devnet",
+      rpcUrl: rpc.url,
+    });
+    const option: PaymentOption = {
+      ...usdcOption(),
+      extra: { feePayer: throwawayAddress(), transactionVersions: [0, 1] },
+    };
+
+    const headers = await payer.createPaymentHeaders(required(option), option);
+
+    expect(decodePayment(headers["PAYMENT-SIGNATURE"]).version).toBe(0);
+  });
+
   it("Configured asset not offered", async () => {
     const payer = createSolanaPayer({
       key: throwawayKey().base58,
@@ -229,7 +249,8 @@ describe("createSolanaPayer", () => {
     const client = new ApiClient(descriptor, {
       tier: "pro",
       transport: fake.transport,
-      payment: { payer, maxPerCall: "0.05" },
+      wallet: payer,
+      payment: { maxPerCall: "0.05" },
     });
     const error = await client
       .request({ route: "transfer-readiness", schema: anyBody })
@@ -237,5 +258,38 @@ describe("createSolanaPayer", () => {
 
     expect(error).toBeInstanceOf(CriptonPaymentError);
     expect(error).toMatchObject({ code: "no-supported-payment-option" });
+  });
+});
+
+describe("Solana kit wallet", () => {
+  it("Solana wallet without per-call payment", async () => {
+    const option = usdcOption();
+    const header = Buffer.from(JSON.stringify(required(option))).toString("base64");
+    const fake = new FakeTransport()
+      .respond(problem("payment-required", 402, { "PAYMENT-REQUIRED": header }))
+      .respond(paid());
+    const kit = createSolanaAgentKit({
+      transport: fake.transport,
+      tier: "pro",
+      wallet: { key: throwawayKey().base58, network: "devnet", rpcUrl: rpc.url },
+    });
+    const before = rpc.methods.length;
+
+    const error = await kit.data
+      .transferReadiness({
+        source: throwawayAddress(),
+        destination: throwawayAddress(),
+        mint: "SOL",
+        amount: "0.001",
+      })
+      .catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(CriptonPaymentError);
+    expect(error).toMatchObject({ code: "payment-disabled" });
+    expect(fake.requests).toHaveLength(1);
+    expect(fake.requests[0]?.url).toContain("/v1/pro/solana/transfer-readiness");
+    expect(fake.requests.some((r) => "payment-signature" in r.headers)).toBe(false);
+    expect(rpc.methods.slice(before)).toEqual([]);
+    expect(kit.spent()).toBe("0");
   });
 });

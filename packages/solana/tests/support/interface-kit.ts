@@ -20,6 +20,7 @@ export const TOOL_NAMES = [
   "solana_token",
   "solana_transfer_readiness",
   "solana_prepare_transfer",
+  "solana_credits_status",
 ].sort();
 
 export { slotFixture, healthFixture };

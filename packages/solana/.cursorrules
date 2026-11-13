@@ -7,8 +7,19 @@ Applies when writing Solana SOL or SPL token transfer code.
 - Check readiness first and surface its blockers; do not send when the verdict is not ready (`transfer-not-ready`).
 - Read `meta.stale` on every response and treat stale data as possibly out of date.
 - Amounts are decimal strings in the asset's units; never use floats. SOL amounts have at most 9 decimals. Addresses and mints are base58 decoding to 32 bytes; `mint` is a mint address or `"SOL"`.
-- Free routes live under `/v1/solana/*`; paid routes under `/v1/pro/solana/*` (mostly prepaid credits; per-call x402 where the API offers it).
+- Free routes live under `/v1/solana/*`; paid routes under `/v1/pro/solana/*` (mostly prepaid credits; per-call x402 where the API offers it). Credit purchases and token rotation use `/v1/pro/credits/*`; the price index is `GET /v1/pro/requirements`.
 - Payment is opt-in: `CRIPTON_TIER=pro`, `CRIPTON_SOLANA_PAYER_KEY` and a mandatory `CRIPTON_MAX_PER_CALL`; `CRIPTON_SESSION_BUDGET`, `CRIPTON_SOLANA_PAY_ASSET`, `CRIPTON_SOLANA_NETWORK` and `CRIPTON_SOLANA_RPC_URL` are optional.
-- Never hardcode prices or amounts to pay; read them from the API (`kit.priceOf(resource)`).
-- Never hardcode, log or commit a secret key; read it from the environment only.
+- Never hardcode prices or amounts to pay; read them from the API (`GET /v1/pro/requirements`, `kit.prices()`, `kit.priceOf(resource)`).
+- Prepaid credits: `CRIPTON_CREDITS_TOKEN` (a `clc_...` token, needs `CRIPTON_TIER=pro`) is sent as `Authorization: Bearer` on paid-tier calls. `CRIPTON_SOLANA_SIWX=on` (needs `CRIPTON_SOLANA_PAYER_KEY`) spends the wallet's credits with a Sign-In-With-X (SIWX) signature when no token is configured. `solana_credits_status` reports whether a token is configured, whether SIWX is on and the last known balance, never the token.
+- Never hardcode, log or commit a secret key or credit token; read it from the environment only.
 - Handle errors by their `{ code, message }` shape.
+
+## Purchase limits
+
+- A top-up needs its own maximum: `maxAmount` in `kit.credits.topup({ bundle, maxAmount })`, `--max` in `agent-apis-solana topup <bundle> --max <amount>`.
+- `maxPerCall` and `sessionBudget` never apply to purchases; they limit per-call payments only.
+- `credits.topupBudget` (`CRIPTON_TOPUP_BUDGET`) caps the total of the process's purchases.
+- A credit token is shown once: store it in `CRIPTON_CREDITS_TOKEN` right away. A Solana wallet recovers its credits with `rotate-token` (`kit.credits.rotateToken()`), which revokes the wallet's earlier tokens.
+- `solana_credits_topup` exists only with tier `pro` (`CRIPTON_TIER=pro`), `CRIPTON_SOLANA_PAYER_KEY`, `CRIPTON_TOPUP_MAX` (per-purchase maximum) and `CRIPTON_TOPUP_BUDGET` (per-process budget); it keeps the bought token in process memory and never shows it to the model. With a credit token already configured, it keeps using that token and does not keep the bought one.
+- A `solana_credits_topup` error `payment-settlement-failed` with `details.eventId` means the API could not confirm the purchase: it may still settle and its amount already counts toward the top-up budget, so do not buy it again. Once the API reconciles the payment, the credits belong to the wallet and `agent-apis-solana rotate-token` gives it a token for them.
+- Its result reports `tokenKept`: true when the bought token became the process's token. When `tokenKept` is false (a token was already configured, or the bought token could not be kept), the purchase still happened: `rotate-token` gives the wallet a token for its credits and revokes the wallet's earlier tokens.

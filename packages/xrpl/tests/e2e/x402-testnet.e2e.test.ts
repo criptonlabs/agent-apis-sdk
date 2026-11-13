@@ -1,36 +1,29 @@
 import { describe, expect, it } from "vite-plus/test";
 import { Wallet } from "xrpl";
 import { RLUSD_ISSUER, createXrplAgentKit } from "../../src/index.js";
+import { guardedBaseUrl, payerSeed } from "./e2e-env.js";
 
-const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]"]);
+describe("XRPL x402 testnet end to end (opt-in)", () => {
+  it("reads the free fee route without credentials or payment", async () => {
+    const baseUrl = guardedBaseUrl();
 
-function requireEnv(name: string): string {
-  const value = process.env[name];
-  if (value === undefined || value === "") throw new Error(`${name} is required`);
-  return value;
-}
+    const kit = createXrplAgentKit({ baseUrl });
+    const response = await kit.data.fee();
 
-describe("XRPL x402 testnet end to end (human-run only)", () => {
+    expect(response.data.meta).toBeDefined();
+    expect(response.receipt).toBeNull();
+  }, 60_000);
+
   // The fee route is credits-only in the 2026-10-18 route table; payment-readiness is paid per call.
   it("pays a pro payment-readiness call on xrpl:1 and records the spend", async () => {
-    const baseUrl = requireEnv("CRIPTON_E2E_BASE_URL");
-    const seed = requireEnv("CRIPTON_XRPL_PAYER_SEED");
-    if (!LOCAL_HOSTS.has(new URL(baseUrl).hostname)) {
-      throw new Error("CRIPTON_E2E_BASE_URL must point to localhost, 127.0.0.1 or [::1]");
-    }
-    if (process.env["CRIPTON_XRPL_NETWORK"] !== "testnet") {
-      throw new Error("CRIPTON_XRPL_NETWORK must be 'testnet'");
-    }
+    const baseUrl = guardedBaseUrl();
+    const seed = payerSeed();
 
     const kit = createXrplAgentKit({
       baseUrl,
       tier: "pro",
-      payment: {
-        seed,
-        network: "testnet",
-        maxPerCall: "0.05",
-        sessionBudget: "0.2",
-      },
+      wallet: { seed, network: "testnet" },
+      payment: { maxPerCall: "0.05", sessionBudget: "0.2" },
     });
     const response = await kit.data.paymentReadiness({
       source: Wallet.fromSeed(seed).classicAddress,

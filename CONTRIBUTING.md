@@ -66,24 +66,39 @@ Conventional commits: `feat:`, `fix:`, `docs:`, `test:`, `chore:`, and so on. Ke
 - Tests generate any key material at runtime; no real or sample secret is committed.
 - The gitleaks hook and CI scan reject XRPL seeds, Solana keys, `clc_` tokens and `CRIPTON_*_SEED=`, `CRIPTON_*_SECRET=` or `CRIPTON_*_KEY=` style assignments. Do not bypass the hook.
 
-## XRPL testnet end-to-end check (human-approved only)
+## End-to-end checks on the test networks
 
-`pnpm -C packages/xrpl test:e2e` is an opt-in check excluded from `pnpm test` and CI. It must be run by a person, never by an automated agent. It needs:
+The suites in `packages/xrpl/tests/e2e/` (XRPL testnet) and `packages/solana/tests/e2e/` (Solana devnet) pay real test-network transactions through a local copy of the API. They are opt-in (`CRIPTON_E2E=1`, set by each package's `test:e2e` script) and stay excluded from `pnpm test` and CI.
 
-- `CRIPTON_E2E_BASE_URL`: URL of a local Worker with the XRPL payment rail on testnet (localhost, 127.0.0.1 or [::1]; other hosts are refused).
-- `CRIPTON_XRPL_NETWORK=testnet`.
-- `CRIPTON_XRPL_PAYER_SEED`: a testnet seed, taken from the environment and never written to a file.
+### Who may run them
 
-The payer needs a trust line to the official testnet RLUSD issuer and some testnet RLUSD; the kit pays only official RLUSD. If the Worker's environment sets an own test issuer (`XRPL_TESTNET_ISSUER_OVERRIDE`), start it with a last `--env-file` that clears that variable. The check calls `payment-readiness`, a route paid per call.
+- People and automated agents may run them on Solana devnet and XRPL testnet (standing rule of the maintainer, 2026-11-12). Never with mainnet keys, seeds or RPC URLs.
+- Funding the payers (testnet RLUSD, devnet USDC and EURC) is done by a person. Agents never request faucet funds.
+- The API repository (`../kryptonianlabs-apis`) is read only: no edit, no install, no dev server and no writing git command inside it. The only git command run on it is `git archive` (with the read-only `git rev-parse` that checks the revision).
 
-## Solana devnet end-to-end check (human-approved only)
+### Local API stack
 
-`pnpm -C packages/solana test:e2e` is opt-in and excluded from `pnpm test` and CI. It pays one `transfer-readiness` call on Solana devnet through a local Worker and needs:
+`scripts/e2e-api-stack.mjs` runs the API's released main revision without touching the API repository. It needs Node 26 and pnpm 11.28.4 installed through Corepack (the script runs that `pnpm.cjs`).
 
-- `CRIPTON_E2E_BASE_URL`: URL of a local Worker with Solana payments on devnet and Solana data configured (localhost, 127.0.0.1 or [::1] only).
-- `CRIPTON_SOLANA_NETWORK=devnet`, optional `CRIPTON_SOLANA_PAY_ASSET` (`USDC` default or `EURC`).
-- `CRIPTON_SOLANA_PAYER_KEY`: a devnet key funded with devnet USDC or EURC, taken from the environment and never written to a file.
-- `CRIPTON_E2E_SOLANA_SOURCE`: the payer's address, used as the readiness source.
+```bash
+node scripts/e2e-api-stack.mjs start                        # API stack on http://localhost:8787
+node scripts/e2e-api-stack.mjs run <xrpl|solana> [filter]   # ECB trigger, then a kit's test:e2e
+```
+
+- `start` (no arguments) exports the API's released main revision with `git archive` into the gitignored `.e2e-api/<rev>/` of this repository (once; a marker file records a complete export), runs `pnpm install --frozen-lockfile` inside the export, writes fresh per-run test secrets and local overrides to `.e2e-api/<rev>/sdk-e2e.env` (mode 0600; `PUBLIC_ORIGIN=http://localhost:8787` and an empty `XRPL_TESTNET_ISSUER_OVERRIDE`), and starts the export's Workers with the API's env files (`.dev.vars`, `.env.solana-data`, `.env.solana-devnet`, `.env.xrpl-testnet`, read in place, never copied) followed by the generated file, passing `--test-scheduled` to every `wrangler dev` (the local stack never fires cron triggers by itself). It refuses to start unless the merged environment has `SOLANA_NETWORK=devnet`, `XRPL_NETWORK=testnet` and no mainnet `SOLANA_RPC_URL`.
+- `run <xrpl|solana> [filter]` needs a gateway answering on `http://localhost:8787`. It first fires the billing Worker's ECB trigger once (`GET http://localhost:8987/__scheduled?cron=15+15+*+*+1-5`, the public ECB daily feed), because the ledger values USD amounts with the latest ECB rate, and stops unless it answers 200. Then it runs `pnpm -C packages/<kit> test:e2e [filter]` with `CRIPTON_E2E_BASE_URL` set to the gateway. The payer secrets are read in memory from the API's env files: for `xrpl`, `XRPL_TESTNET_PAYER_SEED` as `CRIPTON_XRPL_PAYER_SEED` with `CRIPTON_XRPL_NETWORK=testnet`; for `solana`, the 32-byte hex `X402_E2E_CLIENT_SEED` expanded to `CRIPTON_SOLANA_PAYER_KEY`, its address as `CRIPTON_E2E_SOLANA_SOURCE`, and `CRIPTON_SOLANA_NETWORK=devnet`. Set `CRIPTON_SOLANA_PAY_ASSET` (`USDC` default, or `EURC`) in your shell to choose the Solana asset.
+- The script never prints an env value, seed or key, and writes none except the generated test secrets in `sdk-e2e.env`.
+
+### Guards
+
+- Every suite refuses a `CRIPTON_E2E_BASE_URL` other than localhost, 127.0.0.1 or [::1].
+- The XRPL suite requires `CRIPTON_XRPL_NETWORK=testnet` and the Solana suite `CRIPTON_SOLANA_NETWORK=devnet`.
+- The kit pays only the official RLUSD issuer of each network; there is no issuer override.
+
+### Payers and the XRPL testnet reset
+
+- The XRPL payer needs a trust line to the official testnet RLUSD issuer and some testnet RLUSD. The Solana payer needs devnet USDC or EURC.
+- The XRPL testnet resets on 2026-11-25. After the reset, the XRPL suites run only once a person confirms that the payer holds official testnet RLUSD again; the kit keeps refusing any other issuer.
 
 ## Reporting security issues
 

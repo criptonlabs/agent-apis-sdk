@@ -22,7 +22,8 @@ export default defineConfig({
   ssr: { resolve: { conditions: ["@criptonlabs/source", "node", "import", "module", "default"] } },
   resolve: { conditions: ["@criptonlabs/source", "node", "import", "module", "default"] },
   test: {
-    // The testnet end-to-end run is opt-in and human-run only (design Risks, task 11.1).
+    // The testnet end-to-end run is opt-in (`CRIPTON_E2E=1`, CONTRIBUTING.md); its files run one at a time because they share one XRPL payer account (same Sequence otherwise).
+    fileParallelism: process.env["CRIPTON_E2E"] !== "1",
     exclude:
       process.env["CRIPTON_E2E"] === "1"
         ? ["**/node_modules/**"]

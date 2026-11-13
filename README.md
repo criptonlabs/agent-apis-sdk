@@ -18,19 +18,20 @@ Pre-release. The repository is private and nothing is published to npm yet; pack
 
 ## Packages
 
-| Package                          | Purpose                                                                    | Entry points                                                             |
-| -------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `@criptonlabs/agent-apis-core`   | Network-independent core for kit authors: HTTP client, x402 flow, adapters | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`, `./cli`                 |
-| `@criptonlabs/agent-apis-xrpl`   | XRP Ledger kit: 14 tools, payment preparation, DEX quote, CLI              | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`; bin `agent-apis-xrpl`   |
-| `@criptonlabs/agent-apis-solana` | Solana kit: 6 tools, transfer preparation, CLI                             | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`; bin `agent-apis-solana` |
+| Package                          | Purpose                                                                     | Entry points                                                             |
+| -------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `@criptonlabs/agent-apis-core`   | Network-independent core for kit authors: HTTP client, x402 flow, adapters  | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`, `./cli`                 |
+| `@criptonlabs/agent-apis-xrpl`   | XRP Ledger kit: 15 tools, payment preparation, DEX quote, CLI               | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`; bin `agent-apis-xrpl`   |
+| `@criptonlabs/agent-apis-solana` | Solana kit: 7 tools plus an opt-in purchase tool, transfer preparation, CLI | `.`, `./mcp`, `./ai-sdk`, `./mastra`, `./eliza`; bin `agent-apis-solana` |
 
 End users want a network kit (`@criptonlabs/agent-apis-xrpl` or `@criptonlabs/agent-apis-solana`); the core is for people who build kits.
 
 ## Features
 
 - Typed data clients for the `/v1/xrpl/*` and `/v1/solana/*` routes, with the `meta` freshness block on every response.
-- 14 agent tools from one definition list, served over MCP (stdio), Vercel AI SDK, Mastra, ElizaOS and CLI.
+- Agent tools from one definition list per kit, served over MCP (stdio), Vercel AI SDK, Mastra, ElizaOS and CLI.
 - Opt-in pay-per-call with x402, with mandatory per-call and optional session spend limits.
+- Prepaid credits: spend with a credit token (or, on Solana, a Sign-In-With-X wallet signature) and buy them with an explicit, capped top-up.
 - Unsigned payment preparation (readiness check, path, fee) and DEX quotes with a slippage limit.
 - RFC 9457 problems from the API surfaced as typed errors.
 - `SKILL.md` and `.cursorrules` guidance files for coding agents.
@@ -60,16 +61,42 @@ console.log(slot.data.slot, slot.data.meta);
 ## How payment works
 
 - The free tier (`/v1/xrpl/*`, `/v1/solana/*`) needs no configuration or payment.
-- The paid tier (`/v1/pro/xrpl/*`, `/v1/pro/solana/*`) is charged with x402 only when you opt in: RLUSD on the XRP Ledger, or USDC / EURC on Solana. Routes the API sells only for prepaid credits raise `credits-required`.
-- Opt-in requires `CRIPTON_TIER=pro`, the kit's payer key (`CRIPTON_XRPL_PAYER_SEED` or `CRIPTON_SOLANA_PAYER_KEY`) and `CRIPTON_MAX_PER_CALL`. `maxPerCall` is mandatory: without it the client never pays.
+- The paid tier (`/v1/pro/xrpl/*`, `/v1/pro/solana/*`) is charged with x402 only when you opt in: RLUSD on the XRP Ledger, or USDC / EURC on Solana. Routes the API sells only for prepaid credits raise `credits-required` unless the kit holds credits (see [Prepaid credits](#prepaid-credits)).
+- Per-call opt-in requires `CRIPTON_TIER=pro`, the kit's payer key (`CRIPTON_XRPL_PAYER_SEED` or `CRIPTON_SOLANA_PAYER_KEY`) and `CRIPTON_MAX_PER_CALL`. `maxPerCall` is mandatory: without it the client never pays per call.
 - `CRIPTON_SESSION_BUDGET` is an optional cap on the total spent in a session.
-- Prices come from the API at runtime (`GET /v1/pro/requirements`, `kit.priceOf`); the SDK stores none.
+- Prices come from the API at runtime (`GET /v1/pro/requirements`, `kit.prices()`, `kit.priceOf`); the SDK stores none.
 
 See [packages/xrpl/README.md](packages/xrpl/README.md) and [packages/solana/README.md](packages/solana/README.md) for details.
 
+## Prepaid credits
+
+- With `CRIPTON_TIER=pro` and a credit token in `CRIPTON_CREDITS_TOKEN` (in code, `credits: { token }` with the value read from the environment), paid-tier calls carry `Authorization: Bearer` and spend credits instead of paying per call. The token needs tier `pro` and is a secret: keep it in the environment or a secret store, never written in code, prompts, logs or command-line arguments.
+- `kit.credits.lastKnownBalance()` returns the balance per denomination from the API's last credit-paid answer (`null` before one; there is no balance request). The status tools `xrpl_credits_status` and `solana_credits_status` and the CLI `credits` command report it, with whether a token is configured and the process's top-up spend, never the token.
+- Credits are bought only through an explicit top-up (`kit.credits.topup({ bundle, maxAmount })`, the CLI `topup <bundle> --max <amount>` or, on Solana only, the opt-in MCP tool `solana_credits_topup`; see [Purchase limits](#purchase-limits)), paid with the kit wallet: RLUSD on the XRP Ledger, USDC or EURC on Solana. Bundle ids and prices come from the API at runtime. The kit never buys credits on its own.
+
+## Sign-In-With-X (Solana only)
+
+- With `CRIPTON_SOLANA_SIWX=on` (or `credits: { siwx: true }` in code), tier `pro` and `CRIPTON_SOLANA_PAYER_KEY`, the Solana kit answers the API's Sign-In-With-X challenges with a signature of the payer wallet and spends that wallet's credits without a token. A configured credit token always comes first.
+- `agent-apis-solana rotate-token` (`kit.credits.rotateToken()`) issues a new credit token for the wallet with a Sign-In-With-X proof; the API revokes the wallet's earlier tokens. Rotation never debits credits.
+- Sign-In-With-X spending and rotation need the optional peer `@x402/extensions`.
+- The XRPL kit has no Sign-In-With-X and no token rotation.
+
+## Purchase limits
+
+**Purchases have their own limits; the per-call limits never apply to them.**
+
+- A top-up needs its own maximum: `maxAmount` in `kit.credits.topup({ bundle, maxAmount })`, `--max` in the CLI `topup <bundle> --max <amount>`. A bundle priced above it is refused before anything is signed.
+- `maxPerCall` and `sessionBudget` never apply to purchases; they limit per-call payments only. `credits.topupBudget` caps the total of the process's purchases, and a purchase whose answer is lost counts as spent.
+- A credit token is shown once: `kit.credits.topup` (and, on Solana, `kit.credits.rotateToken`) return it, serialized results show `[redacted]`, and the CLI `topup` (and `rotate-token`) print it once. Store it in `CRIPTON_CREDITS_TOKEN` right away.
+- Solana: the MCP tool `solana_credits_topup` exists only with tier `pro`, `CRIPTON_SOLANA_PAYER_KEY`, `CRIPTON_TOPUP_MAX` (its per-purchase maximum) and `CRIPTON_TOPUP_BUDGET` (its per-process budget). It never shows the token to the model and reports `tokenKept`; when `tokenKept` is false the purchase still happened, and `rotate-token` recovers a token for the wallet's credits.
+- XRPL: the kit has no purchase tool and ignores `CRIPTON_TOPUP_MAX` and `CRIPTON_TOPUP_BUDGET`; its purchase limits are `--max` in the CLI, and `maxAmount` with `credits.topupBudget` in code. An XRPL wallet cannot recover a lost credit token.
+
+Details: [Prepaid credits](packages/xrpl/README.md#prepaid-credits) and [Purchase limits](packages/xrpl/README.md#purchase-limits) of the XRPL kit, [Prepaid credits](packages/solana/README.md#prepaid-credits) and [Purchase limits](packages/solana/README.md#purchase-limits) of the Solana kit.
+
 ## Security
 
-- Seeds are read only from the environment. The CLI rejects `--seed`, `--secret` and `--private-key`.
+- Seeds, keys and credit tokens are read only from the environment. The CLI rejects `--seed`, `--secret`, `--private-key`, `--key`, `--payer-key`, `--token`, `--credits-token` and any argument containing `clc_`.
+- No tool result or tool error contains a credit token.
 - gitleaks runs as a fail-closed pre-commit hook (with lint and typecheck; tests, build and exports run in pre-push) and in CI, with extra rules for XRPL seeds, Solana keys and `clc_` tokens.
 - Prepared payments are unsigned; review them before signing elsewhere.
 
@@ -84,7 +111,7 @@ Report vulnerabilities as described in [SECURITY.md](SECURITY.md).
 | `packages/solana` | `@criptonlabs/agent-apis-solana`                    |
 | `tests/exports`   | Built-entry import check for every package          |
 | `tests/fixtures`  | OpenAPI snapshot shared by the kits' contract tests |
-| `scripts/`        | Repository tooling (secret-rule verification)       |
+| `scripts/`        | Secret-rule verification, local e2e API stack       |
 | `.github/`        | CI workflow, issue forms, pull request template     |
 | `.changeset/`     | Pending version changes                             |
 

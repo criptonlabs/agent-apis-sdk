@@ -9,6 +9,14 @@ const ANNOTATIONS = {
   openWorldHint: true,
 } as const;
 
+/** The purchase tool spends funds and each call buys again. */
+const PURCHASE_ANNOTATIONS = {
+  readOnlyHint: false,
+  destructiveHint: false,
+  idempotentHint: false,
+  openWorldHint: true,
+} as const;
+
 const address = (what: string) =>
   z.string().describe(`${what}: a base58 Solana address (32 bytes once decoded).`);
 const transferMint = z
@@ -51,7 +59,74 @@ const transfer = z.object({
   amount: amount("Amount to send in the asset's units"),
 });
 
-export function createSolanaTools(kit: SolanaAgentKit): ToolDefinition<unknown, unknown>[] {
+const purchase = z.object({
+  bundle: z
+    .string()
+    .describe(
+      "Credit bundle id, as listed in the API's prepaid credits offer (details.prepaidOffer.bundles[].id of a credits-required error).",
+    ),
+});
+
+/**
+ * Makes the bought token the kit's token when none is configured; false when one is configured or
+ * the kit refuses it. The refusal is dropped, never raised: the purchase has settled (finding F2).
+ */
+function keepToken(kit: SolanaAgentKit, token: string): boolean {
+  if (kit.credits.hasToken()) return false;
+  try {
+    kit.credits.adoptToken(token);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Buys one credit bundle within the configured per-purchase maximum and the kit's top-up budget,
+ * keeps the bought token in the kit's memory only when none is configured (design D8, D13), and
+ * returns the purchase without the token, with `tokenKept`.
+ */
+function purchaseTool(kit: SolanaAgentKit, maxAmount: string): ToolDefinition<unknown, unknown> {
+  return {
+    name: "solana_credits_topup",
+    description:
+      "Buys one prepaid credit bundle with the configured Solana wallet, paying at most the operator's per-purchase maximum and never more than the process's top-up budget. Each call is a new purchase. The bought credit token is never returned: when no token is configured it is kept in this process for later paid calls; when one is configured, that one stays in use. Returns the bundle, wallet, denomination, balance, lot expiry, pending flag, payment receipt and tokenKept (true when the bought token became this process's token). With tokenKept false the purchase still happened; the CLI rotate-token gives the wallet a token for its credits. A payment-settlement-failed error with details.eventId means the API could not confirm the purchase: it may still settle and its amount already counts toward the top-up budget, so do not buy it again; once the API reconciles the payment, the credits belong to the wallet and the CLI rotate-token gives it a token for them.",
+    inputSchema: purchase,
+    annotations: PURCHASE_ANNOTATIONS,
+    run: async (input) => {
+      const { bundle } = purchase.parse(input);
+      const result = await kit.credits.topup({ bundle, maxAmount });
+      const tokenKept = keepToken(kit, result.token);
+      const { wallet, denomination, balance, lotExpiresAt, pending, receipt } = result;
+      return {
+        bundle: result.bundle,
+        wallet,
+        denomination,
+        balance,
+        lotExpiresAt,
+        pending,
+        receipt,
+        tokenKept,
+      };
+    },
+  };
+}
+
+/**
+ * The 7 Solana tools, plus `solana_credits_topup` only when `options.topup` is given and the kit
+ * has tier pro, a wallet and a top-up budget.
+ */
+export function createSolanaTools(
+  kit: SolanaAgentKit,
+  options?: { topup?: { maxAmount: string } },
+): ToolDefinition<unknown, unknown>[] {
+  const tools = readTools(kit);
+  const topup = options?.topup;
+  if (topup === undefined || !kit.credits.topupReady()) return tools;
+  return [...tools, purchaseTool(kit, topup.maxAmount)];
+}
+
+function readTools(kit: SolanaAgentKit): ToolDefinition<unknown, unknown>[] {
   const { data } = kit;
   return [
     define(
@@ -94,6 +169,17 @@ export function createSolanaTools(kit: SolanaAgentKit): ToolDefinition<unknown, 
       "Builds an unsigned Solana transfer description (instructions, readiness and token account creation cost) after checking readiness. Returns the unsigned transfer description only; it never signs or sends a transaction. Read-only.",
       transfer,
       async (i) => kit.prepareTransfer(i),
+    ),
+    define(
+      "solana_credits_status",
+      "Prepaid credit status of this process: whether a credit token is configured, whether SIWX spending is on, the last known balance per denomination (null before any credit-paid response) and the amount spent on top-ups. Sends no request and never returns the token. Read-only.",
+      empty,
+      async () => ({
+        hasToken: kit.credits.hasToken(),
+        siwxEnabled: kit.credits.siwxEnabled(),
+        balance: kit.credits.lastKnownBalance(),
+        topupSpent: kit.credits.topupSpent(),
+      }),
     ),
   ];
 }

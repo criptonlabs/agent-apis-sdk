@@ -2,6 +2,7 @@ import { describe, expect, it } from "vite-plus/test";
 import { z } from "zod";
 import { CriptonPaymentError, CriptonProblemError } from "../../../src/domain/errors.js";
 import { ApiClient } from "../../../src/infrastructure/http/api-client.js";
+import { SOLANA_MAINNET, loadFixture } from "../../support/credit-fixtures.js";
 import { FakePayer } from "../../support/fake-payer.js";
 import { FakeTransport, type ScriptedResponse } from "../../support/fake-transport.js";
 import { FEE_URL, problem, xrplOption } from "../../support/x402-fixtures.js";
@@ -34,12 +35,16 @@ const expectedOffer = {
 
 const b64 = (value: unknown) => Buffer.from(JSON.stringify(value)).toString("base64");
 
-function prepaidChallenge(accepts: PaymentOption[], error?: string): ScriptedResponse {
+function prepaidChallenge(
+  accepts: PaymentOption[],
+  error?: string,
+  info: Record<string, unknown> = offerInfo,
+): ScriptedResponse {
   const required = {
     x402Version: 2,
     resource: { url: FEE_URL },
     accepts,
-    extensions: { [PREPAID]: { info: offerInfo, schema: { type: "object" } } },
+    extensions: { [PREPAID]: { info, schema: { type: "object" } } },
   };
   const base = problem("payment-required", 402, { "PAYMENT-REQUIRED": b64(required) });
   return {
@@ -57,7 +62,8 @@ describe("prepaid signals", () => {
     const client = new ApiClient(descriptor, {
       tier: "pro",
       transport: fake.transport,
-      payment: { payer, maxPerCall: "1" },
+      wallet: payer,
+      payment: { maxPerCall: "1" },
     });
     const error = await call(client).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(CriptonPaymentError);
@@ -96,7 +102,8 @@ describe("prepaid signals", () => {
     const client = new ApiClient(descriptor, {
       tier: "pro",
       transport: fake.transport,
-      payment: { payer, maxPerCall: "1" },
+      wallet: payer,
+      payment: { maxPerCall: "1" },
     });
     const error = await call(client).catch((e: unknown) => e);
     expect(error).toMatchObject({
@@ -142,6 +149,44 @@ describe("prepaid signals", () => {
     expect((error as CriptonProblemError).toJSON().details).toMatchObject({
       reason: "credits_insufficient",
     });
+  });
+
+  it("Offer assets and activation surfaced", async () => {
+    const fake = new FakeTransport().respond(loadFixture("challenge-fee-credits-only"));
+    const client = new ApiClient(descriptor, { tier: "pro", transport: fake.transport });
+    const error = await call(client).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(CriptonPaymentError);
+    expect(error).toMatchObject({
+      code: "credits-required",
+      prepaidOffer: {
+        assets: {
+          USD: [
+            { asset: "USDC", network: SOLANA_MAINNET },
+            { asset: "RLUSD", network: "xrpl:0" },
+          ],
+        },
+      },
+    });
+    expect((error as CriptonPaymentError).prepaidOffer?.bundles).toContainEqual(
+      expect.objectContaining({ id: "eur-10", activation: "finalized" }),
+    );
+  });
+
+  it("Malformed offer assets left out", async () => {
+    const fake = new FakeTransport().respond(
+      prepaidChallenge([], undefined, { ...offerInfo, assets: "USD" }),
+    );
+    const client = new ApiClient(descriptor, { tier: "pro", transport: fake.transport });
+    const error = await call(client).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(CriptonPaymentError);
+    expect(error).toMatchObject({
+      code: "credits-required",
+      prepaidOffer: {
+        ...expectedOffer,
+        bundles: [{ ...expectedOffer.bundles[0], activation: "confirmed" }],
+      },
+    });
+    expect((error as CriptonPaymentError).prepaidOffer).not.toHaveProperty("assets");
   });
 
   it("Malformed prepaid offer ignored", async () => {

@@ -1,0 +1,695 @@
+{
+  "status": 402,
+  "headers": {
+    "content-type": "application/problem+json",
+    "cache-control": "no-store",
+    "payment-required": "eyJ4NDAyVmVyc2lvbiI6MiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby94cnBsL3BheW1lbnQtcmVhZGluZXNzIiwiZGVzY3JpcHRpb24iOiJQcmUtcGF5bWVudCBjaGVjazogY2FuIHRoaXMgcGF5bWVudCBmcm9tIHNvdXJjZSB0byBkZXN0aW5hdGlvbiBzdWNjZWVkIG5vdz8iLCJtaW1lVHlwZSI6ImFwcGxpY2F0aW9uL2pzb24ifSwiYWNjZXB0cyI6W3sic2NoZW1lIjoiZXhhY3QiLCJuZXR3b3JrIjoic29sYW5hOjVleWt0NFVzRnY4UDhOSmRUUkVwWTF2enFLcVpLdmRwIiwiYXNzZXQiOiJFUGpGV2RkNUF1ZnFTU3FlTTJxTjF4enliYXBDOEc0d0VHR2tad3lURHQxdiIsImFtb3VudCI6IjE0NTIwIiwicGF5VG8iOiJHRUp5U1VpNkxqSHdRV0tEMkJEZzNUaUdLd2hLbUJVN0pKVGpaZmsxUkQ1NCIsIm1heFRpbWVvdXRTZWNvbmRzIjo2MCwiZXh0cmEiOnsiZmVlUGF5ZXIiOiJDak5GVGp2QmhiSkpkMkI1ZVBQTUhSTHgxRUxacGE4ZHdRZ0dMNzI3ZUt3dyJ9fSx7InNjaGVtZSI6ImV4YWN0IiwibmV0d29yayI6InNvbGFuYTo1ZXlrdDRVc0Z2OFA4TkpkVFJFcFkxdnpxS3FaS3ZkcCIsImFzc2V0IjoiRVBqRldkZDVBdWZxU1NxZU0ycU4xeHp5YmFwQzhHNHdFR0drWnd5VER0MXYiLCJhbW91bnQiOiIxNDUyMCIsInBheVRvIjoiR0VKeVNVaTZMakh3UVdLRDJCRGczVGlHS3doS21CVTdKSlRqWmZrMVJENTQiLCJtYXhUaW1lb3V0U2Vjb25kcyI6NjAsImV4dHJhIjp7ImZlZVBheWVyIjoiRGVYdGVyUjJrUW04QXZSSG5OUGF0V2tFNDZUZkFjTWVCRGpiNkZ5U29BYjgifX0seyJzY2hlbWUiOiJleGFjdCIsIm5ldHdvcmsiOiJzb2xhbmE6NWV5a3Q0VXNGdjhQOE5KZFRSRXBZMXZ6cUtxWkt2ZHAiLCJhc3NldCI6IkVQakZXZGQ1QXVmcVNTcWVNMnFOMXh6eWJhcEM4RzR3RUdHa1p3eVREdDF2IiwiYW1vdW50IjoiMTQ1MjAiLCJwYXlUbyI6IkdFSnlTVWk2TGpId1FXS0QyQkRnM1RpR0t3aEttQlU3SkpUalpmazFSRDU0IiwibWF4VGltZW91dFNlY29uZHMiOjYwLCJleHRyYSI6eyJmZWVQYXllciI6Ikg5N2pNY3lOc291Q1NlN3NXb3lzRDVuTDFCY3ZwUDhESER6RU5IWlY4c3ZvIn19LHsic2NoZW1lIjoiZXhhY3QiLCJuZXR3b3JrIjoic29sYW5hOjVleWt0NFVzRnY4UDhOSmRUUkVwWTF2enFLcVpLdmRwIiwiYXNzZXQiOiJIendxYktadzhIeE1ONmJGMnlGWk5yaHQzYzJpWFh6cEtjRnU3dUJFREt0ciIsImFtb3VudCI6IjEyMTAwIiwicGF5VG8iOiJHRUp5U1VpNkxqSHdRV0tEMkJEZzNUaUdLd2hLbUJVN0pKVGpaZmsxUkQ1NCIsIm1heFRpbWVvdXRTZWNvbmRzIjo2MCwiZXh0cmEiOnsiZmVlUGF5ZXIiOiJDak5GVGp2QmhiSkpkMkI1ZVBQTUhSTHgxRUxacGE4ZHdRZ0dMNzI3ZUt3dyJ9fSx7InNjaGVtZSI6ImV4YWN0IiwibmV0d29yayI6InNvbGFuYTo1ZXlrdDRVc0Z2OFA4TkpkVFJFcFkxdnpxS3FaS3ZkcCIsImFzc2V0IjoiSHp3cWJLWnc4SHhNTjZiRjJ5RlpOcmh0M2MyaVhYenBLY0Z1N3VCRURLdHIiLCJhbW91bnQiOiIxMjEwMCIsInBheVRvIjoiR0VKeVNVaTZMakh3UVdLRDJCRGczVGlHS3doS21CVTdKSlRqWmZrMVJENTQiLCJtYXhUaW1lb3V0U2Vjb25kcyI6NjAsImV4dHJhIjp7ImZlZVBheWVyIjoiRGVYdGVyUjJrUW04QXZSSG5OUGF0V2tFNDZUZkFjTWVCRGpiNkZ5U29BYjgifX0seyJzY2hlbWUiOiJleGFjdCIsIm5ldHdvcmsiOiJzb2xhbmE6NWV5a3Q0VXNGdjhQOE5KZFRSRXBZMXZ6cUtxWkt2ZHAiLCJhc3NldCI6Ikh6d3FiS1p3OEh4TU42YkYyeUZaTnJodDNjMmlYWHpwS2NGdTd1QkVES3RyIiwiYW1vdW50IjoiMTIxMDAiLCJwYXlUbyI6IkdFSnlTVWk2TGpId1FXS0QyQkRnM1RpR0t3aEttQlU3SkpUalpmazFSRDU0IiwibWF4VGltZW91dFNlY29uZHMiOjYwLCJleHRyYSI6eyJmZWVQYXllciI6Ikg5N2pNY3lOc291Q1NlN3NXb3lzRDVuTDFCY3ZwUDhESER6RU5IWlY4c3ZvIn19LHsic2NoZW1lIjoiZXhhY3QiLCJuZXR3b3JrIjoieHJwbDowIiwiYXNzZXQiOiI1MjRDNTU1MzQ0MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIiwiYW1vdW50IjoiMC4wMTQ1MiIsInBheVRvIjoicnA2aHVOZHBnVjdqS1Rua2lINVp0bU5KbjVtZXpyTHRjdyIsIm1heFRpbWVvdXRTZWNvbmRzIjo2MCwiZXh0cmEiOnsiaXNzdWVyIjoick14Q0tiRUR3cXI3NlF1aGVTVU1kRUdmNEI5eEo4bTVEZSIsImFyZUZlZXNTcG9uc29yZWQiOmZhbHNlLCJzb3VyY2VUYWciOjgwNDY4MTQ2OCwiaW52b2ljZUlkIjoieDQwMjovdjEvcHJvL3hycGwvcGF5bWVudC1yZWFkaW5lc3MifX1dLCJleHRlbnNpb25zIjp7ImJhemFhciI6eyJpbmZvIjp7ImlucHV0Ijp7InR5cGUiOiJodHRwIiwibWV0aG9kIjoiR0VUIiwicXVlcnlQYXJhbXMiOnsic291cmNlIjoickhiOUNKQVd5QjRyajkxVlJXbjk2RGt1a0c0YndkdHlUaCIsImRlc3RpbmF0aW9uIjoicnZZQWZXajVnaDY3b1Y2ZlczMlp6UDNBdzRFdWJzNTlCIn19LCJvdXRwdXQiOnsidHlwZSI6Impzb24iLCJleGFtcGxlIjp7InZlcmRpY3QiOiJub3RfcmVhZHkiLCJyZWFzb25zIjpbImRlc3RpbmF0aW9uX3RhZ19yZXF1aXJlZCJdfX19LCJzY2hlbWEiOnsidHlwZSI6Im9iamVjdCIsInByb3BlcnRpZXMiOnsiaW5wdXQiOnsidHlwZSI6Im9iamVjdCIsInByb3BlcnRpZXMiOnsidHlwZSI6eyJjb25zdCI6Imh0dHAifSwibWV0aG9kIjp7ImVudW0iOlsiR0VUIl19LCJxdWVyeVBhcmFtcyI6eyJ0eXBlIjoib2JqZWN0IiwicHJvcGVydGllcyI6eyJzb3VyY2UiOnsidHlwZSI6InN0cmluZyJ9LCJkZXN0aW5hdGlvbiI6eyJ0eXBlIjoic3RyaW5nIn19LCJyZXF1aXJlZCI6WyJzb3VyY2UiLCJkZXN0aW5hdGlvbiJdfX0sInJlcXVpcmVkIjpbInR5cGUiLCJtZXRob2QiXX0sIm91dHB1dCI6eyJ0eXBlIjoib2JqZWN0IiwicHJvcGVydGllcyI6eyJ0eXBlIjp7InR5cGUiOiJzdHJpbmcifSwiZXhhbXBsZSI6eyJ0eXBlIjoib2JqZWN0IiwicHJvcGVydGllcyI6eyJ2ZXJkaWN0Ijp7InR5cGUiOiJzdHJpbmcifSwicmVhc29ucyI6eyJ0eXBlIjoiYXJyYXkifX19fSwicmVxdWlyZWQiOlsidHlwZSJdfX0sInJlcXVpcmVkIjpbImlucHV0Il19fSwiY29tLmNyaXB0b25sYWJzL3ByZXBhaWQtY3JlZGl0cyI6eyJpbmZvIjp7ImJ1bmRsZV92ZXJzaW9uIjoiMjAyNi0xMC0yNiIsInRvcHVwX3VybCI6Imh0dHBzOi8vYXBpLmNyaXB0b25sYWJzLmNvbS92MS9wcm8vY3JlZGl0cy97aWR9IiwiYXNzZXRzIjp7IkVVUiI6W3siYXNzZXQiOiJFVVJDIiwibmV0d29yayI6InNvbGFuYTo1ZXlrdDRVc0Z2OFA4TkpkVFJFcFkxdnpxS3FaS3ZkcCJ9XSwiVVNEIjpbeyJhc3NldCI6IlVTREMiLCJuZXR3b3JrIjoic29sYW5hOjVleWt0NFVzRnY4UDhOSmRUUkVwWTF2enFLcVpLdmRwIn0seyJhc3NldCI6IlJMVVNEIiwibmV0d29yayI6InhycGw6MCJ9XX0sImJ1bmRsZXMiOlt7ImlkIjoiZXVyLTEiLCJhbW91bnQiOiIxLjIxIiwiY3JlZGl0ZWRfdW5pdHMiOiIxIiwiYXBwcm94X2NhbGxzIjoxMDAsImFjdGl2YXRpb24iOiJjb25maXJtZWQifSx7ImlkIjoiZXVyLTIiLCJhbW91bnQiOiIyLjQyIiwiY3JlZGl0ZWRfdW5pdHMiOiIyLjIiLCJhcHByb3hfY2FsbHMiOjIyMCwiYWN0aXZhdGlvbiI6ImNvbmZpcm1lZCJ9LHsiaWQiOiJldXItMTAiLCJhbW91bnQiOiIxMi4xMCIsImNyZWRpdGVkX3VuaXRzIjoiMTEuNSIsImFwcHJveF9jYWxscyI6MTE1MCwiYWN0aXZhdGlvbiI6ImZpbmFsaXplZCJ9LHsiaWQiOiJldXItNTAiLCJhbW91bnQiOiI2MC41MCIsImNyZWRpdGVkX3VuaXRzIjoiNjAiLCJhcHByb3hfY2FsbHMiOjYwMDAsImFjdGl2YXRpb24iOiJmaW5hbGl6ZWQifSx7ImlkIjoidXNkLXN0YXJ0ZXIiLCJhbW91bnQiOiIxLjAwIiwiY3JlZGl0ZWRfdW5pdHMiOiIwLjgyIiwiYXBwcm94X2NhbGxzIjo2OCwiYWN0aXZhdGlvbiI6ImNvbmZpcm1lZCJ9LHsiaWQiOiJ1c2QtMSIsImFtb3VudCI6IjEuMjEiLCJjcmVkaXRlZF91bml0cyI6IjEiLCJhcHByb3hfY2FsbHMiOjgzLCJhY3RpdmF0aW9uIjoiY29uZmlybWVkIn0seyJpZCI6InVzZC0yIiwiYW1vdW50IjoiMi40MiIsImNyZWRpdGVkX3VuaXRzIjoiMi4yIiwiYXBwcm94X2NhbGxzIjoxODMsImFjdGl2YXRpb24iOiJjb25maXJtZWQifSx7ImlkIjoidXNkLTEwIiwiYW1vdW50IjoiMTIuMTAiLCJjcmVkaXRlZF91bml0cyI6IjExLjUiLCJhcHByb3hfY2FsbHMiOjk1OCwiYWN0aXZhdGlvbiI6ImZpbmFsaXplZCJ9LHsiaWQiOiJ1c2QtNTAiLCJhbW91bnQiOiI2MC41MCIsImNyZWRpdGVkX3VuaXRzIjoiNjAiLCJhcHByb3hfY2FsbHMiOjUwMDAsImFjdGl2YXRpb24iOiJmaW5hbGl6ZWQifV0sImNsaWVudF9zZXR1cCI6eyJub3RlIjoieDQwMiBjbGllbnRzIGNhcCBwYXltZW50cyBhdCAxIFVTRCBieSBkZWZhdWx0OiB1c2Qtc3RhcnRlciAoMS4wMCBVU0QpIG5lZWRzIG5vIHNldHVwOyBmb3IgbGFyZ2VyIGJ1bmRsZXMgc2V0IHNwZW5kQ29udHJvbHMubWF4QW1vdW50UGVyUGF5bWVudCB0byBhdCBsZWFzdCB0aGUgYnVuZGxlIGFtb3VudCwgYW5kIGxpc3QgRVVSQyBpbiBzcGVuZENvbnRyb2xzLmFsbG93ZWRBc3NldHMuIiwiZ3VpZGUiOiJodHRwczovL2FwaS5jcmlwdG9ubGFicy5jb20vZG9jcy9ndWlkZXMvcGF5bWVudHMubWQjcHJlcGFpZC1jcmVkaXRzIn19LCJzY2hlbWEiOnsidHlwZSI6Im9iamVjdCJ9fSwic2lnbi1pbi13aXRoLXgiOnsiaW5mbyI6eyJkb21haW4iOiJhcGkuY3JpcHRvbmxhYnMuY29tIiwidXJpIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby94cnBsL3BheW1lbnQtcmVhZGluZXNzIiwidmVyc2lvbiI6IjEiLCJub25jZSI6IjZhZjYwMjAwYTNiODUzYmVhOTcyMWJhMmM0ZDY4YmEyIiwiaXNzdWVkQXQiOiIyMDI2LTExLTEyVDE4OjE0OjI0WiIsImV4cGlyYXRpb25UaW1lIjoiMjAyNi0xMS0xMlQxODoxOToyNFoifSwic3VwcG9ydGVkQ2hhaW5zIjpbeyJjaGFpbklkIjoic29sYW5hOjVleWt0NFVzRnY4UDhOSmRUUkVwWTF2enFLcVpLdmRwIiwidHlwZSI6ImVkMjU1MTkiLCJzaWduYXR1cmVTY2hlbWUiOiJzaXdzIn1dLCJzY2hlbWEiOnsiJHNjaGVtYSI6Imh0dHBzOi8vanNvbi1zY2hlbWEub3JnL2RyYWZ0LzIwMjAtMTIvc2NoZW1hIiwidHlwZSI6Im9iamVjdCIsInByb3BlcnRpZXMiOnsiZG9tYWluIjp7InR5cGUiOiJzdHJpbmcifSwiYWRkcmVzcyI6eyJ0eXBlIjoic3RyaW5nIn0sInN0YXRlbWVudCI6eyJ0eXBlIjoic3RyaW5nIn0sInVyaSI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoidXJpIn0sInZlcnNpb24iOnsidHlwZSI6InN0cmluZyJ9LCJjaGFpbklkIjp7InR5cGUiOiJzdHJpbmcifSwidHlwZSI6eyJ0eXBlIjoic3RyaW5nIn0sIm5vbmNlIjp7InR5cGUiOiJzdHJpbmcifSwiaXNzdWVkQXQiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6ImRhdGUtdGltZSJ9LCJleHBpcmF0aW9uVGltZSI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoiZGF0ZS10aW1lIn0sIm5vdEJlZm9yZSI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoiZGF0ZS10aW1lIn0sInJlcXVlc3RJZCI6eyJ0eXBlIjoic3RyaW5nIn0sInJlc291cmNlcyI6eyJ0eXBlIjoiYXJyYXkiLCJpdGVtcyI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoidXJpIn19LCJzaWduYXR1cmUiOnsidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsiZG9tYWluIiwiYWRkcmVzcyIsInVyaSIsInZlcnNpb24iLCJjaGFpbklkIiwidHlwZSIsIm5vbmNlIiwiaXNzdWVkQXQiLCJzaWduYXR1cmUiXX19fX0="
+  },
+  "body": {
+    "x402Version": 2,
+    "resource": {
+      "url": "https://api.criptonlabs.com/v1/pro/xrpl/payment-readiness",
+      "description": "Pre-payment check: can this payment from source to destination succeed now?",
+      "mimeType": "application/json"
+    },
+    "accepts": [
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "14520",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "14520",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "DeXterR2kQm8AvRHnNPatWkE46TfAcMeBDjb6FySoAb8"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "14520",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "H97jMcyNsouCSe7sWoysD5nL1BcvpP8DHDzENHZV8svo"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+        "amount": "12100",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+        "amount": "12100",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "DeXterR2kQm8AvRHnNPatWkE46TfAcMeBDjb6FySoAb8"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+        "amount": "12100",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "H97jMcyNsouCSe7sWoysD5nL1BcvpP8DHDzENHZV8svo"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "xrpl:0",
+        "asset": "524C555344000000000000000000000000000000",
+        "amount": "0.01452",
+        "payTo": "rp6huNdpgV7jKTnkiH5ZtmNJn5mezrLtcw",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+          "areFeesSponsored": false,
+          "sourceTag": 804681468,
+          "invoiceId": "x402:/v1/pro/xrpl/payment-readiness"
+        }
+      }
+    ],
+    "extensions": {
+      "bazaar": {
+        "info": {
+          "input": {
+            "type": "http",
+            "method": "GET",
+            "queryParams": {
+              "source": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+              "destination": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+            }
+          },
+          "output": {
+            "type": "json",
+            "example": {
+              "verdict": "not_ready",
+              "reasons": ["destination_tag_required"]
+            }
+          }
+        },
+        "schema": {
+          "type": "object",
+          "properties": {
+            "input": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "http"
+                },
+                "method": {
+                  "enum": ["GET"]
+                },
+                "queryParams": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "string"
+                    },
+                    "destination": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["source", "destination"]
+                }
+              },
+              "required": ["type", "method"]
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "example": {
+                  "type": "object",
+                  "properties": {
+                    "verdict": {
+                      "type": "string"
+                    },
+                    "reasons": {
+                      "type": "array"
+                    }
+                  }
+                }
+              },
+              "required": ["type"]
+            }
+          },
+          "required": ["input"]
+        }
+      },
+      "com.criptonlabs/prepaid-credits": {
+        "info": {
+          "bundle_version": "2026-10-26",
+          "topup_url": "https://api.criptonlabs.com/v1/pro/credits/{id}",
+          "assets": {
+            "EUR": [
+              {
+                "asset": "EURC",
+                "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"
+              }
+            ],
+            "USD": [
+              {
+                "asset": "USDC",
+                "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"
+              },
+              {
+                "asset": "RLUSD",
+                "network": "xrpl:0"
+              }
+            ]
+          },
+          "bundles": [
+            {
+              "id": "eur-1",
+              "amount": "1.21",
+              "credited_units": "1",
+              "approx_calls": 100,
+              "activation": "confirmed"
+            },
+            {
+              "id": "eur-2",
+              "amount": "2.42",
+              "credited_units": "2.2",
+              "approx_calls": 220,
+              "activation": "confirmed"
+            },
+            {
+              "id": "eur-10",
+              "amount": "12.10",
+              "credited_units": "11.5",
+              "approx_calls": 1150,
+              "activation": "finalized"
+            },
+            {
+              "id": "eur-50",
+              "amount": "60.50",
+              "credited_units": "60",
+              "approx_calls": 6000,
+              "activation": "finalized"
+            },
+            {
+              "id": "usd-starter",
+              "amount": "1.00",
+              "credited_units": "0.82",
+              "approx_calls": 68,
+              "activation": "confirmed"
+            },
+            {
+              "id": "usd-1",
+              "amount": "1.21",
+              "credited_units": "1",
+              "approx_calls": 83,
+              "activation": "confirmed"
+            },
+            {
+              "id": "usd-2",
+              "amount": "2.42",
+              "credited_units": "2.2",
+              "approx_calls": 183,
+              "activation": "confirmed"
+            },
+            {
+              "id": "usd-10",
+              "amount": "12.10",
+              "credited_units": "11.5",
+              "approx_calls": 958,
+              "activation": "finalized"
+            },
+            {
+              "id": "usd-50",
+              "amount": "60.50",
+              "credited_units": "60",
+              "approx_calls": 5000,
+              "activation": "finalized"
+            }
+          ],
+          "client_setup": {
+            "note": "x402 clients cap payments at 1 USD by default: usd-starter (1.00 USD) needs no setup; for larger bundles set spendControls.maxAmountPerPayment to at least the bundle amount, and list EURC in spendControls.allowedAssets.",
+            "guide": "https://api.criptonlabs.com/docs/guides/payments.md#prepaid-credits"
+          }
+        },
+        "schema": {
+          "type": "object"
+        }
+      },
+      "sign-in-with-x": {
+        "info": {
+          "domain": "api.criptonlabs.com",
+          "uri": "https://api.criptonlabs.com/v1/pro/xrpl/payment-readiness",
+          "version": "1",
+          "nonce": "6af60200a3b853bea9721ba2c4d68ba2",
+          "issuedAt": "2026-11-12T18:14:24Z",
+          "expirationTime": "2026-11-12T18:19:24Z"
+        },
+        "supportedChains": [
+          {
+            "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+            "type": "ed25519",
+            "signatureScheme": "siws"
+          }
+        ],
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "domain": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "version": {
+              "type": "string"
+            },
+            "chainId": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "nonce": {
+              "type": "string"
+            },
+            "issuedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expirationTime": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "notBefore": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "requestId": {
+              "type": "string"
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "signature": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain",
+            "address",
+            "uri",
+            "version",
+            "chainId",
+            "type",
+            "nonce",
+            "issuedAt",
+            "signature"
+          ]
+        }
+      }
+    },
+    "type": "https://api.criptonlabs.com/errors/payment-required.md",
+    "title": "Payment Required",
+    "status": 402,
+    "detail": "A valid payment is required. Sign one of the accepted payment options and retry.",
+    "instance": "/v1/pro/xrpl/payment-readiness"
+  },
+  "paymentRequired": {
+    "x402Version": 2,
+    "resource": {
+      "url": "https://api.criptonlabs.com/v1/pro/xrpl/payment-readiness",
+      "description": "Pre-payment check: can this payment from source to destination succeed now?",
+      "mimeType": "application/json"
+    },
+    "accepts": [
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "14520",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "14520",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "DeXterR2kQm8AvRHnNPatWkE46TfAcMeBDjb6FySoAb8"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "14520",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "H97jMcyNsouCSe7sWoysD5nL1BcvpP8DHDzENHZV8svo"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+        "amount": "12100",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+        "amount": "12100",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "DeXterR2kQm8AvRHnNPatWkE46TfAcMeBDjb6FySoAb8"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+        "amount": "12100",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "H97jMcyNsouCSe7sWoysD5nL1BcvpP8DHDzENHZV8svo"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "xrpl:0",
+        "asset": "524C555344000000000000000000000000000000",
+        "amount": "0.01452",
+        "payTo": "rp6huNdpgV7jKTnkiH5ZtmNJn5mezrLtcw",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+          "areFeesSponsored": false,
+          "sourceTag": 804681468,
+          "invoiceId": "x402:/v1/pro/xrpl/payment-readiness"
+        }
+      }
+    ],
+    "extensions": {
+      "bazaar": {
+        "info": {
+          "input": {
+            "type": "http",
+            "method": "GET",
+            "queryParams": {
+              "source": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+              "destination": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+            }
+          },
+          "output": {
+            "type": "json",
+            "example": {
+              "verdict": "not_ready",
+              "reasons": ["destination_tag_required"]
+            }
+          }
+        },
+        "schema": {
+          "type": "object",
+          "properties": {
+            "input": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "const": "http"
+                },
+                "method": {
+                  "enum": ["GET"]
+                },
+                "queryParams": {
+                  "type": "object",
+                  "properties": {
+                    "source": {
+                      "type": "string"
+                    },
+                    "destination": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["source", "destination"]
+                }
+              },
+              "required": ["type", "method"]
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "example": {
+                  "type": "object",
+                  "properties": {
+                    "verdict": {
+                      "type": "string"
+                    },
+                    "reasons": {
+                      "type": "array"
+                    }
+                  }
+                }
+              },
+              "required": ["type"]
+            }
+          },
+          "required": ["input"]
+        }
+      },
+      "com.criptonlabs/prepaid-credits": {
+        "info": {
+          "bundle_version": "2026-10-26",
+          "topup_url": "https://api.criptonlabs.com/v1/pro/credits/{id}",
+          "assets": {
+            "EUR": [
+              {
+                "asset": "EURC",
+                "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"
+              }
+            ],
+            "USD": [
+              {
+                "asset": "USDC",
+                "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"
+              },
+              {
+                "asset": "RLUSD",
+                "network": "xrpl:0"
+              }
+            ]
+          },
+          "bundles": [
+            {
+              "id": "eur-1",
+              "amount": "1.21",
+              "credited_units": "1",
+              "approx_calls": 100,
+              "activation": "confirmed"
+            },
+            {
+              "id": "eur-2",
+              "amount": "2.42",
+              "credited_units": "2.2",
+              "approx_calls": 220,
+              "activation": "confirmed"
+            },
+            {
+              "id": "eur-10",
+              "amount": "12.10",
+              "credited_units": "11.5",
+              "approx_calls": 1150,
+              "activation": "finalized"
+            },
+            {
+              "id": "eur-50",
+              "amount": "60.50",
+              "credited_units": "60",
+              "approx_calls": 6000,
+              "activation": "finalized"
+            },
+            {
+              "id": "usd-starter",
+              "amount": "1.00",
+              "credited_units": "0.82",
+              "approx_calls": 68,
+              "activation": "confirmed"
+            },
+            {
+              "id": "usd-1",
+              "amount": "1.21",
+              "credited_units": "1",
+              "approx_calls": 83,
+              "activation": "confirmed"
+            },
+            {
+              "id": "usd-2",
+              "amount": "2.42",
+              "credited_units": "2.2",
+              "approx_calls": 183,
+              "activation": "confirmed"
+            },
+            {
+              "id": "usd-10",
+              "amount": "12.10",
+              "credited_units": "11.5",
+              "approx_calls": 958,
+              "activation": "finalized"
+            },
+            {
+              "id": "usd-50",
+              "amount": "60.50",
+              "credited_units": "60",
+              "approx_calls": 5000,
+              "activation": "finalized"
+            }
+          ],
+          "client_setup": {
+            "note": "x402 clients cap payments at 1 USD by default: usd-starter (1.00 USD) needs no setup; for larger bundles set spendControls.maxAmountPerPayment to at least the bundle amount, and list EURC in spendControls.allowedAssets.",
+            "guide": "https://api.criptonlabs.com/docs/guides/payments.md#prepaid-credits"
+          }
+        },
+        "schema": {
+          "type": "object"
+        }
+      },
+      "sign-in-with-x": {
+        "info": {
+          "domain": "api.criptonlabs.com",
+          "uri": "https://api.criptonlabs.com/v1/pro/xrpl/payment-readiness",
+          "version": "1",
+          "nonce": "6af60200a3b853bea9721ba2c4d68ba2",
+          "issuedAt": "2026-11-12T18:14:24Z",
+          "expirationTime": "2026-11-12T18:19:24Z"
+        },
+        "supportedChains": [
+          {
+            "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+            "type": "ed25519",
+            "signatureScheme": "siws"
+          }
+        ],
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "domain": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "version": {
+              "type": "string"
+            },
+            "chainId": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "nonce": {
+              "type": "string"
+            },
+            "issuedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expirationTime": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "notBefore": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "requestId": {
+              "type": "string"
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "signature": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain",
+            "address",
+            "uri",
+            "version",
+            "chainId",
+            "type",
+            "nonce",
+            "issuedAt",
+            "signature"
+          ]
+        }
+      }
+    }
+  }
+}

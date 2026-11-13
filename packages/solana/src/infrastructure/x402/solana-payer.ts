@@ -44,10 +44,11 @@ async function createClients(
   rpcUrl: string | undefined,
 ): Promise<PaymentClients> {
   const signer = await signerFrom(bytes);
-  const scheme = new ExactSvmScheme(
-    toClientSvmSigner(signer),
-    rpcUrl !== undefined ? { rpcUrl } : undefined,
-  );
+  // Version 0 whatever the 402 advertises: the API advertises none today; version 1 is a later change.
+  const scheme = new ExactSvmScheme(toClientSvmSigner(signer), {
+    transactionVersions: [0],
+    ...(rpcUrl !== undefined ? { rpcUrl } : {}),
+  });
   // Spend limits belong to the kit core (maxPerCall, sessionBudget): x402Client's own
   // default cap and asset allow-list are disabled so they cannot alter the selected option.
   const client = new x402Client().register(caip2, scheme).setSpendControls(false);

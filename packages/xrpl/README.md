@@ -33,7 +33,7 @@ const prepared = await kit.preparePayment({
 // `prepared` holds an unsigned Payment; the kit never signs or submits it.
 ```
 
-Other methods: `kit.data.*` (one per `/v1/xrpl/*` route), `kit.dexQuote`, `kit.priceOf(resource)` and `kit.spent()`.
+Other methods: `kit.data.*` (one per `/v1/xrpl/*` route), `kit.dexQuote`, `kit.priceOf(resource)`, `kit.prices()` (the price index), `kit.spent()` and `kit.credits` (prepaid credits, see below).
 
 ## Configuration
 
@@ -46,8 +46,11 @@ Other methods: `kit.data.*` (one per `/v1/xrpl/*` route), `kit.dexQuote`, `kit.p
 | `CRIPTON_XRPL_PAYER_SEED` | unset                         | XRPL seed that signs x402 payments. Environment only.  |
 | `CRIPTON_XRPL_NETWORK`    | `mainnet`                     | `mainnet` or `testnet`.                                |
 | `CRIPTON_XRPL_WS_URL`     | unset                         | Optional XRPL WebSocket URL used while paying.         |
+| `CRIPTON_CREDITS_TOKEN`   | unset                         | Prepaid credit token (`clc_...`). Needs tier `pro`.    |
+| `CRIPTON_TOPUP_BUDGET`    | unset                         | Solana only; the XRPL kit ignores it.                  |
+| `CRIPTON_TOPUP_MAX`       | unset                         | Solana only; the XRPL kit ignores it.                  |
 
-Payment is enabled only when both `CRIPTON_XRPL_PAYER_SEED` and `CRIPTON_MAX_PER_CALL` are set. An invalid value fails with an `invalid-input` error that names the variable, never its value.
+Payment is enabled only when both `CRIPTON_XRPL_PAYER_SEED` and `CRIPTON_MAX_PER_CALL` are set. `CRIPTON_TOPUP_MAX` and `CRIPTON_TOPUP_BUDGET` are Solana settings (the per-purchase maximum of `solana_credits_topup` and the cap on a process's Solana top-ups) and the XRPL kit ignores them; the core still checks that they are set together or not at all. The XRPL purchase limits are `--max` in the CLI, and `maxAmount` with `credits.topupBudget` in code. An invalid value fails with an `invalid-input` error that names the variable, never its value.
 
 ## Tools
 
@@ -69,6 +72,7 @@ Assets are written `"XRP"` or `"<currency>.<issuer>"`; amounts are decimal strin
 | `xrpl_paths`                | Multi-hop payment paths with the source amount needed (can take up to about 20 s)            | `source`, `destination`, `asset`, `amount`, `sendMaxAsset?`, `sendMax?`, `sourceAssets?`                                          |
 | `xrpl_prepare_payment`      | Unsigned `Payment` after readiness check, path search and fee choice; never signs or submits | `source`, `destination`, `asset`, `amount`, `destinationTag?`, `sourceAsset?`, `sendMaxTolerancePct?`, `feeTier?`, `maxFeeDrops?` |
 | `xrpl_dex_quote`            | Filled amount, average price, slippage and best venue; refuses above the slippage limit      | `base`, `quote`, `amount`, `depth?`, `maxSlippagePct?`                                                                            |
+| `xrpl_credits_status`       | Whether a credit token is configured, last known balance, top-up spend; no request, no token | none                                                                                                                              |
 
 `depth` is 10, 50, 100 or 200. `sendMaxTolerancePct` is required for cross-currency payments.
 
@@ -78,16 +82,19 @@ The `limit` of `xrpl_account_lines` is an integer from 10 to 400 and the `limit`
 
 `agent-apis-xrpl <command> [options]`. Add `--json` for compact JSON output (errors also go to stdout as JSON). Secrets are rejected as arguments.
 
-| Command                                                                                                                     | Purpose                    |
-| --------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `mcp`                                                                                                                       | Start the stdio MCP server |
-| `fee`                                                                                                                       | Fee tiers and congestion   |
-| `account <address>`                                                                                                         | Account summary            |
-| `token <asset>`                                                                                                             | Issued token data          |
-| `readiness --from --to [--asset --amount --destination-tag]`                                                                | Payment readiness          |
-| `prepare-payment --from --to --asset --amount [--destination-tag --source-asset --send-max-tolerance --fee-tier --max-fee]` | Unsigned payment           |
-| `quote-dex --base --quote --amount [--depth --max-slippage]`                                                                | DEX quote                  |
+| Command                                                                                                                     | Purpose                     |
+| --------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| `mcp`                                                                                                                       | Start the stdio MCP server  |
+| `fee`                                                                                                                       | Fee tiers and congestion    |
+| `account <address>`                                                                                                         | Account summary             |
+| `token <asset>`                                                                                                             | Issued token data           |
+| `readiness --from --to [--asset --amount --destination-tag]`                                                                | Payment readiness           |
+| `prepare-payment --from --to --asset --amount [--destination-tag --source-asset --send-max-tolerance --fee-tier --max-fee]` | Unsigned payment            |
+| `quote-dex --base --quote --amount [--depth --max-slippage]`                                                                | DEX quote                   |
+| `topup <bundle> --max <amount>`                                                                                             | Buy a prepaid credit bundle |
+| `credits`                                                                                                                   | Credit status               |
 
+`topup` prints the new credit token once on stdout and a notice on stderr to store it in `CRIPTON_CREDITS_TOKEN`. `<command> --help` prints a command's help without reading the environment.
 Exit codes:
 
 | Code | Meaning                                                                          |
@@ -113,7 +120,7 @@ Exit codes:
 }
 ```
 
-For the paid tier add `CRIPTON_MAX_PER_CALL`, `CRIPTON_XRPL_PAYER_SEED` (and optionally `CRIPTON_SESSION_BUDGET`) to `env`, using a secret store rather than a committed file, and set `CRIPTON_TIER` to `pro`.
+For the paid tier add `CRIPTON_MAX_PER_CALL`, `CRIPTON_XRPL_PAYER_SEED` (and optionally `CRIPTON_SESSION_BUDGET`) or `CRIPTON_CREDITS_TOKEN` to `env`, using a secret store rather than a committed file, and set `CRIPTON_TIER` to `pro`.
 
 ## Frameworks
 
@@ -147,13 +154,40 @@ Programmatic equivalent, with the seed taken from the environment:
 ```ts
 const kit = createXrplAgentKit({
   tier: "pro",
+  wallet: { seed: process.env.CRIPTON_XRPL_PAYER_SEED! },
   payment: {
-    seed: process.env.CRIPTON_XRPL_PAYER_SEED!,
     maxPerCall: process.env.CRIPTON_MAX_PER_CALL!,
     sessionBudget: process.env.CRIPTON_SESSION_BUDGET,
   },
 });
 ```
+
+## Prepaid credits
+
+- With `CRIPTON_TIER=pro` and a credit token (`CRIPTON_CREDITS_TOKEN`; in code, `credits: { token }` with the value read from the environment), paid-tier calls carry `Authorization: Bearer` and spend credits. The token is a secret: keep it in the environment or a secret store, never written in code, prompts, logs or command-line arguments (the CLI refuses it as an argument).
+- `kit.credits.lastKnownBalance()` returns the balance per denomination from the API's last credit-paid answer (`null` before one), `kit.credits.hasToken()` whether a token is configured, `kit.credits.topupSpent()` the amount spent on top-ups by this process. `xrpl_credits_status` and the CLI `credits` command report the same three values; no tool result or error contains the token.
+- Credit purchases use `POST /v1/pro/credits/{bundle}`, paid in RLUSD with the wallet; bundle ids and prices come from the API's credits offer at run time.
+
+```ts
+const kit = createXrplAgentKit({
+  tier: "pro",
+  wallet: { seed: process.env.CRIPTON_XRPL_PAYER_SEED! },
+  credits: { topupBudget: "<your-topup-budget>" },
+});
+
+const bought = await kit.credits.topup({ bundle: "<bundle-id>", maxAmount: "<max-amount>" });
+// bought.token is shown only here: store it in CRIPTON_CREDITS_TOKEN right away.
+```
+
+## Purchase limits
+
+- A top-up needs its own maximum: `maxAmount` in `kit.credits.topup({ bundle, maxAmount })`, `--max` in `agent-apis-xrpl topup <bundle> --max <amount>`. A bundle priced above it is refused before anything is signed.
+- `maxPerCall` and `sessionBudget` never apply to purchases; they limit per-call payments only.
+- `credits.topupBudget`, set in code, caps the total of the process's purchases. A purchase whose answer is lost counts as spent.
+- `CRIPTON_TOPUP_MAX` and `CRIPTON_TOPUP_BUDGET` are Solana settings (the per-purchase maximum of `solana_credits_topup` and the cap on a process's Solana top-ups); the XRPL kit ignores them (the core still checks that they are set together or not at all). The XRPL purchase limits are `--max` in the CLI, and `maxAmount` with `credits.topupBudget` in code.
+- A credit token is shown once: `kit.credits.topup` returns it (serialized results show `[redacted]`) and the CLI `topup` prints it once. Store it in `CRIPTON_CREDITS_TOKEN` right away. An XRPL wallet cannot recover a lost credit token (there is no token rotation on XRPL).
+- When the API cannot confirm a purchase's settlement it answers `payment-settlement-failed` with a provisional token; the CLI prints it once, and it becomes valid only if the payment is reconciled.
+- No tool buys credits in the XRPL kit. Top-ups happen only through the programmatic `kit.credits.topup` and the CLI `topup` command.
 
 ## Errors
 
@@ -174,7 +208,7 @@ Tool and CLI errors have the shape `{ code, message, ... }` (plus `status`, `ret
 
 ## Security notes
 
-- Provide the seed only through the environment; never in code, prompts, logs or command-line arguments.
+- Provide the seed and the credit token only through the environment; never in code, prompts, logs or command-line arguments.
 - `xrpl_prepare_payment` output is unsigned; review it before any signing happens elsewhere.
 - Use a dedicated, low-balance payer wallet and set a small `CRIPTON_MAX_PER_CALL`.
 - Report vulnerabilities through the repository `SECURITY.md`.

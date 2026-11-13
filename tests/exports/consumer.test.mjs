@@ -14,7 +14,7 @@ const ENTRIES = {
 };
 
 const NAMED = {
-  "core/index": ["ApiClient", "CriptonKitError", "assertDecimal", "loadPeer"],
+  "core/index": ["ApiClient", "CriptonKitError", "assertDecimal", "codeList", "loadPeer"],
   "xrpl/index": ["createXrplAgentKit", "PaymentNotReadyError"],
   "xrpl/mcp": ["createXrplMcpServer", "startXrplMcpServer"],
   "xrpl/ai-sdk": ["createCriptonXrplTools"],

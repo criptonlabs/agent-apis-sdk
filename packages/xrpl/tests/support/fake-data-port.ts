@@ -34,7 +34,12 @@ export class FakeDataPort {
         if (!this.scripted.has(operation)) {
           return Promise.reject(new Error(`fake-data-port: no scripted answer for ${operation}`));
         }
-        return Promise.resolve({ data: this.scripted.get(operation), receipt: null });
+        return Promise.resolve({
+          data: this.scripted.get(operation),
+          receipt: null,
+          credits: null,
+          replayed: false,
+        });
       };
     },
   });

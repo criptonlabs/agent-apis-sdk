@@ -1,7 +1,15 @@
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { afterEach, describe, expect, it } from "vite-plus/test";
+import {
+  creditToken,
+  expectTokenAbsent,
+  loadFixture,
+  withHeaders,
+} from "../../../../core/tests/support/credit-fixtures.js";
+import { FakeTransport } from "../../../../core/tests/support/fake-transport.js";
 import { createXrplMcpServer } from "../../../src/interfaces/mcp/server.js";
-import type { XrplAgentKit } from "../../../src/index.js";
+import { createXrplAgentKit, type XrplAgentKit } from "../../../src/index.js";
+import { readXrplEnv } from "../../../src/infrastructure/config/xrpl-env.js";
 import {
   DESTINATION,
   SOURCE,
@@ -40,6 +48,45 @@ describe("XRPL MCP server", () => {
       expect(tool.inputSchema).toBeDefined();
       expect(tool.inputSchema.type).toBe("object");
     }
+  });
+
+  it("Purchase caps set for the XRPL kit", async () => {
+    const env = { CRIPTON_TOPUP_MAX: "1.21", CRIPTON_TOPUP_BUDGET: "5" };
+    const kit = createXrplAgentKit({
+      ...readXrplEnv(env),
+      transport: new FakeTransport().transport,
+    });
+    const client = await connect(kit);
+    const { tools } = await client.listTools();
+    const names = tools.map((t) => t.name).sort();
+    expect(names).toEqual(TOOL_NAMES);
+    expect(names.filter((name) => /topup|purchase|buy/i.test(name))).toEqual([]);
+  });
+
+  it("Credit status after a debit", async () => {
+    const token = creditToken();
+    const fake = new FakeTransport().respond(
+      withHeaders(loadFixture("credit-paid-fee"), {
+        "x-credits-remaining": "EUR=0;USD=0.8194",
+      }),
+    );
+    const kit = createXrplAgentKit({ transport: fake.transport, tier: "pro", credits: { token } });
+    await kit.data.fee();
+    expect(fake.requests).toHaveLength(1);
+
+    const client = await connect(kit);
+    const result = await client.callTool({ name: "xrpl_credits_status", arguments: {} });
+
+    expect(result.isError).not.toBe(true);
+    const content = result.content as Array<{ type: string; text: string }>;
+    const text = content[0]?.text ?? "";
+    expect(JSON.parse(text)).toEqual({
+      hasToken: true,
+      balance: { EUR: "0", USD: "0.8194" },
+      topupSpent: "0",
+    });
+    expectTokenAbsent([result, text], token);
+    expect(fake.requests, "the status call sends no HTTP request").toHaveLength(1);
   });
 
   it("Prepare tool annotations", async () => {

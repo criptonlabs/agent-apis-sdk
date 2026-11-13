@@ -16,8 +16,8 @@ export interface DexQuote {
   filled: string;
   partial: boolean;
   insufficientLiquidity: boolean;
-  bestVenue: "clob" | "amm" | null;
-  ammStatus: "ok" | "stale" | "no_pool" | "unavailable";
+  bestVenue: "clob" | "amm" | (string & {}) | null;
+  ammStatus: "ok" | "stale" | "no_pool" | "unavailable" | (string & {});
   avgPrice: string | null;
   slippagePct: string | null;
   venues: { clob: SlippageResponse["venues"]["clob"]; amm: SlippageResponse["venues"]["amm"] };

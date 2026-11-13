@@ -1,0 +1,199 @@
+{
+  "status": 200,
+  "headers": {
+    "content-type": "application/json",
+    "cache-control": "no-store"
+  },
+  "body": {
+    "x402Version": 2,
+    "resource": {
+      "url": "https://api.criptonlabs.com/v1/pro/xrpl/fee",
+      "description": "Current XRPL fee tiers in drops with a congestion score.",
+      "mimeType": "application/json"
+    },
+    "accepts": [],
+    "extensions": {
+      "com.criptonlabs/prepaid-credits": {
+        "info": {
+          "bundle_version": "2026-10-26",
+          "topup_url": "https://api.criptonlabs.com/v1/pro/credits/{id}",
+          "assets": {
+            "EUR": [
+              {
+                "asset": "EURC",
+                "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"
+              }
+            ],
+            "USD": [
+              {
+                "asset": "USDC",
+                "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"
+              },
+              {
+                "asset": "RLUSD",
+                "network": "xrpl:0"
+              }
+            ]
+          },
+          "bundles": [
+            {
+              "id": "eur-1",
+              "amount": "1.21",
+              "credited_units": "1",
+              "approx_calls": 2000,
+              "activation": "confirmed"
+            },
+            {
+              "id": "eur-2",
+              "amount": "2.42",
+              "credited_units": "2.2",
+              "approx_calls": 4400,
+              "activation": "confirmed"
+            },
+            {
+              "id": "eur-10",
+              "amount": "12.10",
+              "credited_units": "11.5",
+              "approx_calls": 23000,
+              "activation": "finalized"
+            },
+            {
+              "id": "eur-50",
+              "amount": "60.50",
+              "credited_units": "60",
+              "approx_calls": 120000,
+              "activation": "finalized"
+            },
+            {
+              "id": "usd-starter",
+              "amount": "1.00",
+              "credited_units": "0.82",
+              "approx_calls": 1366,
+              "activation": "confirmed"
+            },
+            {
+              "id": "usd-1",
+              "amount": "1.21",
+              "credited_units": "1",
+              "approx_calls": 1666,
+              "activation": "confirmed"
+            },
+            {
+              "id": "usd-2",
+              "amount": "2.42",
+              "credited_units": "2.2",
+              "approx_calls": 3666,
+              "activation": "confirmed"
+            },
+            {
+              "id": "usd-10",
+              "amount": "12.10",
+              "credited_units": "11.5",
+              "approx_calls": 19166,
+              "activation": "finalized"
+            },
+            {
+              "id": "usd-50",
+              "amount": "60.50",
+              "credited_units": "60",
+              "approx_calls": 100000,
+              "activation": "finalized"
+            }
+          ],
+          "client_setup": {
+            "note": "x402 clients cap payments at 1 USD by default: usd-starter (1.00 USD) needs no setup; for larger bundles set spendControls.maxAmountPerPayment to at least the bundle amount, and list EURC in spendControls.allowedAssets.",
+            "guide": "https://api.criptonlabs.com/docs/guides/payments.md#prepaid-credits"
+          }
+        },
+        "schema": {
+          "type": "object"
+        }
+      },
+      "sign-in-with-x": {
+        "info": {
+          "domain": "api.criptonlabs.com",
+          "uri": "https://api.criptonlabs.com/v1/pro/xrpl/fee",
+          "version": "1",
+          "nonce": "6af601fe06eacd2dca1a4b8146b376e5",
+          "issuedAt": "2026-11-12T18:14:22Z",
+          "expirationTime": "2026-11-12T18:19:22Z"
+        },
+        "supportedChains": [
+          {
+            "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+            "type": "ed25519",
+            "signatureScheme": "siws"
+          }
+        ],
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "domain": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string",
+              "format": "uri"
+            },
+            "version": {
+              "type": "string"
+            },
+            "chainId": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "nonce": {
+              "type": "string"
+            },
+            "issuedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "expirationTime": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "notBefore": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "requestId": {
+              "type": "string"
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "signature": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "domain",
+            "address",
+            "uri",
+            "version",
+            "chainId",
+            "type",
+            "nonce",
+            "issuedAt",
+            "signature"
+          ]
+        }
+      }
+    },
+    "payments_mode": "x402"
+  }
+}

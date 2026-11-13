@@ -1,4 +1,4 @@
-import { assertDecimal, type ApiClient } from "@criptonlabs/agent-apis-core";
+import { assertDecimal, type ApiClient, type CallOptions } from "@criptonlabs/agent-apis-core";
 import type { XrplDataPort } from "../../application/ports.js";
 import { parseAsset } from "../../domain/asset.js";
 import {
@@ -30,6 +30,11 @@ function opt<T>(value: T | undefined, map: (v: T) => string): string | undefined
   return value === undefined ? undefined : map(value);
 }
 
+/** The call options forwarded to the core, which validates and sends them (design D11). */
+function call(options: CallOptions | undefined): { idempotencyKey?: string } {
+  return options?.idempotencyKey === undefined ? {} : { idempotencyKey: options.idempotencyKey };
+}
+
 export interface XrplDataClientOptions {
   pathsTimeoutMs?: number;
 }
@@ -40,22 +45,36 @@ export function createXrplDataClient(
 ): XrplDataPort {
   const pathsTimeoutMs = options.pathsTimeoutMs ?? PATHS_TIMEOUT_MS;
   return {
-    fee: async () => api.request({ route: "fee", schema: RESPONSE_SCHEMAS["/v1/xrpl/fee"] }),
-    health: async () =>
-      api.request({ route: "health", schema: RESPONSE_SCHEMAS["/v1/xrpl/health"] }),
-    networkHealth: async () =>
-      api.request({ route: "network/health", schema: RESPONSE_SCHEMAS["/v1/xrpl/network/health"] }),
-    healthHistory: async (q) => {
+    fee: async (options) =>
+      api.request({ route: "fee", schema: RESPONSE_SCHEMAS["/v1/xrpl/fee"], ...call(options) }),
+    health: async (options) =>
+      api.request({
+        route: "health",
+        schema: RESPONSE_SCHEMAS["/v1/xrpl/health"],
+        ...call(options),
+      }),
+    networkHealth: async (options) =>
+      api.request({
+        route: "network/health",
+        schema: RESPONSE_SCHEMAS["/v1/xrpl/network/health"],
+        ...call(options),
+      }),
+    healthHistory: async (q, options) => {
       const window = opt(q?.window, (w) => assertHistoryWindow("window", w));
       return api.request({
         route: "health/history",
         query: { window },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/health/history"],
+        ...call(options),
       });
     },
-    latestLedger: async () =>
-      api.request({ route: "ledger/latest", schema: RESPONSE_SCHEMAS["/v1/xrpl/ledger/latest"] }),
-    orderbook: async (q) => {
+    latestLedger: async (options) =>
+      api.request({
+        route: "ledger/latest",
+        schema: RESPONSE_SCHEMAS["/v1/xrpl/ledger/latest"],
+        ...call(options),
+      }),
+    orderbook: async (q, options) => {
       const base = asset("base", q.base);
       const quote = asset("quote", q.quote);
       const depth = opt(q.depth, (d) => String(assertDepth("depth", d)));
@@ -63,9 +82,10 @@ export function createXrplDataClient(
         route: "orderbook",
         query: { base, quote, depth },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/orderbook"],
+        ...call(options),
       });
     },
-    slippage: async (q) => {
+    slippage: async (q, options) => {
       const base = asset("base", q.base);
       const quote = asset("quote", q.quote);
       const amount = assertDecimal("amount", q.amount);
@@ -74,22 +94,25 @@ export function createXrplDataClient(
         route: "slippage",
         query: { base, quote, amount, depth },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/slippage"],
+        ...call(options),
       });
     },
-    amm: async (a, b) => {
+    amm: async (a, b, options) => {
       const first = asset("a", a);
       const second = asset("b", b);
       return api.request({
         route: `amm/${enc(first)}/${enc(second)}`,
         schema: RESPONSE_SCHEMAS["/v1/xrpl/amm/{a}/{b}"],
+        ...call(options),
       });
     },
-    accountSummary: async (address) =>
+    accountSummary: async (address, options) =>
       api.request({
         route: `account/${assertClassicAddress("address", address)}/summary`,
         schema: RESPONSE_SCHEMAS["/v1/xrpl/account/{address}/summary"],
+        ...call(options),
       }),
-    accountLines: async (address, q) => {
+    accountLines: async (address, q, options) => {
       const checked = assertClassicAddress("address", address);
       const lines = limit(q?.limit, LINES_LIMIT);
       const peer = opt(q?.peer, (p) => assertClassicAddress("peer", p));
@@ -97,23 +120,26 @@ export function createXrplDataClient(
         route: `account/${checked}/lines`,
         query: { limit: lines, peer, marker: q?.marker },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/account/{address}/lines"],
+        ...call(options),
       });
     },
-    accountTransactions: async (address, q) => {
+    accountTransactions: async (address, q, options) => {
       const checked = assertClassicAddress("address", address);
       const txLimit = limit(q?.limit, TX_LIMIT);
       return api.request({
         route: `account/${checked}/transactions`,
         query: { limit: txLimit, marker: q?.marker },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/account/{address}/transactions"],
+        ...call(options),
       });
     },
-    token: async (value) =>
+    token: async (value, options) =>
       api.request({
         route: `token/${enc(asset("asset", value))}`,
         schema: RESPONSE_SCHEMAS["/v1/xrpl/token/{asset}"],
+        ...call(options),
       }),
-    paymentReadiness: async (q) => {
+    paymentReadiness: async (q, options) => {
       const source = assertClassicAddress("source", q.source);
       const destination = assertClassicAddress("destination", q.destination);
       const tag = opt(q.destinationTag, (t) => String(assertDestinationTag("destinationTag", t)));
@@ -127,9 +153,10 @@ export function createXrplDataClient(
           destination_tag: tag,
         },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/payment-readiness"],
+        ...call(options),
       });
     },
-    paths: async (q) => {
+    paths: async (q, options) => {
       const source = assertClassicAddress("source", q.source);
       const destination = assertClassicAddress("destination", q.destination);
       const assetValue = asset("asset", q.asset);
@@ -149,6 +176,7 @@ export function createXrplDataClient(
         },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/paths"],
         timeoutMs: pathsTimeoutMs,
+        ...call(options),
       });
     },
   };

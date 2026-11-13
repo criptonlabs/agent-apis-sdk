@@ -1,4 +1,4 @@
-import type { KitResponse } from "@criptonlabs/agent-apis-core";
+import type { CallOptions, KitResponse } from "@criptonlabs/agent-apis-core";
 import type {
   AccountLinesResponse,
   AccountSummaryResponse,
@@ -18,48 +18,69 @@ import type {
 
 export type Depth = 10 | 50 | 100 | 200;
 
+/** Every data method takes the call options last (design D11). */
 export interface XrplDataPort {
-  fee(): Promise<KitResponse<FeeResponse>>;
-  health(): Promise<KitResponse<HealthResponse>>;
-  networkHealth(): Promise<KitResponse<NetworkHealthResponse>>;
-  healthHistory(q?: { window?: "1h" | "24h" | "7d" }): Promise<KitResponse<HealthHistoryResponse>>;
-  latestLedger(): Promise<KitResponse<LedgerLatestResponse>>;
-  orderbook(q: {
-    base: string;
-    quote: string;
-    depth?: Depth;
-  }): Promise<KitResponse<OrderbookResponse>>;
-  slippage(q: {
-    base: string;
-    quote: string;
-    amount: string;
-    depth?: Depth;
-  }): Promise<KitResponse<SlippageResponse>>;
-  amm(a: string, b: string): Promise<KitResponse<AmmResponse>>;
-  accountSummary(address: string): Promise<KitResponse<AccountSummaryResponse>>;
+  fee(options?: CallOptions): Promise<KitResponse<FeeResponse>>;
+  health(options?: CallOptions): Promise<KitResponse<HealthResponse>>;
+  networkHealth(options?: CallOptions): Promise<KitResponse<NetworkHealthResponse>>;
+  healthHistory(
+    q?: { window?: "1h" | "24h" | "7d" },
+    options?: CallOptions,
+  ): Promise<KitResponse<HealthHistoryResponse>>;
+  latestLedger(options?: CallOptions): Promise<KitResponse<LedgerLatestResponse>>;
+  orderbook(
+    q: {
+      base: string;
+      quote: string;
+      depth?: Depth;
+    },
+    options?: CallOptions,
+  ): Promise<KitResponse<OrderbookResponse>>;
+  slippage(
+    q: {
+      base: string;
+      quote: string;
+      amount: string;
+      depth?: Depth;
+    },
+    options?: CallOptions,
+  ): Promise<KitResponse<SlippageResponse>>;
+  amm(a: string, b: string, options?: CallOptions): Promise<KitResponse<AmmResponse>>;
+  accountSummary(
+    address: string,
+    options?: CallOptions,
+  ): Promise<KitResponse<AccountSummaryResponse>>;
   accountLines(
     address: string,
     q?: { limit?: number; peer?: string; marker?: string },
+    options?: CallOptions,
   ): Promise<KitResponse<AccountLinesResponse>>;
   accountTransactions(
     address: string,
     q?: { limit?: number; marker?: string },
+    options?: CallOptions,
   ): Promise<KitResponse<AccountTransactionsResponse>>;
-  token(asset: string): Promise<KitResponse<TokenResponse>>;
-  paymentReadiness(q: {
-    source: string;
-    destination: string;
-    asset?: string;
-    amount?: string;
-    destinationTag?: number;
-  }): Promise<KitResponse<ReadinessResponse>>;
-  paths(q: {
-    source: string;
-    destination: string;
-    asset: string;
-    amount: string;
-    sendMaxAsset?: string;
-    sendMax?: string;
-    sourceAssets?: string[];
-  }): Promise<KitResponse<PathsResponse>>;
+  token(asset: string, options?: CallOptions): Promise<KitResponse<TokenResponse>>;
+  paymentReadiness(
+    q: {
+      source: string;
+      destination: string;
+      asset?: string;
+      amount?: string;
+      destinationTag?: number;
+    },
+    options?: CallOptions,
+  ): Promise<KitResponse<ReadinessResponse>>;
+  paths(
+    q: {
+      source: string;
+      destination: string;
+      asset: string;
+      amount: string;
+      sendMaxAsset?: string;
+      sendMax?: string;
+      sourceAssets?: string[];
+    },
+    options?: CallOptions,
+  ): Promise<KitResponse<PathsResponse>>;
 }

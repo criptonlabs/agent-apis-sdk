@@ -1,6 +1,13 @@
-import { CriptonValidationError, type PaymentOption } from "@criptonlabs/agent-apis-core";
+import {
+  CriptonPaymentError,
+  CriptonValidationError,
+  type PaymentOption,
+} from "@criptonlabs/agent-apis-core";
 import { describe, expect, it } from "vite-plus/test";
 import { Wallet } from "xrpl";
+import { FakeTransport } from "../../../../core/tests/support/fake-transport.js";
+import { problem } from "../../../../core/tests/support/x402-fixtures.js";
+import { createXrplAgentKit } from "../../../src/index.js";
 import { createXrplPayer } from "../../../src/infrastructure/x402/xrpl-payer.js";
 import { createFakeXrplClientFactory } from "../../support/fake-xrpl-client-factory.js";
 
@@ -78,5 +85,44 @@ describe("createXrplPayer", () => {
     const solana: PaymentOption = { ...wanted, network: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp" };
 
     expect(payer.selectOption([solana, wanted])).toBe(wanted);
+  });
+});
+
+describe("XRPL kit wallet", () => {
+  it("Wallet without per-call payment", async () => {
+    const option = testnetOption();
+    const challenge = {
+      x402Version: 2,
+      resource: { url: "https://api.criptonlabs.com/v1/pro/xrpl/payment-readiness" },
+      accepts: [option],
+    };
+    const header = Buffer.from(JSON.stringify(challenge)).toString("base64");
+    const fake = new FakeTransport().respond(
+      problem("payment-required", 402, { "PAYMENT-REQUIRED": header }),
+    );
+    const kit = createXrplAgentKit({
+      transport: fake.transport,
+      tier: "pro",
+      // Unreachable local WebSocket: a kit that tried to sign could never reach a ledger.
+      wallet: {
+        seed: Wallet.generate().seed as string,
+        network: "testnet",
+        wsUrl: "ws://127.0.0.1:9",
+      },
+    });
+
+    const error = await kit.data
+      .paymentReadiness({
+        source: Wallet.generate().classicAddress,
+        destination: Wallet.generate().classicAddress,
+      })
+      .catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(CriptonPaymentError);
+    expect(error).toMatchObject({ code: "payment-disabled" });
+    expect(fake.requests).toHaveLength(1);
+    expect(fake.requests[0]?.url).toContain("/v1/pro/xrpl/payment-readiness");
+    expect(fake.requests.some((r) => "payment-signature" in r.headers)).toBe(false);
+    expect(kit.spent()).toBe("0");
   });
 });

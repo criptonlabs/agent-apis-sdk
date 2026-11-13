@@ -23,7 +23,12 @@ export class FakeDataPort {
     token: unexpected("token"),
     transferReadiness: (q): Promise<KitResponse<TransferReadinessResponse>> => {
       this.readinessQueries.push(q);
-      return Promise.resolve({ data: this.readiness, receipt: null });
+      return Promise.resolve({
+        data: this.readiness,
+        receipt: null,
+        credits: null,
+        replayed: false,
+      });
     },
   };
 }

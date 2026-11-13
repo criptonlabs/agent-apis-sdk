@@ -24,7 +24,8 @@ describe("createXrplAgentKit", () => {
 
     const kit = createXrplAgentKit({
       transport: fake.transport,
-      payment: { seed, maxPerCall: "0.05" },
+      wallet: { seed },
+      payment: { maxPerCall: "0.05" },
     });
 
     expect(JSON.stringify(kit)).not.toContain(seed);

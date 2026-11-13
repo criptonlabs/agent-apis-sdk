@@ -1,6 +1,7 @@
 import {
   ApiClient,
   CriptonNetworkError,
+  CriptonResponseError,
   CriptonValidationError,
 } from "@criptonlabs/agent-apis-core";
 import { afterEach, describe, expect, it, vi } from "vite-plus/test";
@@ -322,5 +323,33 @@ describe("XRPL data client", () => {
       amount: "1",
       destination_tag: "12",
     });
+  });
+
+  it("Unknown reason code passes through", async () => {
+    const body = { ...structuredClone(readinessFixture), verdict: "not_ready" };
+    body.reasons = ["issuer_rippling_disabled"];
+    const { client } = setup(body);
+    const result = await client.paymentReadiness({ source: ADDRESS, destination: OTHER });
+    expect(result.data.verdict).toBe("not_ready");
+    expect(result.data.reasons).toEqual(["issuer_rippling_disabled"]);
+  });
+
+  it("Unknown status code passes through", async () => {
+    const body = structuredClone(slippageFixture);
+    body.venues.amm_status = "frozen";
+    const { client } = setup(body);
+    const result = await client.slippage({ base: "XRP", quote: ISSUED, amount: "100" });
+    expect(result.data.venues.amm_status).toBe("frozen");
+  });
+
+  it("Wrong type in a code field", async () => {
+    const body = structuredClone(readinessFixture) as Record<string, unknown>;
+    body.reasons = [42];
+    const { client } = setup(body);
+    const error = await client
+      .paymentReadiness({ source: ADDRESS, destination: OTHER })
+      .catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(CriptonResponseError);
+    expect(error).toMatchObject({ code: "invalid-response" });
   });
 });

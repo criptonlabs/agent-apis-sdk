@@ -1,4 +1,4 @@
-import { CriptonValidationError } from "@criptonlabs/agent-apis-core";
+import { type CliReveal, CriptonValidationError } from "@criptonlabs/agent-apis-core";
 import type { CliCommand } from "@criptonlabs/agent-apis-core/cli";
 import type { XrplAgentKit } from "../../index.js";
 import { startXrplMcpServerWithKit } from "../mcp/server.js";
@@ -36,6 +36,34 @@ function defined<R extends object>(value: object): R {
 }
 
 const str = { type: "string" } as const;
+
+const TOKEN_NOTICE = "Store this credit token in CRIPTON_CREDITS_TOKEN now: it is not shown again.";
+
+const TOPUP_HELP = `Usage: agent-apis-xrpl topup <bundle> --max <amount> [--json]
+
+Buys one prepaid credit bundle with the XRPL wallet (RLUSD) and prints the new
+credit token once. Needs CRIPTON_XRPL_PAYER_SEED. Bundle ids and prices come
+from the API's credits offer at run time; none is fixed in the kit.
+
+Purchase limits:
+  - --max <amount> is mandatory: the most this purchase may pay, decimal string.
+    A bundle priced above it is refused before anything is signed.
+  - maxPerCall (CRIPTON_MAX_PER_CALL) and sessionBudget (CRIPTON_SESSION_BUDGET)
+    never apply to purchases; they limit per-call payments only.
+  - CRIPTON_TOPUP_MAX and CRIPTON_TOPUP_BUDGET configure only the Solana purchase
+    tool; the XRPL kit ignores them (they must still be set together or not at all).
+  - The credit token is shown once: store it in CRIPTON_CREDITS_TOKEN right away.
+    An XRPL wallet cannot recover a lost credit token (no rotation on XRPL).
+  - No tool buys credits in the XRPL kit; top-ups happen only through this
+    command and the programmatic kit.credits.topup.
+`;
+
+const CREDITS_HELP = `Usage: agent-apis-xrpl credits [--json]
+
+Prints whether a credit token is configured (CRIPTON_CREDITS_TOKEN), the last
+known balance per denomination and the amount spent on top-ups by this process.
+Sends no request and never prints the token. A fresh process has balance null.
+`;
 
 export function xrplCommands(kitFactory: (env: NodeJS.ProcessEnv) => XrplAgentKit): CliCommand[] {
   return [
@@ -129,6 +157,45 @@ export function xrplCommands(kitFactory: (env: NodeJS.ProcessEnv) => XrplAgentKi
           maxSlippagePct: text(args, "max-slippage"),
         });
         return kitFactory(env).dexQuote(input);
+      },
+    },
+    {
+      name: "topup",
+      description: "Buy a prepaid credit bundle: topup <bundle> --max <amount>",
+      help: TOPUP_HELP,
+      positionals: 1,
+      options: { max: str },
+      async run(args, env): Promise<CliReveal> {
+        const bundle = positional(args, "bundle");
+        const maxAmount = required(args, "max");
+        const result = await kitFactory(env).credits.topup({ bundle, maxAmount });
+        const { token, wallet, denomination, balance, lotExpiresAt, pending, receipt } = result;
+        return {
+          reveal: {
+            bundle: result.bundle,
+            token,
+            wallet,
+            denomination,
+            balance,
+            lotExpiresAt,
+            pending,
+            receipt,
+          },
+          notice: TOKEN_NOTICE,
+        };
+      },
+    },
+    {
+      name: "credits",
+      description: "Credit status: whether a token is configured, last known balance, top-up spend",
+      help: CREDITS_HELP,
+      async run(_args, env) {
+        const { credits } = kitFactory(env);
+        return {
+          hasToken: credits.hasToken(),
+          balance: credits.lastKnownBalance(),
+          topupSpent: credits.topupSpent(),
+        };
       },
     },
   ];

@@ -195,5 +195,15 @@ export function createXrplTools(kit: XrplAgentKit): ToolDefinition<unknown, unkn
       }),
       async (i) => kit.dexQuote(strip(i)),
     ),
+    define(
+      "xrpl_credits_status",
+      "Prepaid credit status of this process: whether a credit token is configured, the last known balance per denomination (null before any credit-paid response) and the amount spent on top-ups. Sends no request and never returns the token. Read-only.",
+      empty,
+      async () => ({
+        hasToken: kit.credits.hasToken(),
+        balance: kit.credits.lastKnownBalance(),
+        topupSpent: kit.credits.topupSpent(),
+      }),
+    ),
   ];
 }

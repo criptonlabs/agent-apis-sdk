@@ -1,6 +1,6 @@
 ---
 name: agent-apis-solana
-description: Check Solana network status, SPL token data and transfer readiness against the Criptonlabs Agent APIs, and prepare unsigned SOL or SPL token transfers, using the 6 tools of @criptonlabs/agent-apis-solana.
+description: Check Solana network status, SPL token data and transfer readiness against the Criptonlabs Agent APIs, and prepare unsigned SOL or SPL token transfers, using the 7 tools of @criptonlabs/agent-apis-solana and its opt-in credit purchase tool.
 ---
 
 # Criptonlabs Agent APIs: Solana
@@ -21,6 +21,8 @@ Typed, read-only access to the hosted Criptonlabs Agent APIs for Solana. The kit
 - `solana_token`: SPL mint data (token program, decimals, supply, mint and freeze authorities, extensions, transfer fee) and a safety verdict with reasons. Takes a mint address only; `SOL` is not a mint.
 - `solana_transfer_readiness`: whether a SOL or SPL token transfer between two wallets can succeed, with blockers and warnings.
 - `solana_prepare_transfer`: builds an unsigned transfer description after checking readiness. It never signs and never sends.
+- `solana_credits_status`: whether a credit token is configured, whether SIWX spending is on, the last known credit balance per denomination (`null` before any credit-paid response) and the amount spent on top-ups in this process. It sends no request and never returns the token.
+- `solana_credits_topup` (opt-in, listed only when the operator configured the purchase limits): buys one credit bundle (`bundle`, an id from the API's prepaid credits offer) with the wallet. It is the only tool that is not read-only: each call is a new purchase. It returns the purchase without the token (see Purchase limits).
 
 Transfer inputs are `source`, `destination`, `mint` (a base58 mint address or `"SOL"`) and `amount`. Addresses and mints are base58 and must decode to 32 bytes. Amounts are decimal strings in the asset's units, never floats; SOL amounts have at most 9 decimals. Invalid inputs are rejected before any request.
 
@@ -38,8 +40,10 @@ Before building, it verifies the readiness against the intent: `source`, `destin
 
 - `/v1/solana/*`: free tier, the default.
 - `/v1/pro/solana/*`: paid tier, same data. Most paid routes accept only prepaid credits (`credits-required`); per-call x402 payment applies where the API offers it (today transfer readiness).
+- `/v1/pro/credits/*`: prepaid credit purchases (`POST /v1/pro/credits/{bundle}`) and token rotation (`POST /v1/pro/credits/token`), used only on an explicit call.
+- `/v1/pro/requirements`: the price index of the paid routes, free to read.
 
-Prices are never fixed in the kit or in this file: they come from the API at runtime (`kit.priceOf(resource)`).
+Prices are never fixed in the kit or in this file: they come from the API at runtime (`GET /v1/pro/requirements`, `kit.prices()` or `kit.priceOf(resource)`).
 
 ## Opt-in payment
 
@@ -55,17 +59,34 @@ Payment is off unless configured. The free tier needs no configuration. To use t
 
 The kit never switches to the paid tier on its own and never pays without these variables.
 
+## Prepaid credits
+
+- `CRIPTON_CREDITS_TOKEN`: a prepaid credit token (`clc_...`, needs `CRIPTON_TIER=pro`). Paid-tier calls then carry it as `Authorization: Bearer`; the balance the API reports on credit-paid answers is what `solana_credits_status` shows.
+- `CRIPTON_SOLANA_SIWX=on`: Sign-In-With-X (SIWX) spending. With `CRIPTON_TIER=pro`, `CRIPTON_SOLANA_PAYER_KEY` and no credit token, the kit answers the API's SIWX challenges with a signature of the wallet and spends the wallet's credits without a token. A configured token always comes first. `off` or unset leaves it off.
+- A credit token is a secret, like a key: supply it only through the environment. No tool result or tool error ever contains it.
+- A lost token is replaced with `agent-apis-solana rotate-token`, which signs a SIWX proof with the wallet and revokes the wallet's earlier tokens.
+
+## Purchase limits
+
+- A top-up needs its own maximum: `maxAmount` in code (`kit.credits.topup({ bundle, maxAmount })`), `--max` in the CLI (`agent-apis-solana topup <bundle> --max <amount>`). A bundle priced above it is refused before anything is signed.
+- `maxPerCall` and `sessionBudget` never apply to purchases; they limit per-call payments only.
+- `credits.topupBudget` (`CRIPTON_TOPUP_BUDGET`) caps the total of the process's purchases. A purchase whose answer is lost counts as spent.
+- A credit token is shown once, when it is bought or rotated: store it in `CRIPTON_CREDITS_TOKEN` right away. A Solana wallet recovers its credits with `rotate-token`, which revokes the wallet's earlier tokens.
+- `solana_credits_topup` exists only with tier `pro` (`CRIPTON_TIER=pro`), `CRIPTON_SOLANA_PAYER_KEY`, `CRIPTON_TOPUP_MAX` (its per-purchase maximum) and `CRIPTON_TOPUP_BUDGET` (its per-process budget). It keeps the bought token in process memory for later paid-tier calls and never shows it to the model. With a credit token already configured, it keeps using that token and does not keep the bought one.
+- A `solana_credits_topup` error `payment-settlement-failed` with `details.eventId` means the API could not confirm the purchase: it may still settle and its amount already counts toward the top-up budget, so do not buy it again. Once the API reconciles the payment, the credits belong to the wallet and `agent-apis-solana rotate-token` gives it a token for them.
+- Its result reports `tokenKept`: true when the bought token became the process's token. When `tokenKept` is false (a token was already configured, or the bought token could not be kept), the purchase still happened: `rotate-token` gives the wallet a token for its credits and revokes the wallet's earlier tokens.
+
 ## Reading results
 
 Every response carries `meta` (`slot`, `commitment` = `finalized`, `as_of`, `age_seconds`, `cache`, `stale`). If `meta.stale` is true, treat the data as possibly out of date.
 
 ## Errors
 
-Tool errors have the shape `{ code, message, ... }` (for example validation, problem, payment, refusal or network errors). Read `code` and `message`; do not retry blindly. `transfer-not-ready` carries the API blockers in `details.reasons` and `details.warnings`. When the API names the failing fields (for example `invalid-parameters`), `details.errors` lists them with `field` and `message`; fix those inputs. `credits-required` means the route is paid only with prepaid credits; when `details.prepaidOffer` is present (also on a free-tier 429), tell the user about the offer instead of retrying. The kit never buys credits.
+Tool errors have the shape `{ code, message, ... }` (for example validation, problem, payment, refusal or network errors). Read `code` and `message`; do not retry blindly. `transfer-not-ready` carries the API blockers in `details.reasons` and `details.warnings`. When the API names the failing fields (for example `invalid-parameters`), `details.errors` lists them with `field` and `message`; fix those inputs. `credits-required` means the route is paid only with prepaid credits; when `details.prepaidOffer` is present (also on a free-tier 429), tell the user about the offer instead of retrying. Credits are bought only through `solana_credits_topup` when the operator configured it, the CLI `topup` command or the programmatic `kit.credits.topup`; never automatically.
 
 ## Safety
 
-- Never paste a secret key into a prompt, a file, a command-line argument or a log. Supply it only through the environment.
+- Never paste a secret key or a credit token into a prompt, a file, a command-line argument or a log. Supply it only through the environment.
 - `solana_prepare_transfer` output is unsigned; review it before any signing happens elsewhere.
 - Do not hardcode prices or amounts to pay.
 

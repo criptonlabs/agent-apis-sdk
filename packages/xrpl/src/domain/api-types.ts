@@ -1,4 +1,5 @@
-// Generated from the API OpenAPI document 0.19.2 (fetched 2026-10-27; /v1/xrpl/* unchanged since 0.19.1): one type per 200 body of /v1/xrpl/*.
+// Generated from the API OpenAPI document 0.21.0 (fetched 2026-11-12): one type per 200 body of /v1/xrpl/*.
+// Code-list fields are open: a known code or any other string (kit-api-sync design D3).
 // Refresh together with tests/fixtures/openapi.json (design D16).
 
 export type FeeResponse = {
@@ -9,7 +10,7 @@ export type FeeResponse = {
   };
   congestion: {
     score: number;
-    band: "low" | "medium" | "high";
+    band: "low" | "medium" | "high" | (string & {});
     load_factor_assumed: boolean;
   };
   base_fee: string;
@@ -22,16 +23,16 @@ export type FeeResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
 
 export type HealthResponse = {
-  status: "ok" | "degraded" | "down" | "unknown";
+  status: "ok" | "degraded" | "down" | "unknown" | (string & {});
   nodes: Array<{
     member: string;
-    state: "up" | "down";
+    state: "up" | "down" | (string & {});
     latency_ms: number | null;
     ledger_index: number | null;
     ledger_age_s: number | null;
@@ -45,16 +46,16 @@ export type HealthResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
 
 export type NetworkHealthResponse = {
-  status: "ok" | "degraded" | "down" | "unknown";
+  status: "ok" | "degraded" | "down" | "unknown" | (string & {});
   nodes: Array<{
     member: string;
-    state: "up" | "down";
+    state: "up" | "down" | (string & {});
     latency_ms: number | null;
     ledger_index: number | null;
     ledger_age_s: number | null;
@@ -68,7 +69,7 @@ export type NetworkHealthResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -90,7 +91,7 @@ export type HealthHistoryResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -103,7 +104,7 @@ export type LedgerLatestResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -126,7 +127,7 @@ export type OrderbookResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -134,7 +135,7 @@ export type OrderbookResponse = {
 export type SlippageResponse = {
   base: string;
   quote: string;
-  side: "buy";
+  side: "buy" | (string & {});
   depth: number;
   amount: string;
   filled: string;
@@ -147,8 +148,8 @@ export type SlippageResponse = {
   transfer_fee: string | null;
   avg_price_after_fees: string | null;
   venues: {
-    best: "clob" | "amm" | null;
-    amm_status: "ok" | "stale" | "no_pool" | "unavailable";
+    best: "clob" | "amm" | (string & {}) | null;
+    amm_status: "ok" | "stale" | "no_pool" | "unavailable" | (string & {});
     clob: {
       avg_price: string | null;
       cost: string | null;
@@ -170,7 +171,7 @@ export type SlippageResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -185,7 +186,7 @@ export type AmmResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -207,7 +208,7 @@ export type AccountSummaryResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -235,7 +236,7 @@ export type AccountLinesResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -261,7 +262,7 @@ export type AccountTransactionsResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -278,18 +279,18 @@ export type TokenResponse = {
   transfer_rate: number;
   transfer_fee_pct: string;
   obligations: string | null;
-  obligations_status: "ok" | "unavailable";
+  obligations_status: "ok" | "unavailable" | (string & {});
   meta: {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
 
 export type ReadinessResponse = {
-  verdict: "ready" | "not_ready" | "unknown";
+  verdict: "ready" | "not_ready" | "unknown" | (string & {});
   reasons: Array<
     | "source_not_found"
     | "insufficient_xrp_balance"
@@ -305,8 +306,11 @@ export type ReadinessResponse = {
     | "destination_line_frozen"
     | "issuer_not_found"
     | "issuer_global_freeze"
+    | (string & {})
   >;
-  warnings: Array<"destination_will_be_created" | "transfer_fee" | "high_fee" | "network_degraded">;
+  warnings: Array<
+    "destination_will_be_created" | "transfer_fee" | "high_fee" | "network_degraded" | (string & {})
+  >;
   checks_failed: Array<
     | "source_account"
     | "destination_account"
@@ -316,6 +320,7 @@ export type ReadinessResponse = {
     | "issuer"
     | "fee"
     | "network_health"
+    | (string & {})
   >;
   spendable_xrp: string | null;
   transfer_fee_pct: string | null;
@@ -328,7 +333,7 @@ export type ReadinessResponse = {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };
@@ -351,12 +356,12 @@ export type PathsResponse = {
     >;
   }>;
   paths_may_be_non_optimal: true;
-  warnings: Array<"destination_not_found">;
+  warnings: Array<"destination_not_found" | (string & {})>;
   meta: {
     ledger_index: number;
     as_of: string;
     age_seconds: number;
-    cache: "hit" | "miss" | "stale";
+    cache: "hit" | "miss" | "stale" | (string & {});
     stale: boolean;
   };
 };

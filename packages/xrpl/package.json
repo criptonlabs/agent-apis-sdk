@@ -60,8 +60,8 @@
   },
   "dependencies": {
     "@criptonlabs/agent-apis-core": "workspace:^",
-    "@x402/core": "~2.28.0",
-    "@x402/xrpl": "~2.28.0",
+    "@x402/core": "~2.30.0",
+    "@x402/xrpl": "~2.30.0",
     "xrpl": "^4.7.0",
     "zod": "^4.3.5"
   },

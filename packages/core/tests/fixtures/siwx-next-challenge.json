@@ -1,0 +1,21 @@
+{
+  "status": 200,
+  "headers": {
+    "content-type": "application/json",
+    "cache-control": "no-store",
+    "x-credits-remaining": "EUR=0.9995;USD=0",
+    "x-siwx-next-challenge": "nonce=\"6af60356b83d61eb929e88c8413fbac4\", issuedAt=\"2026-11-12T18:20:06Z\", expirationTime=\"2026-11-12T18:25:06Z\""
+  },
+  "body": {
+    "slot": 462121534,
+    "block_time": "2026-10-27T15:29:06.000Z",
+    "meta": {
+      "slot": 462121534,
+      "commitment": "finalized",
+      "as_of": "2026-10-27T15:29:06.921Z",
+      "age_seconds": 0,
+      "cache": "miss",
+      "stale": false
+    }
+  }
+}

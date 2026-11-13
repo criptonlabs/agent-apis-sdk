@@ -1,4 +1,5 @@
-// Zod response schemas per OpenAPI path (snapshot 0.19.2), typed against api-types.
+// Zod response schemas per OpenAPI path (snapshot 0.21.0), typed against api-types.
+import { codeList } from "@criptonlabs/agent-apis-core";
 import { z } from "zod";
 import type {
   SlotLatestResponse,
@@ -27,7 +28,7 @@ const meta = z.object({
   commitment: z.enum(["finalized"]),
   as_of: str,
   age_seconds: z.number(),
-  cache: z.enum(["hit", "miss", "stale"]),
+  cache: codeList(["hit", "miss", "stale"]),
   stale: z.boolean(),
 });
 
@@ -38,7 +39,7 @@ const slotLatestSchema = z.object({
 }) satisfies z.ZodType<SlotLatestResponse>;
 
 const healthSchema = z.object({
-  status: z.enum(["up", "down", "unknown", "unavailable"]),
+  status: codeList(["up", "down", "unknown", "unavailable"]),
   slot: int.nullable(),
   latency_ms: z.number().nullable(),
   last_probe_at: strNull,
@@ -69,9 +70,9 @@ const tokenSchema = z.object({
   freeze_authority: strNull,
   extensions: z.array(str),
   transfer_fee: z.object({ basis_points: int, maximum_fee: str }).nullable(),
-  verdict: z.enum(["SAFE", "WARN", "DANGER"]),
+  verdict: codeList(["SAFE", "WARN", "DANGER"]),
   reasons: z.array(
-    z.enum([
+    codeList([
       "permanent_delegate",
       "transfer_hook",
       "pausable",
@@ -96,7 +97,7 @@ const transferReadinessSchema = z.object({
   token_program: strNull,
   ready: z.boolean(),
   blockers: z.array(
-    z.enum([
+    codeList([
       "insufficient_balance",
       "insufficient_sol_for_fees",
       "source_below_rent_exempt",
@@ -105,9 +106,10 @@ const transferReadinessSchema = z.object({
       "destination_frozen",
       "non_transferable",
       "mint_paused",
+      "destination_ata_occupied",
     ]),
   ),
-  warnings: z.array(z.enum(["destination_off_curve", "memo_required"])),
+  warnings: z.array(codeList(["destination_off_curve", "memo_required"])),
   requires_ata_creation: z.boolean(),
   ata_creation_lamports: strNull,
   transfer_fee: strNull,

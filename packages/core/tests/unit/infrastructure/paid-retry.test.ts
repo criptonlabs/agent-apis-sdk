@@ -35,7 +35,8 @@ describe("paid retry", () => {
       tier: "pro",
       transport,
       timeoutMs: 50,
-      payment: { payer: new FakePayer(), maxPerCall: "0.05" },
+      wallet: new FakePayer(),
+      payment: { maxPerCall: "0.05" },
     });
     const result = await client.request({ route: "fee", schema });
     expect(result.receipt).not.toBeNull();
@@ -49,7 +50,8 @@ describe("paid retry", () => {
     const client = new ApiClient(descriptor, {
       tier: "pro",
       transport: fake.transport,
-      payment: { payer: new FakePayer(), maxPerCall: "0.05", sessionBudget: "1" },
+      wallet: new FakePayer(),
+      payment: { maxPerCall: "0.05", sessionBudget: "1" },
     });
     const error = await client.request({ route: "fee", schema }).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(CriptonPaymentError);

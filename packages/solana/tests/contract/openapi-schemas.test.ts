@@ -29,12 +29,22 @@ function snapshotSchema(path: string): Json {
   return resolve(op.responses["200"].content["application/json"].schema);
 }
 
+// Enum values of a property: its own `enum`, or those inside its `anyOf` / `oneOf` branches
+// (the shape `z.toJSONSchema` emits for a code list, kit-api-sync design D3).
+function enumValues(prop: Json): unknown[] | undefined {
+  if (Array.isArray(prop.enum)) return prop.enum;
+  const branches = [...(prop.anyOf ?? []), ...(prop.oneOf ?? [])].flatMap((branch: Json) => {
+    const values = resolve(branch).enum;
+    return Array.isArray(values) ? values : [];
+  });
+  return branches.length > 0 ? branches : undefined;
+}
+
 function enums(schema: Json): Record<string, unknown[]> {
   const out: Record<string, unknown[]> = {};
   for (const [name, raw] of Object.entries<Json>(schema.properties ?? {})) {
-    const prop = resolve(raw);
-    if (Array.isArray(prop.enum))
-      out[name] = [...prop.enum].sort((a, b) => String(a).localeCompare(String(b)));
+    const values = enumValues(resolve(raw));
+    if (values) out[name] = [...values].sort((a, b) => String(a).localeCompare(String(b)));
   }
   return out;
 }
@@ -55,9 +65,94 @@ function byName(a: string, b: string): number {
   return a.localeCompare(b);
 }
 
+// Response fields that D3 of kit-api-sync makes forward-compatible code lists, by name.
+const CODE_FIELDS = [
+  "verdict",
+  "reasons",
+  "warnings",
+  "blockers",
+  "status",
+  "state",
+  "band",
+  "amm_status",
+  "obligations_status",
+  "best",
+  "side",
+  "cache",
+];
+
+interface CodeField {
+  path: string[];
+  values: string[];
+}
+
+function codeFieldsOf(schema: Json, parents: string[] = []): CodeField[] {
+  const found: CodeField[] = [];
+  for (const [name, raw] of Object.entries<Json>(resolve(schema).properties ?? {})) {
+    const prop = resolve(raw);
+    const leaf = prop.type === "array" ? resolve(prop.items) : prop;
+    const path = [...parents, name];
+    if (CODE_FIELDS.includes(name) && Array.isArray(leaf.enum)) {
+      found.push({ path, values: leaf.enum.filter((v: unknown) => typeof v === "string") });
+    }
+    found.push(...codeFieldsOf(leaf, path));
+  }
+  return found;
+}
+
+function stepInto(node: any): any {
+  if (node?.element) return node.element;
+  return typeof node?.unwrap === "function" ? node.unwrap() : undefined;
+}
+
+function knownOf(node: any): readonly string[] | undefined {
+  let current = node;
+  while (current && !Array.isArray(current.known)) current = stepInto(current);
+  return current?.known;
+}
+
+function kitField(schema: unknown, path: string[]): unknown {
+  let node: any = schema;
+  for (const key of path) {
+    while (node && !node.shape) node = stepInto(node);
+    node = node?.shape?.[key];
+  }
+  return node;
+}
+
+function knownProblem(known: readonly string[] | undefined, field: CodeField): string | undefined {
+  if (!known) return `${field.path.join(".")}: no known list`;
+  const absent = field.values.filter((value) => !known.includes(value));
+  return absent.length > 0 ? `${field.path.join(".")}: missing ${absent.join(", ")}` : undefined;
+}
+
+const ROUTES = SOLANA_ROUTE_PATHS;
+
 describe("OpenAPI snapshot contract", () => {
-  it("snapshot is API 0.19.2", () => {
-    expect(openapi.info.version).toBe("0.19.2");
+  it("snapshot is API 0.21.0", () => {
+    expect(openapi.info.version).toBe("0.21.0");
+  });
+
+  it("every OpenAPI code value is in the kit's known list", () => {
+    const fields = ROUTES.flatMap((route) =>
+      codeFieldsOf(snapshotSchema(route)).map((field) => ({ route, field })),
+    );
+    const known = fields.map(({ route, field }) => ({
+      route,
+      field,
+      list: knownOf(kitField(RESPONSE_SCHEMAS[route], field.path)),
+    }));
+    const checked = known.filter(({ list }) => list !== undefined);
+    expect(fields.length).toBeGreaterThan(0);
+    expect(checked).toHaveLength(fields.length);
+    expect(
+      known
+        .map(({ route, field, list }) => {
+          const problem = knownProblem(list, field);
+          return problem ? `${route} ${problem}` : undefined;
+        })
+        .filter((problem) => problem !== undefined),
+    ).toEqual([]);
   });
 
   for (const path of SOLANA_ROUTE_PATHS) {

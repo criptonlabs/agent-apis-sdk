@@ -1,4 +1,4 @@
-import type { KitResponse } from "@criptonlabs/agent-apis-core";
+import type { CallOptions, KitResponse } from "@criptonlabs/agent-apis-core";
 import type {
   SlotLatestResponse,
   SolanaHealthHistoryResponse,
@@ -8,19 +8,26 @@ import type {
 } from "../domain/api-types.js";
 import type { PreparedInstruction, TransferPlan } from "../domain/prepared-transfer.js";
 
+/** Every data method takes the call options last (design D11). */
 export interface SolanaDataPort {
-  latestSlot(): Promise<KitResponse<SlotLatestResponse>>;
-  health(): Promise<KitResponse<SolanaHealthResponse>>;
-  healthHistory(q?: {
-    window?: "1h" | "24h" | "7d";
-  }): Promise<KitResponse<SolanaHealthHistoryResponse>>;
-  token(mint: string): Promise<KitResponse<SolanaTokenResponse>>;
-  transferReadiness(q: {
-    source: string;
-    destination: string;
-    mint: string;
-    amount: string;
-  }): Promise<KitResponse<TransferReadinessResponse>>;
+  latestSlot(options?: CallOptions): Promise<KitResponse<SlotLatestResponse>>;
+  health(options?: CallOptions): Promise<KitResponse<SolanaHealthResponse>>;
+  healthHistory(
+    q?: {
+      window?: "1h" | "24h" | "7d";
+    },
+    options?: CallOptions,
+  ): Promise<KitResponse<SolanaHealthHistoryResponse>>;
+  token(mint: string, options?: CallOptions): Promise<KitResponse<SolanaTokenResponse>>;
+  transferReadiness(
+    q: {
+      source: string;
+      destination: string;
+      mint: string;
+      amount: string;
+    },
+    options?: CallOptions,
+  ): Promise<KitResponse<TransferReadinessResponse>>;
 }
 
 /** Turns a transfer plan into instruction descriptions (encoding lives in infrastructure). */

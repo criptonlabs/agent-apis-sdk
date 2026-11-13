@@ -35,7 +35,8 @@ function setup(
   return new ApiClient(descriptor, {
     tier: "pro",
     transport: fake.transport,
-    payment: { payer, ...limits },
+    wallet: payer,
+    payment: limits,
   });
 }
 const call = (client: ApiClient) => client.request({ route: "fee", schema });

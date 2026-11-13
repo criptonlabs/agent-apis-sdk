@@ -62,18 +62,19 @@ describe("common environment validation", () => {
 
 describe("price lookup mapping", () => {
   it("a body without payments_mode or accepts maps to null and an empty list", () => {
-    expect(toPriceLookup({})).toEqual({ paymentsMode: null, options: [] });
+    expect(toPriceLookup({})).toEqual({ paymentsMode: null, options: [], prepaidOffer: null });
   });
 
   it("a non-object body maps to null and an empty list", () => {
-    expect(toPriceLookup(null)).toEqual({ paymentsMode: null, options: [] });
-    expect(toPriceLookup("x")).toEqual({ paymentsMode: null, options: [] });
+    expect(toPriceLookup(null)).toEqual({ paymentsMode: null, options: [], prepaidOffer: null });
+    expect(toPriceLookup("x")).toEqual({ paymentsMode: null, options: [], prepaidOffer: null });
   });
 
   it("a non-string mode and a non-array accepts are ignored", () => {
     expect(toPriceLookup({ payments_mode: 1, accepts: {} })).toEqual({
       paymentsMode: null,
       options: [],
+      prepaidOffer: null,
     });
   });
 });

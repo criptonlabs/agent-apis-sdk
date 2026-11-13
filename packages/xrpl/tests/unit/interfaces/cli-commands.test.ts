@@ -1,9 +1,25 @@
+import { ApiClient, type CreditsApi } from "@criptonlabs/agent-apis-core";
 import { runCli } from "@criptonlabs/agent-apis-core/cli";
 import { describe, expect, it } from "vite-plus/test";
+import {
+  creditToken,
+  decodePaymentRequired,
+  encodePaymentRequired,
+  expectTokenAbsent,
+  loadFixture,
+  settlementHeader,
+  topupCreated,
+  type ResponseFixture,
+} from "../../../../core/tests/support/credit-fixtures.js";
 import { FakeTransport } from "../../../../core/tests/support/fake-transport.js";
-import { createXrplAgentKit } from "../../../src/index.js";
+import { TX_HASH } from "../../../../core/tests/support/x402-fixtures.js";
+import { Wallet } from "xrpl";
+import { createXrplAgentKit, type XrplAgentKit } from "../../../src/index.js";
 import { readXrplEnv } from "../../../src/infrastructure/config/xrpl-env.js";
+import { XRPL_DESCRIPTOR } from "../../../src/infrastructure/descriptor.js";
+import { createXrplPayer } from "../../../src/infrastructure/x402/xrpl-payer.js";
 import { xrplCommands } from "../../../src/interfaces/cli/commands.js";
+import { createFakeXrplClientFactory } from "../../support/fake-xrpl-client-factory.js";
 import accountSummary from "../../fixtures/responses/account-summary.json" with { type: "json" };
 import fee from "../../fixtures/responses/fee.json" with { type: "json" };
 import slippage from "../../fixtures/responses/slippage.json" with { type: "json" };
@@ -13,8 +29,24 @@ import { DESTINATION, SOURCE, readiness } from "../../support/interface-kit.js";
 const USD = `USD.${DESTINATION}`;
 const READY = readiness({ verdict: "ready", reasons: [], warnings: [], checks_failed: [] });
 
-function run(argv: string[]) {
+/** The recorded `usd-starter` top-up challenge with its RLUSD `xrpl:0` entry priced at `amount`. */
+function topupChallengeRlusd(amount: string): ResponseFixture {
+  const recorded = loadFixture("topup-challenge-usd-starter");
+  const required = decodePaymentRequired(recorded.headers["payment-required"] ?? "");
+  const accepts = (required.accepts as Array<Record<string, unknown>>).map((option) =>
+    option.network === "xrpl:0" ? { ...option, amount } : option,
+  );
+  const rebound = { ...required, accepts };
+  return {
+    ...recorded,
+    headers: { ...recorded.headers, "payment-required": encodePaymentRequired(rebound) },
+    body: { ...recorded.body, ...rebound },
+  };
+}
+
+function run(argv: string[], env: NodeJS.ProcessEnv = {}, scripted?: ResponseFixture) {
   const fake = new FakeTransport().respondWith((request) => {
+    if (scripted !== undefined) return scripted;
     const path = new URL(request.url).pathname;
     if (path.endsWith("/fee")) return { body: fee };
     if (path.endsWith("/summary")) return { body: accountSummary };
@@ -26,13 +58,47 @@ function run(argv: string[]) {
   const out: string[] = [];
   const err: string[] = [];
   const done = runCli(
-    xrplCommands((env) => createXrplAgentKit({ ...readXrplEnv(env), transport: fake.transport })),
+    xrplCommands((cliEnv) =>
+      createXrplAgentKit({ ...readXrplEnv(cliEnv), transport: fake.transport }),
+    ),
     argv,
-    {},
+    env,
     { stdout: (t: string) => out.push(t), stderr: (t: string) => err.push(t) },
   );
   const urls = () => fake.requests.map((r) => new URL(r.url));
   return { done, out, err, urls };
+}
+
+/** The kit's credits as an `ApiClient` with `XRPL_DESCRIPTOR`, the transport and that wallet. */
+function apiCredits(client: ApiClient): CreditsApi {
+  return {
+    topup: (request) => client.topup(request),
+    lastKnownBalance: () => client.lastKnownBalance(),
+    topupSpent: () => client.topupSpent(),
+    hasToken: () => client.hasCreditToken(),
+  };
+}
+
+/**
+ * The CLI kit of the signed top-up (design "Test Double Boundary"): `createXrplAgentKit` has no
+ * XRPL client seam, so its `credits` come from an `ApiClient` whose `createXrplPayer` wallet (the
+ * seed of the environment) signs on the fake XRPL client factory; the rest is the kit's own.
+ */
+function signingKit(cliEnv: NodeJS.ProcessEnv, fake: FakeTransport): XrplAgentKit {
+  const config = readXrplEnv(cliEnv);
+  if (config.wallet === undefined) throw new Error("the scenario sets CRIPTON_XRPL_PAYER_SEED");
+  const wallet = createXrplPayer({
+    ...config.wallet,
+    clientFactory: createFakeXrplClientFactory().factory,
+  });
+  const client = new ApiClient(XRPL_DESCRIPTOR, { transport: fake.transport, wallet });
+  const kit = createXrplAgentKit({ ...config, transport: fake.transport });
+  return { ...kit, credits: apiCredits(client) };
+}
+
+/** How many times `needle` occurs in `text` (the count only, so a token is never printed). */
+function occurrences(text: string, needle: string): number {
+  return text.split(needle).length - 1;
 }
 
 describe("XRPL CLI commands map flags to requests", () => {
@@ -158,5 +224,68 @@ describe("XRPL CLI commands map flags to requests", () => {
   it("quote-dex without --quote exits 2", async () => {
     const r = run(["quote-dex", "--base", "XRP", "--amount", "1"]);
     expect(await r.done).toBe(2);
+  });
+
+  it("Top-up command without a maximum", async () => {
+    const r = run(["topup", "usd-starter"]);
+    expect(await r.done).toBe(2);
+    // `--max` as a whole flag name: the usage text of an unknown command lists `--max-slippage`.
+    expect(r.err.join("") + r.out.join("")).toMatch(/--max(?![-\w])/);
+    expect(r.urls()).toHaveLength(0);
+  });
+
+  it("Top-up command over its cap", async () => {
+    const env = {
+      CRIPTON_XRPL_PAYER_SEED: Wallet.generate().seed as string,
+      // Unreachable local WebSocket: a CLI that tried to sign could never reach a ledger.
+      CRIPTON_XRPL_WS_URL: "ws://127.0.0.1:9",
+    };
+    const r = run(
+      ["topup", "usd-starter", "--max", "0.5", "--json"],
+      env,
+      topupChallengeRlusd("1.00"),
+    );
+    expect(await r.done).toBe(3);
+    expect(JSON.parse(r.out.join(""))).toMatchObject({ code: "payment-over-cap" });
+  });
+
+  it("Top-up command prints the token once", async () => {
+    const seed = Wallet.generate().seed as string;
+    const buyer = Wallet.fromSeed(seed).classicAddress;
+    const token = creditToken();
+    const created = topupCreated(
+      token,
+      settlementHeader({ transaction: TX_HASH, network: "xrpl:0", payer: buyer }),
+      { wallet: `xrpl:0:${buyer}` },
+    );
+    const fake = new FakeTransport().respond(topupChallengeRlusd("1.00")).respond(created);
+    const out: string[] = [];
+    const err: string[] = [];
+
+    const code = await runCli(
+      xrplCommands((cliEnv) => signingKit(cliEnv, fake)),
+      ["topup", "usd-starter", "--max", "1.00", "--json"],
+      { CRIPTON_XRPL_PAYER_SEED: seed },
+      { stdout: (t: string) => out.push(t), stderr: (t: string) => err.push(t) },
+    );
+
+    expect(code).toBe(0);
+    expect(occurrences(out.join(""), token), "the token on stdout").toBe(1);
+    // A boolean, so a failure never prints stderr (it could hold the token).
+    const notice = err.join("").includes("CRIPTON_CREDITS_TOKEN");
+    expect(notice, "the notice naming CRIPTON_CREDITS_TOKEN on stderr").toBe(true);
+  });
+
+  it("Credits command", async () => {
+    const token = creditToken();
+    const env = { CRIPTON_TIER: "pro", CRIPTON_CREDITS_TOKEN: token };
+    const r = run(["credits", "--json"], env);
+    expect(await r.done).toBe(0);
+    expect(JSON.parse(r.out.join(""))).toEqual({
+      hasToken: true,
+      balance: null,
+      topupSpent: "0",
+    });
+    expectTokenAbsent([r.out.join(""), r.err.join("")], token);
   });
 });

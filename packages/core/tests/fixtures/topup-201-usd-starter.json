@@ -1,0 +1,15 @@
+{
+  "status": 201,
+  "headers": {
+    "content-type": "application/json",
+    "payment-response": "<payment-response>"
+  },
+  "body": {
+    "token": "<credit-token>",
+    "wallet": "xrpl:0:rMkDf1zjiP8jEPvoNP51t9eU4qDmrBfriD",
+    "denomination": "USD",
+    "balance": "0.82",
+    "lot_expires_at": "2027-11-12T18:20:05Z",
+    "pending": false
+  }
+}

@@ -1,11 +1,12 @@
-// Written from the API OpenAPI document 0.19.2 (fetched 2026-10-27): one type per 200 body of /v1/solana/*.
+// Written from the API OpenAPI document 0.21.0 (fetched 2026-11-12): one type per 200 body of /v1/solana/*.
+// Code-list fields are open: a known code or any other string (kit-api-sync design D3).
 
 export type SolanaMeta = {
   slot: number;
   commitment: "finalized";
   as_of: string;
   age_seconds: number;
-  cache: "hit" | "miss" | "stale";
+  cache: "hit" | "miss" | "stale" | (string & {});
   stale: boolean;
 };
 
@@ -16,7 +17,7 @@ export type SlotLatestResponse = {
 };
 
 export type SolanaHealthResponse = {
-  status: "up" | "down" | "unknown" | "unavailable";
+  status: "up" | "down" | "unknown" | "unavailable" | (string & {});
   slot: number | null;
   latency_ms: number | null;
   last_probe_at: string | null;
@@ -45,7 +46,8 @@ export type TokenReason =
   | "freeze_authority_set"
   | "transfer_fee"
   | "mint_close_authority"
-  | "unknown_extension";
+  | "unknown_extension"
+  | (string & {});
 
 export type SolanaTokenResponse = {
   mint: string;
@@ -56,7 +58,7 @@ export type SolanaTokenResponse = {
   freeze_authority: string | null;
   extensions: string[];
   transfer_fee: { basis_points: number; maximum_fee: string } | null;
-  verdict: "SAFE" | "WARN" | "DANGER";
+  verdict: "SAFE" | "WARN" | "DANGER" | (string & {});
   reasons: TokenReason[];
   meta: SolanaMeta;
 };
@@ -69,9 +71,11 @@ export type TransferBlocker =
   | "source_frozen"
   | "destination_frozen"
   | "non_transferable"
-  | "mint_paused";
+  | "mint_paused"
+  | "destination_ata_occupied"
+  | (string & {});
 
-export type TransferWarning = "destination_off_curve" | "memo_required";
+export type TransferWarning = "destination_off_curve" | "memo_required" | (string & {});
 
 export type TransferReadinessResponse = {
   source: string;

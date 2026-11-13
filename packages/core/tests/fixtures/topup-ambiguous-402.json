@@ -1,0 +1,125 @@
+{
+  "status": 402,
+  "headers": {
+    "content-type": "application/problem+json",
+    "cache-control": "no-store",
+    "payment-required": "eyJ4NDAyVmVyc2lvbiI6MiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby9jcmVkaXRzL3VzZC1zdGFydGVyIn0sImFjY2VwdHMiOlt7InNjaGVtZSI6ImV4YWN0IiwibmV0d29yayI6InNvbGFuYTo1ZXlrdDRVc0Z2OFA4TkpkVFJFcFkxdnpxS3FaS3ZkcCIsImFzc2V0IjoiRVBqRldkZDVBdWZxU1NxZU0ycU4xeHp5YmFwQzhHNHdFR0drWnd5VER0MXYiLCJhbW91bnQiOiIxMDAwMDAwIiwicGF5VG8iOiJHRUp5U1VpNkxqSHdRV0tEMkJEZzNUaUdLd2hLbUJVN0pKVGpaZmsxUkQ1NCIsIm1heFRpbWVvdXRTZWNvbmRzIjo2MCwiZXh0cmEiOnsiZmVlUGF5ZXIiOiJDak5GVGp2QmhiSkpkMkI1ZVBQTUhSTHgxRUxacGE4ZHdRZ0dMNzI3ZUt3dyJ9fSx7InNjaGVtZSI6ImV4YWN0IiwibmV0d29yayI6InNvbGFuYTo1ZXlrdDRVc0Z2OFA4TkpkVFJFcFkxdnpxS3FaS3ZkcCIsImFzc2V0IjoiRVBqRldkZDVBdWZxU1NxZU0ycU4xeHp5YmFwQzhHNHdFR0drWnd5VER0MXYiLCJhbW91bnQiOiIxMDAwMDAwIiwicGF5VG8iOiJHRUp5U1VpNkxqSHdRV0tEMkJEZzNUaUdLd2hLbUJVN0pKVGpaZmsxUkQ1NCIsIm1heFRpbWVvdXRTZWNvbmRzIjo2MCwiZXh0cmEiOnsiZmVlUGF5ZXIiOiJEZVh0ZXJSMmtRbThBdlJIbk5QYXRXa0U0NlRmQWNNZUJEamI2RnlTb0FiOCJ9fSx7InNjaGVtZSI6ImV4YWN0IiwibmV0d29yayI6InNvbGFuYTo1ZXlrdDRVc0Z2OFA4TkpkVFJFcFkxdnpxS3FaS3ZkcCIsImFzc2V0IjoiRVBqRldkZDVBdWZxU1NxZU0ycU4xeHp5YmFwQzhHNHdFR0drWnd5VER0MXYiLCJhbW91bnQiOiIxMDAwMDAwIiwicGF5VG8iOiJHRUp5U1VpNkxqSHdRV0tEMkJEZzNUaUdLd2hLbUJVN0pKVGpaZmsxUkQ1NCIsIm1heFRpbWVvdXRTZWNvbmRzIjo2MCwiZXh0cmEiOnsiZmVlUGF5ZXIiOiJIOTdqTWN5TnNvdUNTZTdzV295c0Q1bkwxQmN2cFA4REhEekVOSFpWOHN2byJ9fSx7InNjaGVtZSI6ImV4YWN0IiwibmV0d29yayI6InhycGw6MCIsImFzc2V0IjoiNTI0QzU1NTM0NDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMCIsImFtb3VudCI6IjEiLCJwYXlUbyI6InJwNmh1TmRwZ1Y3aktUbmtpSDVadG1OSm41bWV6ckx0Y3ciLCJtYXhUaW1lb3V0U2Vjb25kcyI6NjAsImV4dHJhIjp7Imlzc3VlciI6InJNeENLYkVEd3FyNzZRdWhlU1VNZEVHZjRCOXhKOG01RGUiLCJhcmVGZWVzU3BvbnNvcmVkIjpmYWxzZSwic291cmNlVGFnIjo4MDQ2ODE0NjgsImludm9pY2VJZCI6Ing0MDI6L3YxL3Byby9jcmVkaXRzL3VzZC1zdGFydGVyIn19XX0="
+  },
+  "body": {
+    "x402Version": 2,
+    "resource": {
+      "url": "https://api.criptonlabs.com/v1/pro/credits/usd-starter"
+    },
+    "accepts": [
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "1000000",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "1000000",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "DeXterR2kQm8AvRHnNPatWkE46TfAcMeBDjb6FySoAb8"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "1000000",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "H97jMcyNsouCSe7sWoysD5nL1BcvpP8DHDzENHZV8svo"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "xrpl:0",
+        "asset": "524C555344000000000000000000000000000000",
+        "amount": "1",
+        "payTo": "rp6huNdpgV7jKTnkiH5ZtmNJn5mezrLtcw",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+          "areFeesSponsored": false,
+          "sourceTag": 804681468,
+          "invoiceId": "x402:/v1/pro/credits/usd-starter"
+        }
+      }
+    ],
+    "type": "https://api.criptonlabs.com/errors/payment-settlement-failed.md",
+    "title": "Payment Required",
+    "status": 402,
+    "detail": "The settlement of this payment is not confirmed. The pending_token becomes valid only if the payment is later reconciled.",
+    "instance": "/v1/pro/credits/usd-starter",
+    "pending_token": "<credit-token>",
+    "event_id": "493e122a5dd2acd64a521a74b88de44a65eac503bc507fdcc8e9d2a5a47fd96c"
+  },
+  "paymentRequired": {
+    "x402Version": 2,
+    "resource": {
+      "url": "https://api.criptonlabs.com/v1/pro/credits/usd-starter"
+    },
+    "accepts": [
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "1000000",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "CjNFTjvBhbJJd2B5ePPMHRLx1ELZpa8dwQgGL727eKww"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "1000000",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "DeXterR2kQm8AvRHnNPatWkE46TfAcMeBDjb6FySoAb8"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+        "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "1000000",
+        "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "feePayer": "H97jMcyNsouCSe7sWoysD5nL1BcvpP8DHDzENHZV8svo"
+        }
+      },
+      {
+        "scheme": "exact",
+        "network": "xrpl:0",
+        "asset": "524C555344000000000000000000000000000000",
+        "amount": "1",
+        "payTo": "rp6huNdpgV7jKTnkiH5ZtmNJn5mezrLtcw",
+        "maxTimeoutSeconds": 60,
+        "extra": {
+          "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+          "areFeesSponsored": false,
+          "sourceTag": 804681468,
+          "invoiceId": "x402:/v1/pro/credits/usd-starter"
+        }
+      }
+    ]
+  }
+}

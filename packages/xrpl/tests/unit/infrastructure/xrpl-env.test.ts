@@ -12,6 +12,7 @@ describe("readXrplEnv", () => {
     const seed = Wallet.generate().seed as string;
     const config = readXrplEnv({ CRIPTON_TIER: "pro", CRIPTON_XRPL_PAYER_SEED: seed });
     expect(config.payment).toBeUndefined();
+    expect(config.wallet).toEqual({ seed });
 
     const fake = new FakeTransport().respondWith(() => challenge(xrplOption()));
     const kit = createXrplAgentKit({ ...config, transport: fake.transport });
@@ -54,5 +55,15 @@ describe("readXrplEnv", () => {
     }
     expect(message).toContain("CRIPTON_XRPL_PAYER_SEED");
     expect(message).not.toContain(bad);
+  });
+
+  it("Purchase tool variables ignored by the XRPL kit", () => {
+    const seed = Wallet.generate().seed as string;
+    const config = readXrplEnv({
+      CRIPTON_XRPL_PAYER_SEED: seed,
+      CRIPTON_TOPUP_MAX: "1.21",
+      CRIPTON_TOPUP_BUDGET: "5",
+    });
+    expect(config.credits?.topupBudget).toBeUndefined();
   });
 });

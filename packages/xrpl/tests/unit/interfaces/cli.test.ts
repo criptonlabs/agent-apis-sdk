@@ -20,7 +20,17 @@ describe("XRPL CLI", () => {
   it("commands list", () => {
     const commands = xrplCommands(() => createXrplAgentKit({}));
     expect(commands.map((c) => c.name).sort()).toEqual(
-      ["mcp", "fee", "account", "token", "readiness", "prepare-payment", "quote-dex"].sort(),
+      [
+        "mcp",
+        "fee",
+        "account",
+        "token",
+        "readiness",
+        "prepare-payment",
+        "quote-dex",
+        "topup",
+        "credits",
+      ].sort(),
     );
   });
 

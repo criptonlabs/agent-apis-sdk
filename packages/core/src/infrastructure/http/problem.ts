@@ -2,6 +2,7 @@ import {
   CriptonProblemError,
   type PrepaidSignals,
   type ProblemFieldError,
+  type SettlementSignals,
 } from "../../domain/errors.js";
 import { readPrepaidOffer } from "../x402/prepaid-offer.js";
 
@@ -59,6 +60,16 @@ export function signalsOf(body: unknown): PrepaidSignals {
   };
 }
 
+/** The `event_id` and `pending_token` members of an ambiguous settlement problem, when present. */
+function settlementOf(record: Record<string, unknown>): SettlementSignals {
+  const eventId = str(record.event_id);
+  const pendingToken = str(record.pending_token);
+  return {
+    ...(eventId !== undefined ? { eventId } : {}),
+    ...(pendingToken !== undefined ? { pendingToken } : {}),
+  };
+}
+
 /** Body of a response as JSON, or `undefined` when it is not JSON. */
 export async function readJson(response: Response): Promise<unknown> {
   try {
@@ -94,5 +105,6 @@ export async function parseProblem(response: Response): Promise<CriptonProblemEr
     str(record.instance),
     retryAfterSeconds,
     signalsOf(record),
+    settlementOf(record),
   );
 }

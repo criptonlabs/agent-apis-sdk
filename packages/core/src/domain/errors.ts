@@ -14,6 +14,15 @@ export interface PrepaidSignals {
   errors?: readonly ProblemFieldError[];
 }
 
+/**
+ * The settlement members of an ambiguous paid answer: the API's event id and the provisional
+ * credit token that becomes valid only if the payment is reconciled later.
+ */
+export interface SettlementSignals {
+  eventId?: string;
+  pendingToken?: string;
+}
+
 export type KitErrorJson = {
   code: string;
   message: string;
@@ -70,10 +79,24 @@ export class CriptonResponseError extends CriptonKitError {
   readonly code = "invalid-response";
 }
 
+/** The problem's message: its detail, else its title, else its code. */
+function problemMessage(code: string, title?: string, detail?: string): string {
+  return detail ?? title ?? code;
+}
+
+/** Defines the provisional token as a non-enumerable property, so no serializer lists it (design D8). */
+function hidePendingToken(error: CriptonProblemError, pendingToken: string | undefined): void {
+  if (pendingToken === undefined) return;
+  Object.defineProperty(error, "pendingToken", { value: pendingToken, enumerable: false });
+}
+
 export class CriptonProblemError extends CriptonKitError {
   readonly reason?: string;
   readonly prepaidOffer?: PrepaidOffer;
   readonly errors?: readonly ProblemFieldError[];
+  readonly eventId?: string;
+  /** The provisional credit token: non-enumerable and never serialized (design D8). */
+  declare readonly pendingToken?: string;
 
   constructor(
     readonly code: string,
@@ -83,11 +106,14 @@ export class CriptonProblemError extends CriptonKitError {
     readonly instance?: string,
     readonly retryAfterSeconds?: number,
     signals: PrepaidSignals = {},
+    settlement: SettlementSignals = {},
   ) {
-    super(detail ?? title ?? code);
+    super(problemMessage(code, title, detail));
     if (signals.reason !== undefined) this.reason = signals.reason;
     if (signals.prepaidOffer !== undefined) this.prepaidOffer = signals.prepaidOffer;
     if (signals.errors !== undefined) this.errors = signals.errors;
+    if (settlement.eventId !== undefined) this.eventId = settlement.eventId;
+    hidePendingToken(this, settlement.pendingToken);
   }
 
   protected override topMembers(): Record<string, unknown> {
@@ -100,6 +126,7 @@ export class CriptonProblemError extends CriptonKitError {
       reason: this.reason,
       prepaidOffer: this.prepaidOffer,
       errors: this.errors,
+      eventId: this.eventId,
     };
   }
 }
@@ -124,7 +151,8 @@ export class CriptonPaymentError extends CriptonKitError {
       | "payment-disabled"
       | "no-supported-payment-option"
       | "payment-over-cap"
-      | "payment-budget-exhausted",
+      | "payment-budget-exhausted"
+      | "siwx-challenge-mismatch",
     readonly options: readonly PaymentOptionSummary[],
     signals: PrepaidSignals = {},
   ) {

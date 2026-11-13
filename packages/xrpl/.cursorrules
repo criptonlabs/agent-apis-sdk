@@ -7,8 +7,18 @@ Applies when writing XRP Ledger payment or DEX code.
 - Check readiness first and surface its reasons; do not submit when the verdict is not ready.
 - Read `meta.stale` on every response and treat stale data as possibly out of date.
 - Amounts are decimal strings; never use floats. Assets are `"XRP"` or `"<currency>.<issuer>"`.
-- Free routes live under `/v1/xrpl/*`; paid routes under `/v1/pro/xrpl/*`.
+- Free routes live under `/v1/xrpl/*`; paid routes under `/v1/pro/xrpl/*`. Credit purchases use `/v1/pro/credits/*`; the price index is `GET /v1/pro/requirements`.
 - Payment is opt-in: `CRIPTON_TIER=pro`, `CRIPTON_XRPL_PAYER_SEED` and a mandatory `CRIPTON_MAX_PER_CALL`; `CRIPTON_SESSION_BUDGET` is optional.
-- Never hardcode prices or amounts to pay; read them from the API (`GET /v1/pro/requirements`).
-- Never hardcode, log or commit a seed or private key; read it from the environment only.
+- Never hardcode prices or amounts to pay; read them from the API (`GET /v1/pro/requirements`, `kit.prices()`, `kit.priceOf(resource)`).
+- Prepaid credits: `CRIPTON_CREDITS_TOKEN` (a `clc_...` token, needs `CRIPTON_TIER=pro`) is sent as `Authorization: Bearer` on paid-tier calls. `xrpl_credits_status` reports whether a token is configured and the last known balance, never the token.
+- Never hardcode, log or commit a seed, private key or credit token; read it from the environment only.
 - Handle errors by their `{ code, message }` shape.
+
+## Purchase limits
+
+- A top-up needs its own maximum: `maxAmount` in `kit.credits.topup({ bundle, maxAmount })`, `--max` in `agent-apis-xrpl topup <bundle> --max <amount>`.
+- `maxPerCall` and `sessionBudget` never apply to purchases; they limit per-call payments only.
+- `credits.topupBudget`, set in code, caps the total of the process's purchases.
+- `CRIPTON_TOPUP_MAX` and `CRIPTON_TOPUP_BUDGET` are Solana settings (the per-purchase maximum of `solana_credits_topup` and the cap on a process's Solana top-ups); the XRPL kit ignores them (the core still checks that they are set together or not at all). The XRPL purchase limits are `--max` in the CLI, and `maxAmount` with `credits.topupBudget` in code.
+- A credit token is shown once: store it in `CRIPTON_CREDITS_TOKEN` right away. An XRPL wallet cannot recover a lost credit token (no token rotation on XRPL).
+- No tool buys credits in the XRPL kit; top-ups happen only through the programmatic `kit.credits.topup` and the CLI `topup` command.

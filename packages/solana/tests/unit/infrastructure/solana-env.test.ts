@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { CriptonValidationError } from "@criptonlabs/agent-apis-core";
 import { describe, expect, it } from "vite-plus/test";
+import { creditToken } from "../../../../core/tests/support/credit-fixtures.js";
 import { readSolanaEnv } from "../../../src/infrastructure/config/solana-env.js";
 
 function failure(env: NodeJS.ProcessEnv): { field?: string; message: string } {
@@ -49,18 +50,45 @@ describe("readSolanaEnv", () => {
       CRIPTON_SOLANA_RPC_URL: "https://api.devnet.solana.com",
       CRIPTON_MAX_PER_CALL: "0.05",
     });
-    expect(config.payment).toEqual({
+    expect(config.wallet).toEqual({
       key,
       network: "devnet",
       asset: "EURC",
       rpcUrl: "https://api.devnet.solana.com",
-      maxPerCall: "0.05",
     });
+    expect(config.payment).toEqual({ maxPerCall: "0.05" });
   });
 
   it("Solana key without a cap", () => {
-    const config = readSolanaEnv({ CRIPTON_TIER: "pro", CRIPTON_SOLANA_PAYER_KEY: throwawayKey() });
+    const key = throwawayKey();
+    const config = readSolanaEnv({ CRIPTON_TIER: "pro", CRIPTON_SOLANA_PAYER_KEY: key });
     expect(config.payment).toBeUndefined();
+    expect(config.wallet).toEqual({ key });
+  });
+
+  it("SIWX without a payer key", () => {
+    const result = failure({ CRIPTON_TIER: "pro", CRIPTON_SOLANA_SIWX: "on" });
+    expect(result.field).toBe("CRIPTON_SOLANA_PAYER_KEY");
+  });
+
+  it("Invalid SIWX value", () => {
+    expect(failure({ CRIPTON_SOLANA_SIWX: "yes" }).field).toBe("CRIPTON_SOLANA_SIWX");
+  });
+
+  it("Credit token from the environment", () => {
+    const token = creditToken();
+    const config = readSolanaEnv({ CRIPTON_TIER: "pro", CRIPTON_CREDITS_TOKEN: token });
+    // A boolean, so a failure never prints the token.
+    expect(config.credits?.token === token, "credits.token is the configured token").toBe(true);
+  });
+
+  it("SIWX from the environment", () => {
+    const config = readSolanaEnv({
+      CRIPTON_TIER: "pro",
+      CRIPTON_SOLANA_PAYER_KEY: throwawayKey(),
+      CRIPTON_SOLANA_SIWX: "on",
+    });
+    expect(config.credits?.siwx).toBe(true);
   });
 
   it("reads tier and base URL from the common environment", () => {

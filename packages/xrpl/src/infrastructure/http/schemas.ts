@@ -1,4 +1,5 @@
-// Zod response schemas per OpenAPI path (snapshot 0.19.2), typed against the generated api-types.
+// Zod response schemas per OpenAPI path (snapshot 0.21.0), typed against the generated api-types.
+import { codeList } from "@criptonlabs/agent-apis-core";
 import { z } from "zod";
 import type {
   AccountLinesResponse,
@@ -44,14 +45,14 @@ const meta = z.object({
   ledger_index: int,
   as_of: str,
   age_seconds: z.number(),
-  cache: z.enum(["hit", "miss", "stale"]),
+  cache: codeList(["hit", "miss", "stale"]),
   stale: z.boolean(),
 });
 
-const nodeStatus = z.enum(["ok", "degraded", "down", "unknown"]);
+const nodeStatus = codeList(["ok", "degraded", "down", "unknown"]);
 const node = z.object({
   member: str,
-  state: z.enum(["up", "down"]),
+  state: codeList(["up", "down"]),
   latency_ms: z.number().nullable(),
   ledger_index: int.nullable(),
   ledger_age_s: z.number().nullable(),
@@ -64,7 +65,7 @@ const feeSchema = z.object({
   fee: z.object({ economy: str, standard: str, priority: str }),
   congestion: z.object({
     score: z.number(),
-    band: z.enum(["low", "medium", "high"]),
+    band: codeList(["low", "medium", "high"]),
     load_factor_assumed: z.boolean(),
   }),
   base_fee: str,
@@ -139,7 +140,7 @@ const venueQuote = {
 const slippageSchema = z.object({
   base: str,
   quote: str,
-  side: z.enum(["buy"]),
+  side: codeList(["buy"]),
   depth: int,
   amount: str,
   filled: str,
@@ -152,8 +153,8 @@ const slippageSchema = z.object({
   transfer_fee: strNull,
   avg_price_after_fees: strNull,
   venues: z.object({
-    best: z.enum(["clob", "amm"]).nullable(),
-    amm_status: z.enum(["ok", "stale", "no_pool", "unavailable"]),
+    best: codeList(["clob", "amm"]).nullable(),
+    amm_status: codeList(["ok", "stale", "no_pool", "unavailable"]),
     clob: z.object(venueQuote),
     amm: z.object({ ...venueQuote, spot_price: str, trading_fee: str }).nullable(),
   }),
@@ -236,14 +237,14 @@ const tokenSchema = z.object({
   transfer_rate: z.number(),
   transfer_fee_pct: str,
   obligations: strNull,
-  obligations_status: z.enum(["ok", "unavailable"]),
+  obligations_status: codeList(["ok", "unavailable"]),
   meta,
 }) satisfies z.ZodType<TokenResponse>;
 
 const readinessSchema = z.object({
-  verdict: z.enum(["ready", "not_ready", "unknown"]),
+  verdict: codeList(["ready", "not_ready", "unknown"]),
   reasons: z.array(
-    z.enum([
+    codeList([
       "source_not_found",
       "insufficient_xrp_balance",
       "source_line_missing",
@@ -261,10 +262,10 @@ const readinessSchema = z.object({
     ]),
   ),
   warnings: z.array(
-    z.enum(["destination_will_be_created", "transfer_fee", "high_fee", "network_degraded"]),
+    codeList(["destination_will_be_created", "transfer_fee", "high_fee", "network_degraded"]),
   ),
   checks_failed: z.array(
-    z.enum([
+    codeList([
       "source_account",
       "destination_account",
       "deposit_authorized",
@@ -303,7 +304,7 @@ const pathsSchema = z.object({
     }),
   ),
   paths_may_be_non_optimal: z.literal(true).meta({ enum: [true] }),
-  warnings: z.array(z.enum(["destination_not_found"])),
+  warnings: z.array(codeList(["destination_not_found"])),
   meta,
 }) satisfies z.ZodType<PathsResponse>;
 

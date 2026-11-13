@@ -1,13 +1,46 @@
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { afterEach, describe, expect, it } from "vite-plus/test";
 import { z } from "zod";
+import { ApiClient } from "../../../src/infrastructure/http/api-client.js";
 import { createMcpServer } from "../../../src/interfaces/mcp/server.js";
+import type { ToolDefinition } from "../../../src/interfaces/tools/definition.js";
+import {
+  creditToken,
+  expectTokenAbsent,
+  loadFixture,
+  withBodyMembers,
+} from "../../support/credit-fixtures.js";
+import { FakeTransport } from "../../support/fake-transport.js";
 import { resetRuns, runs, testTools } from "../../support/test-tools.js";
 
 const closers: Array<() => Promise<void>> = [];
 
-async function connect(): Promise<Client> {
-  const server = await createMcpServer(testTools, { name: "test", version: "0.0.0" });
+/** A read tool over an `ApiClient` configured with `token`, on a paid route refused with `credits_invalid`. */
+function creditRefusedTool(token: string, fake: FakeTransport): ToolDefinition<unknown, unknown> {
+  const client = new ApiClient(
+    { network: "xrpl", productToken: "agent-apis-xrpl/0.1.0" },
+    { tier: "pro", transport: fake.transport, credits: { token } },
+  );
+  return {
+    name: "credit_fee",
+    description: "Reads the fee on the paid tier with a credit token.",
+    inputSchema: z.object({}),
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: true,
+    },
+    async run() {
+      return (await client.request({ route: "fee", schema: z.object({}).passthrough() })).data;
+    },
+  };
+}
+
+async function connect(
+  tools: readonly ToolDefinition<unknown, unknown>[] = testTools,
+): Promise<Client> {
+  const server = await createMcpServer(tools, { name: "test", version: "0.0.0" });
   const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
   const client = new Client({ name: "test-client", version: "0.0.0" });
   await server.connect(serverSide);
@@ -82,5 +115,22 @@ describe("MCP adapter", () => {
     expect(text).not.toContain("Error: boom");
     expect(text).not.toMatch(/\n\s+at /);
     expect(text).not.toMatch(/\bat\s+\S+\s+\(/);
+  });
+
+  it("Tool error with a configured token", async () => {
+    const token = creditToken();
+    const refusal = withBodyMembers(loadFixture("challenge-fee-credits-only"), {
+      error: "credits_invalid",
+    });
+    const fake = new FakeTransport().respond(refusal);
+    const client = await connect([creditRefusedTool(token, fake)]);
+    const result = await client.callTool({ name: "credit_fee", arguments: {} });
+    expect(
+      fake.requests[0]?.headers.authorization === `Bearer ${token}`,
+      "the tool's request carries the configured token",
+    ).toBe(true);
+    expect(result.isError).toBe(true);
+    const content = result.content as Array<{ type: string; text: string }>;
+    expectTokenAbsent([content[0]?.text ?? ""], token);
   });
 });

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Fails closed: a push is refused unless tests (with coverage thresholds), build and the
-# package exports check pass. The testnet e2e stays human-run (see CONTRIBUTING.md).
+# package exports check pass. The devnet and testnet e2e suites are opt-in and not part of this hook (see CONTRIBUTING.md).
 set -e
 pnpm test
 pnpm build
