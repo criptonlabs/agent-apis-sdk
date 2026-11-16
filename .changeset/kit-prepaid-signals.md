@@ -1,5 +1,5 @@
 ---
-"@criptonlabs/agent-apis-core": minor
+"@criptonlabs/agent-apis-core": patch
 "@criptonlabs/agent-apis-xrpl": patch
 ---
 

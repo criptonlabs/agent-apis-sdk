@@ -27,7 +27,8 @@
     ".cursorrules",
     "README.md",
     "LICENSE",
-    "NOTICE"
+    "NOTICE",
+    "CHANGELOG.md"
   ],
   "type": "module",
   "exports": {

@@ -1,5 +1,11 @@
 # @criptonlabs/agent-apis-core
 
+[![version](https://img.shields.io/github/package-json/v/criptonlabs/agent-apis-sdk?filename=packages%2Fcore%2Fpackage.json&style=flat-square&label=version)](https://github.com/criptonlabs/agent-apis-sdk/releases)
+[![CI](https://img.shields.io/github/actions/workflow/status/criptonlabs/agent-apis-sdk/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=CI)](https://github.com/criptonlabs/agent-apis-sdk/actions/workflows/ci.yml)
+[![license](https://img.shields.io/github/license/criptonlabs/agent-apis-sdk?style=flat-square&color=blue)](https://github.com/criptonlabs/agent-apis-sdk/blob/main/LICENSE)
+[![node](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcriptonlabs%2Fagent-apis-sdk%2Fmain%2Fpackages%2Fcore%2Fpackage.json&query=%24.engines.node&label=node&style=flat-square&logo=nodedotjs&logoColor=white&color=5FA04E)](https://nodejs.org)
+[![types](https://img.shields.io/badge/types-included-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://github.com/criptonlabs/agent-apis-sdk/tree/main/packages/core)
+
 Network-independent core for the typed clients of the hosted Criptonlabs Agent APIs (https://api.criptonlabs.com).
 
 ## Who it is for
@@ -8,7 +14,7 @@ Authors of network kits. End users who want tools for a specific network should 
 
 ## Status
 
-Pre-release. The package is private and not yet published to npm (version `0.0.0`); install instructions will be added when it is published.
+Pre-release. The package is not yet published to npm; install instructions will be added when it is published. Versions and release notes are in [CHANGELOG.md](CHANGELOG.md).
 
 ## API surface
 

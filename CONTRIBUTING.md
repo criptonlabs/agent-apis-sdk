@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping. This repository is pre-release and private; the rules below apply to every change.
+Thanks for helping. This repository is pre-release; the rules below apply to every change.
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ Before opening a pull request, run `pnpm typecheck && pnpm lint && pnpm test && 
 
 Do one scenario at a time. Never write code and tests together. Amounts are decimal strings and decimal math goes only through the core money module, never floats.
 
-## Changesets
+## Changesets and releases
 
 Every pull request that changes behavior adds a changeset:
 
@@ -55,6 +55,10 @@ pnpm changeset
 ```
 
 Versions are independent per package. Do not edit versions by hand.
+
+On pushes to `main`, after the `verify` job passes, the CI `release` job opens or updates a pull request titled "chore: version packages". That PR bumps versions, writes each package's `CHANGELOG.md` and removes the consumed changesets. Merging it makes the next `release` run create one git tag per package (`<package name>@<version>`) and one GitHub Release per tag. Nothing is published to npm; the packages keep `"private": true`.
+
+The version PR is opened with the workflow token, so GitHub runs no CI on it. CI runs on its merge commit to `main` before the tags are created. Only maintainers merge the version PR.
 
 ## Commit style
 
@@ -74,7 +78,7 @@ The suites in `packages/xrpl/tests/e2e/` (XRPL testnet) and `packages/solana/tes
 
 - People and automated agents may run them on Solana devnet and XRPL testnet (standing rule of the maintainer, 2026-11-12). Never with mainnet keys, seeds or RPC URLs.
 - Funding the payers (testnet RLUSD, devnet USDC and EURC) is done by a person. Agents never request faucet funds.
-- The API repository (`../kryptonianlabs-apis`) is read only: no edit, no install, no dev server and no writing git command inside it. The only git command run on it is `git archive` (with the read-only `git rev-parse` that checks the revision).
+- The API repository is read only: no edit, no install, no dev server and no writing git command inside it. The only git command run on it is `git archive` (with the read-only `git rev-parse` that checks the revision).
 
 ### Local API stack
 

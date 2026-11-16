@@ -1,5 +1,5 @@
 // Local API stack for the SDK testnet/devnet e2e suites (design D15 of change `kit-api-sync`).
-// The API repository `../kryptonianlabs-apis` is read only: this script runs `git archive` (and the
+// The API repository (`API_ROOT`) is read only: this script runs `git archive` (and the
 // read-only `rev-parse`) on it and reads its four env files; it never edits, installs or starts
 // anything inside it. The export of the API's released main (`ce704b9`) lives in the SDK's
 // gitignored `.e2e-api/ce704b9/`, together with the generated test secrets. No env value, seed or
