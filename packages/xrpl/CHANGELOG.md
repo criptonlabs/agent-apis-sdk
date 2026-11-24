@@ -1,5 +1,13 @@
 # @criptonlabs/agent-apis-xrpl
 
+## 0.0.2
+
+### Patch Changes
+
+- 49a2019: Follow API contract 0.27.0. BREAKING (pre-release), response fields follow the API 1:1 with no aliases. XRPL: fee fields are `*_drops`; AMM `trading_fee_pct`; account summary `transfer_fee_pct` replaces `transfer_rate`; trust lines use `peer` and `line_limit`; token `flags` is an object; health uses `ledger_age_seconds` and `load_factor_multiplier`, and `uptime_pct` is a decimal string. Solana: transfer readiness returns `verdict`, `reasons` and `checks_failed` instead of `ready` and `blockers`, with `amount_atomic`; the token verdict is lower case and the raw supply moves to `supply_atomic`; `uptime_pct` is a decimal string. Core: the price index reads `denominations[]`, the prepaid offer has no `activation`, and `meta` may carry a null `ledger_index` or `slot`. Solana transfer preparation raises `transfer-readiness-unknown` when the verdict is `unknown`. New inputs: `domain` (orderbook, slippage), `side` (slippage) and `credentials` (payment readiness, tool and CLI). `depth` accepts the API range, and `quote-dex --depth` text is accepted only as decimal digits, as the API. Asset grammar: 3-character codes are case-sensitive, 40-hex codes are accepted, an MPT id is accepted on payment readiness only, and 4-20 character text codes are refused instead of converted.
+- Updated dependencies [49a2019]
+  - @criptonlabs/agent-apis-core@0.0.2
+
 ## 0.0.1
 
 ### Patch Changes
