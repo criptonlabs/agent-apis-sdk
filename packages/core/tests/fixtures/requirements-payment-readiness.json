@@ -9,14 +9,17 @@
     "resource": {
       "url": "https://api.criptonlabs.com/v1/pro/xrpl/payment-readiness",
       "description": "Pre-payment check: can this payment from source to destination succeed now?",
-      "mimeType": "application/json"
+      "mimeType": "application/json",
+      "serviceName": "Criptonlabs Agent APIs",
+      "tags": ["xrpl", "solana", "pre-payment-check", "market-metrics", "payment-verification"],
+      "iconUrl": "https://api.criptonlabs.com/icon.png"
     },
     "accepts": [
       {
         "scheme": "exact",
         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
         "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-        "amount": "14520",
+        "amount": "43560",
         "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
         "maxTimeoutSeconds": 60,
         "extra": {
@@ -27,7 +30,7 @@
         "scheme": "exact",
         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
         "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-        "amount": "14520",
+        "amount": "43560",
         "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
         "maxTimeoutSeconds": 60,
         "extra": {
@@ -38,7 +41,7 @@
         "scheme": "exact",
         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
         "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-        "amount": "14520",
+        "amount": "43560",
         "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
         "maxTimeoutSeconds": 60,
         "extra": {
@@ -49,7 +52,7 @@
         "scheme": "exact",
         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
         "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
-        "amount": "12100",
+        "amount": "36300",
         "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
         "maxTimeoutSeconds": 60,
         "extra": {
@@ -60,7 +63,7 @@
         "scheme": "exact",
         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
         "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
-        "amount": "12100",
+        "amount": "36300",
         "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
         "maxTimeoutSeconds": 60,
         "extra": {
@@ -71,7 +74,7 @@
         "scheme": "exact",
         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
         "asset": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
-        "amount": "12100",
+        "amount": "36300",
         "payTo": "GEJySUi6LjHwQWKD2BDg3TiGKwhKmBU7JJTjZfk1RD54",
         "maxTimeoutSeconds": 60,
         "extra": {
@@ -82,13 +85,13 @@
         "scheme": "exact",
         "network": "xrpl:0",
         "asset": "524C555344000000000000000000000000000000",
-        "amount": "0.01452",
-        "payTo": "rp6huNdpgV7jKTnkiH5ZtmNJn5mezrLtcw",
+        "amount": "0.04356",
+        "payTo": "raTbdVWE3VHZFod848Y5DWh9fJh3LHq6b",
         "maxTimeoutSeconds": 60,
         "extra": {
           "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
           "areFeesSponsored": false,
-          "sourceTag": 804681468,
+          "sourceTag": 589402985,
           "invoiceId": "x402:/v1/pro/xrpl/payment-readiness"
         }
       }
@@ -100,8 +103,8 @@
             "type": "http",
             "method": "GET",
             "queryParams": {
-              "source": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
-              "destination": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+              "source": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+              "destination": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq"
             }
           },
           "output": {

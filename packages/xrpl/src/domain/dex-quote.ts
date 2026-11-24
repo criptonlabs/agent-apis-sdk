@@ -5,7 +5,7 @@ export interface DexQuoteInput {
   base: string;
   quote: string;
   amount: string;
-  depth?: 10 | 50 | 100 | 200;
+  depth?: number;
   maxSlippagePct?: string;
 }
 
@@ -17,7 +17,7 @@ export interface DexQuote {
   partial: boolean;
   insufficientLiquidity: boolean;
   bestVenue: "clob" | "amm" | (string & {}) | null;
-  ammStatus: "ok" | "stale" | "no_pool" | "unavailable" | (string & {});
+  ammStatus: "ok" | "stale" | "no_pool" | "frozen" | "unavailable" | (string & {});
   avgPrice: string | null;
   slippagePct: string | null;
   venues: { clob: SlippageResponse["venues"]["clob"]; amm: SlippageResponse["venues"]["amm"] };

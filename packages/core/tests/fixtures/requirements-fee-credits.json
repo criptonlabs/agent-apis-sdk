@@ -9,7 +9,10 @@
     "resource": {
       "url": "https://api.criptonlabs.com/v1/pro/xrpl/fee",
       "description": "Current XRPL fee tiers in drops with a congestion score.",
-      "mimeType": "application/json"
+      "mimeType": "application/json",
+      "serviceName": "Criptonlabs Agent APIs",
+      "tags": ["xrpl", "solana", "pre-payment-check", "market-metrics", "payment-verification"],
+      "iconUrl": "https://api.criptonlabs.com/icon.png"
     },
     "accepts": [],
     "extensions": {
@@ -40,69 +43,59 @@
               "id": "eur-1",
               "amount": "1.21",
               "credited_units": "1",
-              "approx_calls": 2000,
-              "activation": "confirmed"
+              "approx_calls": 2000
             },
             {
               "id": "eur-2",
               "amount": "2.42",
               "credited_units": "2.2",
-              "approx_calls": 4400,
-              "activation": "confirmed"
+              "approx_calls": 4400
             },
             {
               "id": "eur-10",
               "amount": "12.10",
               "credited_units": "11.5",
-              "approx_calls": 23000,
-              "activation": "finalized"
+              "approx_calls": 23000
             },
             {
               "id": "eur-50",
               "amount": "60.50",
               "credited_units": "60",
-              "approx_calls": 120000,
-              "activation": "finalized"
+              "approx_calls": 120000
             },
             {
               "id": "usd-starter",
               "amount": "1.00",
               "credited_units": "0.82",
-              "approx_calls": 1366,
-              "activation": "confirmed"
+              "approx_calls": 1366
             },
             {
               "id": "usd-1",
               "amount": "1.21",
               "credited_units": "1",
-              "approx_calls": 1666,
-              "activation": "confirmed"
+              "approx_calls": 1666
             },
             {
               "id": "usd-2",
               "amount": "2.42",
               "credited_units": "2.2",
-              "approx_calls": 3666,
-              "activation": "confirmed"
+              "approx_calls": 3666
             },
             {
               "id": "usd-10",
               "amount": "12.10",
               "credited_units": "11.5",
-              "approx_calls": 19166,
-              "activation": "finalized"
+              "approx_calls": 19166
             },
             {
               "id": "usd-50",
               "amount": "60.50",
               "credited_units": "60",
-              "approx_calls": 100000,
-              "activation": "finalized"
+              "approx_calls": 100000
             }
           ],
           "client_setup": {
-            "note": "x402 clients cap payments at 1 USD by default: usd-starter (1.00 USD) needs no setup; for larger bundles set spendControls.maxAmountPerPayment to at least the bundle amount, and list EURC in spendControls.allowedAssets.",
-            "guide": "https://api.criptonlabs.com/docs/guides/payments.md#prepaid-credits"
+            "guide": "https://api.criptonlabs.com/docs/guides/payments.md#client-setup"
           }
         },
         "schema": {
@@ -114,9 +107,9 @@
           "domain": "api.criptonlabs.com",
           "uri": "https://api.criptonlabs.com/v1/pro/xrpl/fee",
           "version": "1",
-          "nonce": "6af601fe06eacd2dca1a4b8146b376e5",
-          "issuedAt": "2026-11-12T18:14:22Z",
-          "expirationTime": "2026-11-12T18:19:22Z"
+          "nonce": "6b055de40cd2abcf8dd9612d95bec7c3",
+          "issuedAt": "2026-11-24T09:50:28Z",
+          "expirationTime": "2026-11-24T09:55:28Z"
         },
         "supportedChains": [
           {

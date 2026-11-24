@@ -52,12 +52,13 @@ export interface PreparedTransfer {
 }
 
 export class TransferNotReadyError extends CriptonRefusalError {
-  readonly code = "transfer-not-ready";
   constructor(
+    readonly code: "transfer-not-ready" | "transfer-readiness-unknown",
     readonly reasons: readonly string[],
     readonly warnings: readonly string[],
+    readonly checksFailed: readonly string[] = [],
   ) {
-    super("Transfer not ready");
+    super(code);
   }
 }
 
@@ -98,7 +99,7 @@ function assetMatches(intent: TransferIntent, readiness: TransferReadinessRespon
 
 function amountMatches(intent: TransferIntent, readiness: TransferReadinessResponse): boolean {
   try {
-    return mulPow10(intent.amount, readiness.decimals) === readiness.amount_raw;
+    return mulPow10(intent.amount, readiness.decimals) === readiness.amount_atomic;
   } catch (error) {
     if (error instanceof RangeError) {
       return false;
@@ -120,17 +121,28 @@ export function verifyReadiness(
   }
 }
 
+function assertReady(readiness: TransferReadinessResponse): void {
+  if (readiness.verdict === "ready") return;
+  if (readiness.verdict === "not_ready") {
+    throw new TransferNotReadyError("transfer-not-ready", readiness.reasons, readiness.warnings);
+  }
+  throw new TransferNotReadyError(
+    "transfer-readiness-unknown",
+    readiness.reasons,
+    readiness.warnings,
+    readiness.checks_failed,
+  );
+}
+
 export function planTransfer(
   intent: TransferIntent,
   readiness: TransferReadinessResponse,
 ): TransferPlan {
   verifyReadiness(intent, readiness);
-  if (!readiness.ready) {
-    throw new TransferNotReadyError(readiness.blockers, readiness.warnings);
-  }
+  assertReady(readiness);
   const { source, destination, mint } = intent;
   if (mint === "SOL") {
-    return { kind: "sol", source, destination, lamports: readiness.amount_raw };
+    return { kind: "sol", source, destination, lamports: readiness.amount_atomic };
   }
   if (readiness.token_program === null) {
     throw new CriptonValidationError("mint", "mint has no token program in the readiness report");
@@ -141,7 +153,7 @@ export function planTransfer(
     destination,
     mint,
     tokenProgram: readiness.token_program,
-    amountRaw: readiness.amount_raw,
+    amountRaw: readiness.amount_atomic,
     decimals: readiness.decimals,
     createDestinationAccount: readiness.requires_ata_creation,
   };

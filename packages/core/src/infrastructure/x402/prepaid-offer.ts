@@ -25,7 +25,6 @@ function bundleOf(value: unknown): PrepaidBundle | undefined {
     amount: b.amount,
     creditedUnits: b.credited_units,
     ...(typeof b.approx_calls === "number" ? { approxCalls: b.approx_calls } : {}),
-    ...(typeof b.activation === "string" ? { activation: b.activation } : {}),
   };
 }
 

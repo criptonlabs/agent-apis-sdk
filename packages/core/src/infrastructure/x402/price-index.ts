@@ -1,7 +1,8 @@
-import type { CreditBalance, PriceIndex, PriceIndexEntry } from "../../application/ports.js";
+import type { PriceIndex, PriceIndexEntry } from "../../application/ports.js";
 import { assertDecimal } from "../../domain/decimal.js";
 
 type IndexPrice = PriceIndexEntry["prices"][number];
+type IndexDenomination = PriceIndexEntry["denominations"][number];
 
 const record = (value: unknown): Record<string, unknown> | undefined =>
   typeof value === "object" && value !== null && !Array.isArray(value)
@@ -23,6 +24,7 @@ function optionalStrings(price: Record<string, unknown>): Omit<IndexPrice, "amou
     ...(typeof price.network === "string" ? { network: price.network } : {}),
     ...(typeof price.mint === "string" ? { mint: price.mint } : {}),
     ...(typeof price.issuer === "string" ? { issuer: price.issuer } : {}),
+    ...(typeof price.currency === "string" ? { currency: price.currency } : {}),
   };
 }
 
@@ -41,14 +43,24 @@ function pricesOf(value: unknown): IndexPrice[] {
   return value.map(priceOf).filter((p): p is IndexPrice => p !== undefined);
 }
 
-/** The credit debit per denomination; unreadable pairs are left out, none at all is `null`. */
-function debitOf(value: unknown): CreditBalance | null {
-  const debit = record(value);
-  if (debit === undefined) return null;
-  const pairs = Object.entries(debit)
-    .map(([denomination, units]) => [denomination, decimalOf(units)] as const)
-    .filter((pair): pair is readonly [string, string] => pair[1] !== undefined);
-  return pairs.length > 0 ? Object.freeze(Object.fromEntries(pairs)) : null;
+function denominationOf(value: unknown): IndexDenomination | undefined {
+  const entry = record(value);
+  const debit = decimalOf(entry?.debit);
+  if (entry === undefined || debit === undefined || typeof entry.denomination !== "string") {
+    return undefined;
+  }
+  const calls = entry.approx_calls;
+  return {
+    denomination: entry.denomination,
+    debit,
+    ...(Number.isInteger(calls) ? { approxCalls: calls as number } : {}),
+  };
+}
+
+/** The readable denominations in the API's order; none at all gives `[]`. */
+function denominationsOf(value: unknown): IndexDenomination[] {
+  if (!Array.isArray(value)) return [];
+  return value.map(denominationOf).filter((d): d is IndexDenomination => d !== undefined);
 }
 
 function entryOf(value: unknown): PriceIndexEntry | undefined {
@@ -58,7 +70,7 @@ function entryOf(value: unknown): PriceIndexEntry | undefined {
   return {
     resource: route.resource,
     mode: route.mode,
-    debit: debitOf(route.debit),
+    denominations: denominationsOf(route.denominations),
     prices: pricesOf(route.prices),
   };
 }

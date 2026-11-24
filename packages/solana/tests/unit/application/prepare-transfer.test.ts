@@ -11,6 +11,7 @@ import {
 } from "../../../src/domain/prepared-transfer.js";
 import solFixture from "../../fixtures/responses/transfer-readiness-sol.json" with { type: "json" };
 import splFixture from "../../fixtures/responses/transfer-readiness-spl.json" with { type: "json" };
+import unknownFixture from "../../fixtures/derived/transfer-readiness-unknown.json" with { type: "json" };
 import { FakeDataPort } from "../../support/fake-data-port.js";
 
 const SOURCE = "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM";
@@ -67,7 +68,7 @@ function splReadiness(
 
 describe("prepareTransfer", () => {
   it("SOL transfer prepared", async () => {
-    const readiness = solReadiness({ ready: true, amount_raw: "10000000" });
+    const readiness = solReadiness({ verdict: "ready", amount_atomic: "10000000" });
     const fake = new FakeDataPort(readiness);
     const builder = new RecordingBuilder();
 
@@ -87,7 +88,13 @@ describe("prepareTransfer", () => {
   });
 
   it("SPL transfer prepared", async () => {
-    const readiness = splReadiness({ decimals: 6, amount_raw: "1000000" });
+    const readiness = splReadiness({
+      verdict: "ready",
+      decimals: 6,
+      amount_atomic: "1000000",
+      token_program: TOKEN_PROGRAM,
+      requires_ata_creation: false,
+    });
     const fake = new FakeDataPort(readiness);
     const builder = new RecordingBuilder();
 
@@ -110,7 +117,9 @@ describe("prepareTransfer", () => {
   });
 
   it("Token-2022 transfer prepared", async () => {
-    const fake = new FakeDataPort(splReadiness({ token_program: TOKEN_2022_PROGRAM }));
+    const fake = new FakeDataPort(
+      splReadiness({ verdict: "ready", token_program: TOKEN_2022_PROGRAM }),
+    );
     const builder = new RecordingBuilder();
 
     await prepareTransfer(fake.port, builder, splIntent);
@@ -121,6 +130,7 @@ describe("prepareTransfer", () => {
 
   it("Destination account created first", async () => {
     const readiness = splReadiness({
+      verdict: "ready",
       requires_ata_creation: true,
       ata_creation_lamports: "2039280",
     });
@@ -135,7 +145,7 @@ describe("prepareTransfer", () => {
 
   it("Transfer not ready", async () => {
     const fake = new FakeDataPort(
-      solReadiness({ ready: false, blockers: ["insufficient_balance"] }),
+      solReadiness({ verdict: "not_ready", reasons: ["insufficient_balance"] }),
     );
     const builder = new RecordingBuilder();
 
@@ -144,6 +154,29 @@ describe("prepareTransfer", () => {
     expect(error).toBeInstanceOf(TransferNotReadyError);
     expect((error as TransferNotReadyError).code).toBe("transfer-not-ready");
     expect((error as TransferNotReadyError).reasons).toEqual(["insufficient_balance"]);
+    expect(builder.plans).toEqual([]);
+  });
+
+  it("Transfer readiness unknown", async () => {
+    const fake = new FakeDataPort(unknownFixture as TransferReadinessResponse);
+    const builder = new RecordingBuilder();
+
+    const error = await prepareTransfer(fake.port, builder, splIntent).catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(TransferNotReadyError);
+    expect((error as TransferNotReadyError).code).toBe("transfer-readiness-unknown");
+    expect((error as TransferNotReadyError).checksFailed).toEqual(["destination_token_account"]);
+    expect(builder.plans).toEqual([]);
+  });
+
+  it("Unlisted verdict refused", async () => {
+    const fake = new FakeDataPort(splReadiness({ verdict: "deferred" }));
+    const builder = new RecordingBuilder();
+
+    const error = await prepareTransfer(fake.port, builder, splIntent).catch((e: unknown) => e);
+
+    expect(error).toBeInstanceOf(TransferNotReadyError);
+    expect((error as TransferNotReadyError).code).toBe("transfer-readiness-unknown");
     expect(builder.plans).toEqual([]);
   });
 

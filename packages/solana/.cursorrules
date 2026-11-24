@@ -4,10 +4,11 @@ Applies when writing Solana SOL or SPL token transfer code.
 
 - Query the kit (or the API) before building or sending a transfer: `solana_transfer_readiness`, `solana_token`, `solana_network_health`.
 - Use `solana_prepare_transfer` to get an unsigned transfer description; the kit never signs or sends it. The wallet sets the recent blockhash (`recentBlockhash` is `null`), signs and sends.
-- Check readiness first and surface its blockers; do not send when the verdict is not ready (`transfer-not-ready`).
+- Check readiness first: its `verdict` is `ready`, `not_ready` or `unknown`; surface its `reasons`, `warnings` and `checks_failed`. Send only when the verdict is `ready`: `solana_prepare_transfer` refuses `not_ready` with `transfer-not-ready` and `unknown` with `transfer-readiness-unknown`.
+- Base-unit amounts carry the `_atomic` names (`amount_atomic`, `transfer_fee_atomic`, `net_amount_atomic`). `solana_token` gives `supply` in display units and `supply_atomic` in base units, and a safety verdict of `safe`, `warn` or `danger`.
 - Read `meta.stale` on every response and treat stale data as possibly out of date.
 - Amounts are decimal strings in the asset's units; never use floats. SOL amounts have at most 9 decimals. Addresses and mints are base58 decoding to 32 bytes; `mint` is a mint address or `"SOL"`.
-- Free routes live under `/v1/solana/*`; paid routes under `/v1/pro/solana/*` (mostly prepaid credits; per-call x402 where the API offers it). Credit purchases and token rotation use `/v1/pro/credits/*`; the price index is `GET /v1/pro/requirements`.
+- Free routes live under `/v1/solana/*`; paid routes under `/v1/pro/solana/*` (per-call x402 in USDC or EURC, or prepaid credits; production has no credits-only route). Credit purchases and token rotation use `/v1/pro/credits/*`; the price index is `GET /v1/pro/requirements`.
 - Payment is opt-in: `CRIPTON_TIER=pro`, `CRIPTON_SOLANA_PAYER_KEY` and a mandatory `CRIPTON_MAX_PER_CALL`; `CRIPTON_SESSION_BUDGET`, `CRIPTON_SOLANA_PAY_ASSET`, `CRIPTON_SOLANA_NETWORK` and `CRIPTON_SOLANA_RPC_URL` are optional.
 - Never hardcode prices or amounts to pay; read them from the API (`GET /v1/pro/requirements`, `kit.prices()`, `kit.priceOf(resource)`).
 - Prepaid credits: `CRIPTON_CREDITS_TOKEN` (a `clc_...` token, needs `CRIPTON_TIER=pro`) is sent as `Authorization: Bearer` on paid-tier calls. `CRIPTON_SOLANA_SIWX=on` (needs `CRIPTON_SOLANA_PAYER_KEY`) spends the wallet's credits with a Sign-In-With-X (SIWX) signature when no token is configured. `solana_credits_status` reports whether a token is configured, whether SIWX is on and the last known balance, never the token.

@@ -10,7 +10,7 @@ Typed, read-only access to the hosted Criptonlabs Agent APIs for Solana. The kit
 ## When to use
 
 - Before building a SOL or SPL token transfer: check readiness (balance, token accounts, fees) and prepare the unsigned instructions.
-- Before accepting or sending a token: read its mint data and safety verdict.
+- Before accepting or sending a token: read its mint data and safety verdict (`safe`, `warn` or `danger`).
 - To check network health and the latest slot before relying on fresh data.
 
 ## Tools
@@ -18,8 +18,8 @@ Typed, read-only access to the hosted Criptonlabs Agent APIs for Solana. The kit
 - `solana_latest_slot`: latest slot and block time.
 - `solana_network_health`: status (up, down, unknown or unavailable), latest slot, probe latency and last probe time.
 - `solana_health_history`: health over a window (`1h`, `24h` or `7d`): time buckets with samples, uptime percent and average latency.
-- `solana_token`: SPL mint data (token program, decimals, supply, mint and freeze authorities, extensions, transfer fee) and a safety verdict with reasons. Takes a mint address only; `SOL` is not a mint.
-- `solana_transfer_readiness`: whether a SOL or SPL token transfer between two wallets can succeed, with blockers and warnings.
+- `solana_token`: SPL mint data (token program, decimals, `supply` in display units and `supply_atomic` in base units, mint and freeze authorities, extensions, transfer fee) and a safety `verdict` (`safe`, `warn` or `danger`, the highest level matched) with every matched code in `reasons`. Takes a mint address only; `SOL` is not a mint.
+- `solana_transfer_readiness`: whether a SOL or SPL token transfer between two wallets can succeed. Its `verdict` is `ready`, `not_ready` or `unknown`: `not_ready` on any blocking code in `reasons`, else `unknown` when `checks_failed` names a source or destination token account that exists but cannot be decoded, else `ready`. It also returns `warnings` and, in base units, `amount_atomic`, `transfer_fee_atomic` (Token-2022 fee, `null` without one) and `net_amount_atomic` (what the destination receives).
 - `solana_prepare_transfer`: builds an unsigned transfer description after checking readiness. It never signs and never sends.
 - `solana_credits_status`: whether a credit token is configured, whether SIWX spending is on, the last known credit balance per denomination (`null` before any credit-paid response) and the amount spent on top-ups in this process. It sends no request and never returns the token.
 - `solana_credits_topup` (opt-in, listed only when the operator configured the purchase limits): buys one credit bundle (`bundle`, an id from the API's prepaid credits offer) with the wallet. It is the only tool that is not read-only: each call is a new purchase. It returns the purchase without the token (see Purchase limits).
@@ -34,12 +34,12 @@ Transfer inputs are `source`, `destination`, `mint` (a base58 mint address or `"
 - SOL uses a System transfer. SPL tokens use `TransferChecked` (Token or Token-2022 program), preceded by an idempotent associated token account creation when the destination needs one.
 - `ataCreation`: `required` and the `lamports` it costs.
 
-Before building, it verifies the readiness against the intent: `source`, `destination` and `mint` echo the intent, SOL has 9 decimals, an SPL token uses the Token or Token-2022 program, and `amount_raw` equals the intent amount in base units. On a mismatch it refuses with `invalid-response` and builds nothing. It refuses with `transfer-not-ready` when the readiness verdict is not ready. The wallet sets the recent blockhash, signs and sends; the kit never does.
+Before building, it verifies the readiness against the intent: `source`, `destination` and `mint` echo the intent, SOL has 9 decimals, an SPL token uses the Token or Token-2022 program, and `amount_atomic` equals the intent amount in base units. On a mismatch it refuses with `invalid-response` and builds nothing. It refuses with `transfer-not-ready` when the verdict is `not_ready`, and with `transfer-readiness-unknown` when it is `unknown` or any other value. The wallet sets the recent blockhash, signs and sends; the kit never does.
 
 ## Route families
 
 - `/v1/solana/*`: free tier, the default.
-- `/v1/pro/solana/*`: paid tier, same data. Most paid routes accept only prepaid credits (`credits-required`); per-call x402 payment applies where the API offers it (today transfer readiness).
+- `/v1/pro/solana/*`: paid tier, same data. Every route is paid per call with x402 (USDC or EURC on Solana) or with prepaid credits; production (API 0.27.0) has no credits-only route. When the kit cannot pay (no payer or no `maxPerCall`), a paid answer raises `payment-disabled` carrying the API's credit offer in `details.prepaidOffer` and its `details.reason` when sent.
 - `/v1/pro/credits/*`: prepaid credit purchases (`POST /v1/pro/credits/{bundle}`) and token rotation (`POST /v1/pro/credits/token`), used only on an explicit call.
 - `/v1/pro/requirements`: the price index of the paid routes, free to read.
 
@@ -78,11 +78,11 @@ The kit never switches to the paid tier on its own and never pays without these 
 
 ## Reading results
 
-Every response carries `meta` (`slot`, `commitment` = `finalized`, `as_of`, `age_seconds`, `cache`, `stale`). If `meta.stale` is true, treat the data as possibly out of date.
+Every response carries `meta` (`slot`, which may be `null`; `commitment` = `finalized`, `as_of`, `age_seconds`, `cache`, `stale`). If `meta.stale` is true, treat the data as possibly out of date.
 
 ## Errors
 
-Tool errors have the shape `{ code, message, ... }` (for example validation, problem, payment, refusal or network errors). Read `code` and `message`; do not retry blindly. `transfer-not-ready` carries the API blockers in `details.reasons` and `details.warnings`. When the API names the failing fields (for example `invalid-parameters`), `details.errors` lists them with `field` and `message`; fix those inputs. `credits-required` means the route is paid only with prepaid credits; when `details.prepaidOffer` is present (also on a free-tier 429), tell the user about the offer instead of retrying. Credits are bought only through `solana_credits_topup` when the operator configured it, the CLI `topup` command or the programmatic `kit.credits.topup`; never automatically.
+Tool errors have the shape `{ code, message, ... }` (for example validation, problem, payment, refusal or network errors). Read `code` and `message`; do not retry blindly. `transfer-not-ready` carries the API `reasons` in `details.reasons` and its `warnings` in `details.warnings`; `transfer-readiness-unknown` carries the same plus the API `checks_failed` in `details.checksFailed`. Do not send the transfer in either case. When the API names the failing fields (for example `invalid-parameters`), `details.errors` lists them with `field` and `message`; fix those inputs. `credits-required` means the route is paid only with prepaid credits; when `details.prepaidOffer` is present (also on a free-tier 429), tell the user about the offer instead of retrying. Credits are bought only through `solana_credits_topup` when the operator configured it, the CLI `topup` command or the programmatic `kit.credits.topup`; never automatically.
 
 ## Safety
 

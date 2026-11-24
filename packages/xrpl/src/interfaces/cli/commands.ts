@@ -31,6 +31,17 @@ function num(args: Args, name: string): number | undefined {
   return value === undefined ? undefined : Number(value);
 }
 
+function depthNum(args: Args): number | undefined {
+  const value = text(args, "depth");
+  if (value !== undefined && !/^[0-9]+$/.test(value)) {
+    throw new CriptonValidationError(
+      "depth",
+      "depth must be a positive integer no larger than 9007199254740991",
+    );
+  }
+  return value === undefined ? undefined : Number(value);
+}
+
 function defined<R extends object>(value: object): R {
   return Object.fromEntries(Object.entries(value).filter(([, v]) => v !== undefined)) as R;
 }
@@ -63,6 +74,17 @@ const CREDITS_HELP = `Usage: agent-apis-xrpl credits [--json]
 Prints whether a credit token is configured (CRIPTON_CREDITS_TOKEN), the last
 known balance per denomination and the amount spent on top-ups by this process.
 Sends no request and never prints the token. A fresh process has balance null.
+`;
+
+const QUOTE_DEX_HELP = `Usage: agent-apis-xrpl quote-dex --base <asset> --quote <asset> --amount <amount> [--depth <n>] [--max-slippage <pct>] [--json]
+
+Quotes buying --amount of the base asset on the XRPL DEX: filled amount,
+average price, slippage and best venue. Refuses above --max-slippage percent.
+
+Assets: XRP or CODE.issuer, where CODE is a case-sensitive 3-character code or
+a 40-hex code (RLUSD: 524C555344000000000000000000000000000000.rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De).
+--depth is an integer from 1 to 9007199254740991; the API serves it in buckets
+of 10, 50 or 100 levels per side, reported as depth_effective.
 `;
 
 export function xrplCommands(kitFactory: (env: NodeJS.ProcessEnv) => XrplAgentKit): CliCommand[] {
@@ -101,8 +123,16 @@ export function xrplCommands(kitFactory: (env: NodeJS.ProcessEnv) => XrplAgentKi
     },
     {
       name: "readiness",
-      description: "Payment readiness: --from --to [--asset --amount --destination-tag]",
-      options: { from: str, to: str, asset: str, amount: str, "destination-tag": str },
+      description:
+        "Payment readiness: --from --to [--asset --amount --destination-tag --credentials <id[,id...]>]",
+      options: {
+        from: str,
+        to: str,
+        asset: str,
+        amount: str,
+        "destination-tag": str,
+        credentials: str,
+      },
       async run(args, env) {
         const query = defined<Parameters<XrplAgentKit["data"]["paymentReadiness"]>[0]>({
           source: required(args, "from"),
@@ -110,6 +140,7 @@ export function xrplCommands(kitFactory: (env: NodeJS.ProcessEnv) => XrplAgentKi
           asset: text(args, "asset"),
           amount: text(args, "amount"),
           destinationTag: num(args, "destination-tag"),
+          credentials: text(args, "credentials")?.split(","),
         });
         return (await kitFactory(env).data.paymentReadiness(query)).data;
       },
@@ -147,13 +178,14 @@ export function xrplCommands(kitFactory: (env: NodeJS.ProcessEnv) => XrplAgentKi
     {
       name: "quote-dex",
       description: "DEX quote: --base --quote --amount [--depth --max-slippage]",
+      help: QUOTE_DEX_HELP,
       options: { base: str, quote: str, amount: str, depth: str, "max-slippage": str },
       async run(args, env) {
         const input = defined<Parameters<XrplAgentKit["dexQuote"]>[0]>({
           base: required(args, "base"),
           quote: required(args, "quote"),
           amount: required(args, "amount"),
-          depth: num(args, "depth"),
+          depth: depthNum(args),
           maxSlippagePct: text(args, "max-slippage"),
         });
         return kitFactory(env).dexQuote(input);

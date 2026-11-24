@@ -5,7 +5,7 @@ import { SlippageLimitError } from "../../../src/domain/dex-quote.js";
 import { FakeDataPort } from "../../support/fake-data-port.js";
 import slippageFixture from "../../fixtures/responses/slippage.json" with { type: "json" };
 
-const QUOTE_ASSET = "RLUSD.rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De";
+const QUOTE_ASSET = "524C555344000000000000000000000000000000.rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De";
 
 function slippage(overrides: Partial<SlippageResponse>, best: "clob" | "amm" | null = "amm") {
   return {

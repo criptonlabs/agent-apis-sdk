@@ -15,13 +15,17 @@ const openapi = JSON.parse(
   readFileSync(new URL("../../../../tests/fixtures/openapi.json", import.meta.url), "utf8"),
 ) as Json;
 
-function resolve(node: Json | undefined): Json {
+function resolveIn(root: Json, node: Json | undefined): Json {
   let current = node ?? {};
   while (typeof current.$ref === "string") {
     const parts = (current.$ref as string).replace(/^#\//, "").split("/");
-    current = parts.reduce<Json>((acc, part) => acc[part], openapi);
+    current = parts.reduce<Json>((acc, part) => acc[part], root);
   }
   return current;
+}
+
+function resolve(node: Json | undefined): Json {
+  return resolveIn(openapi, node);
 }
 
 function snapshotSchema(path: string): Json {
@@ -29,24 +33,89 @@ function snapshotSchema(path: string): Json {
   return resolve(op.responses["200"].content["application/json"].schema);
 }
 
-// Enum values of a property: its own `enum`, or those inside its `anyOf` / `oneOf` branches
-// (the shape `z.toJSONSchema` emits for a code list, kit-api-sync design D3).
-function enumValues(prop: Json): unknown[] | undefined {
-  if (Array.isArray(prop.enum)) return prop.enum;
-  const branches = [...(prop.anyOf ?? []), ...(prop.oneOf ?? [])].flatMap((branch: Json) => {
-    const values = resolve(branch).enum;
-    return Array.isArray(values) ? values : [];
-  });
-  return branches.length > 0 ? branches : undefined;
+// Non-null branches of a node in the document `root`: `$ref` resolved, `anyOf` / `oneOf`
+// flattened and `null` branches dropped (kit-api-sync-0-27 design D3).
+function branchesOf(root: Json, node: Json | undefined): Json[] {
+  const current = resolveIn(root, node);
+  const nested: Json[] = [...(current.anyOf ?? []), ...(current.oneOf ?? [])];
+  if (nested.length === 0) return current.type === "null" ? [] : [current];
+  return nested.flatMap((branch) => branchesOf(root, branch));
 }
 
-function enums(schema: Json): Record<string, unknown[]> {
-  const out: Record<string, unknown[]> = {};
-  for (const [name, raw] of Object.entries<Json>(schema.properties ?? {})) {
-    const values = enumValues(resolve(raw));
-    if (values) out[name] = [...values].sort((a, b) => String(a).localeCompare(String(b)));
+// Enum set of a node: the values of its branches' `enum`, without the `null` of a nullable
+// `type` array, sorted; undefined when no branch lists values.
+function enumSet(root: Json, node: Json | undefined): unknown[] | undefined {
+  const values = branchesOf(root, node).flatMap((branch: Json) =>
+    Array.isArray(branch.enum) ? branch.enum.filter((v: unknown) => v !== null) : [],
+  );
+  const byJson = (a: unknown, b: unknown) => JSON.stringify(a).localeCompare(JSON.stringify(b));
+  return values.length > 0 ? values.sort(byJson) : undefined;
+}
+
+function propertiesOf(root: Json, node: Json | undefined): Record<string, Json> | undefined {
+  return branchesOf(root, node).find((branch) => branch.properties !== undefined)?.properties;
+}
+
+function itemsOf(root: Json, node: Json | undefined): Json | undefined {
+  return branchesOf(root, node).find((branch) => branch.items !== undefined)?.items;
+}
+
+function sortedKeys(properties: Record<string, Json> | undefined): string[] {
+  return Object.keys(properties ?? {}).sort(byName);
+}
+
+interface Side {
+  root: Json;
+  node: Json | undefined;
+}
+
+function enumDrift(kit: Side, snap: Side, path: string): string[] {
+  const kitEnum = JSON.stringify(enumSet(kit.root, kit.node));
+  const snapEnum = JSON.stringify(enumSet(snap.root, snap.node));
+  return kitEnum === snapEnum ? [] : [`${path}: enum kit ${kitEnum} snapshot ${snapEnum}`];
+}
+
+function propertyDrift(kit: Side, snap: Side, path: string): string[] {
+  const kitProps = propertiesOf(kit.root, kit.node);
+  const snapProps = propertiesOf(snap.root, snap.node);
+  if (kitProps === undefined && snapProps === undefined) return [];
+  const kitNames = sortedKeys(kitProps);
+  const snapNames = sortedKeys(snapProps);
+  const problems =
+    JSON.stringify(kitNames) === JSON.stringify(snapNames)
+      ? []
+      : [`${path}: properties kit ${kitNames.join(",")} snapshot ${snapNames.join(",")}`];
+  for (const name of kitNames.filter((n) => snapNames.includes(n))) {
+    problems.push(
+      ...drift(
+        { root: kit.root, node: kitProps?.[name] },
+        { root: snap.root, node: snapProps?.[name] },
+        `${path}.${name}`,
+      ),
+    );
   }
-  return out;
+  return problems;
+}
+
+function itemDrift(kit: Side, snap: Side, path: string): string[] {
+  const kitItems = itemsOf(kit.root, kit.node);
+  const snapItems = itemsOf(snap.root, snap.node);
+  if (kitItems === undefined && snapItems === undefined) return [];
+  if (kitItems === undefined || snapItems === undefined) return [`${path}[]: array on one side`];
+  return drift(
+    { root: kit.root, node: kitItems },
+    { root: snap.root, node: snapItems },
+    `${path}[]`,
+  );
+}
+
+// Property-name and enum differences at every object and array-item depth (design D3).
+function drift(kit: Side, snap: Side, path: string): string[] {
+  return [
+    ...enumDrift(kit, snap, path),
+    ...propertyDrift(kit, snap, path),
+    ...itemDrift(kit, snap, path),
+  ];
 }
 
 const FIXTURES_BY_PATH: Record<SolanaRoutePath, string[]> = {
@@ -65,12 +134,13 @@ function byName(a: string, b: string): number {
   return a.localeCompare(b);
 }
 
-// Response fields that D3 of kit-api-sync makes forward-compatible code lists, by name.
+// Response fields that D3 of kit-api-sync makes forward-compatible code lists, by name, with the
+// enum fields of kit-api-sync-0-27 design D2.
 const CODE_FIELDS = [
   "verdict",
   "reasons",
   "warnings",
-  "blockers",
+  "checks_failed",
   "status",
   "state",
   "band",
@@ -79,6 +149,12 @@ const CODE_FIELDS = [
   "best",
   "side",
   "cache",
+  "ledger_state",
+  "role",
+  "direction",
+  "server_state",
+  "destination_kind",
+  "default_account_state",
 ];
 
 interface CodeField {
@@ -129,8 +205,8 @@ function knownProblem(known: readonly string[] | undefined, field: CodeField): s
 const ROUTES = SOLANA_ROUTE_PATHS;
 
 describe("OpenAPI snapshot contract", () => {
-  it("snapshot is API 0.21.0", () => {
-    expect(openapi.info.version).toBe("0.21.0");
+  it("snapshot is API 0.27.0", () => {
+    expect(openapi.info.version).toBe("0.27.0");
   });
 
   it("every OpenAPI code value is in the kit's known list", () => {
@@ -158,11 +234,8 @@ describe("OpenAPI snapshot contract", () => {
   for (const path of SOLANA_ROUTE_PATHS) {
     it(`schema of ${path} matches the snapshot property names and enums`, () => {
       const kit = z.toJSONSchema(RESPONSE_SCHEMAS[path]) as Json;
-      const snap = snapshotSchema(path);
-      expect(Object.keys(kit.properties ?? {}).sort(byName)).toEqual(
-        Object.keys(snap.properties ?? {}).sort(byName),
-      );
-      expect(enums(kit)).toEqual(enums(snap));
+      const snap = openapi.paths[path].get.responses["200"].content["application/json"].schema;
+      expect(drift({ root: kit, node: kit }, { root: openapi, node: snap }, path)).toEqual([]);
     });
   }
 

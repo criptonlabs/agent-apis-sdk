@@ -1,13 +1,72 @@
 {
   "asset_a": "XRP",
   "asset_b": "USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-  "reserve_a": "3495.362718",
-  "reserve_b": "4553.888407745065",
-  "trading_fee": "0.0022",
+  "reserve_a": "4081.058339",
+  "reserve_b": "3959.222523402528",
+  "trading_fee_pct": "0.22",
+  "spot_a_per_b": "1.03077266177319257",
+  "spot_a_per_b_with_fee": "1.033045361568643586",
+  "spot_b_per_a": "0.970146024516933033",
+  "spot_b_per_a_with_fee": "0.972285051630520177",
+  "lp_token": {
+    "currency": "03930D02208264E2E40EC1B0C09E4DB96EE197B1",
+    "currency_ascii": null,
+    "issuer": "rHUpaqUPbwzKZdzQ8ZQCme18FrgW9pB4am",
+    "supply": "3154714.362237263"
+  },
+  "a_per_lp_token": "0.001293637987594475",
+  "b_per_lp_token": "0.001255017750828865",
+  "auction_slot": {
+    "account": "rN4aCpXtkEAkRtjTUMaEB6YwRwJ2V9q4pK",
+    "auth_accounts": [
+      "rfPXopKnvj6wjfFnutf6WvRWiX7Uk7AJzY",
+      "rwFn2fj2E4G6NNDZd792bG3A74sX8Dpxjt",
+      "rscdSEEzzVu8KC5rTqnQeVH3nLNnzFvU21",
+      "rHZ9TpAGJrhUBB9dRFEjGAZ95eWxdqpwK8"
+    ],
+    "active": false,
+    "discounted_fee_pct": "0.022",
+    "price": "277.1391394938603",
+    "outbid_price": "277.614863876879144",
+    "expires_at": "2026-10-19T23:40:21.000Z",
+    "time_interval": 20
+  },
+  "auction_slot_minimum_price": "277.614863876879144",
+  "a_frozen": false,
+  "b_frozen": false,
+  "vote_dispersion": {
+    "votes": 4,
+    "min_fee_pct": "0.01",
+    "max_fee_pct": "1",
+    "weighted_sd_pct": "0.398975434741653356"
+  },
+  "vote_slots": [
+    {
+      "account": "rfHdtybrQgU1GZZGwddJ2K7m2Dwyso2fuR",
+      "trading_fee_pct": "0.01",
+      "vote_weight_ratio": "0.0432"
+    },
+    {
+      "account": "rHhaopoUtZVfcLrXuPnDxqozoRWbKsKy8q",
+      "trading_fee_pct": "1",
+      "vote_weight_ratio": "0.01153"
+    },
+    {
+      "account": "rUfQAjaC4DVjPJsFRpFJrtAcvbzPCUiCY6",
+      "trading_fee_pct": "0.01",
+      "vote_weight_ratio": "0.00001"
+    },
+    {
+      "account": "raNf8ibQZECTaiFqkDXKRmM2GfdWK76cSu",
+      "trading_fee_pct": "0.27",
+      "vote_weight_ratio": "0.00132"
+    }
+  ],
   "meta": {
-    "ledger_index": 107738131,
-    "as_of": "2026-10-18T10:58:49.904Z",
-    "age_seconds": 0,
+    "ledger_index": 108537765,
+    "ledger_state": "validated",
+    "as_of": "2026-11-24T09:49:49.196Z",
+    "age_seconds": 1,
     "cache": "hit",
     "stale": false
   }

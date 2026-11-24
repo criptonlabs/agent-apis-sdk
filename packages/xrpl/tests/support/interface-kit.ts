@@ -3,7 +3,7 @@ import { createXrplAgentKit, type XrplAgentKit } from "../../src/index.js";
 import feeFixture from "../fixtures/responses/fee.json" with { type: "json" };
 import readinessFixture from "../fixtures/responses/payment-readiness.json" with { type: "json" };
 
-export const SOURCE = "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh";
+export const SOURCE = "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq";
 export const DESTINATION = "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B";
 
 export const TOOL_NAMES = [

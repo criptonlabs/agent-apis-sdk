@@ -13,6 +13,7 @@ import pkg from "../../../package.json" with { type: "json" };
 import { createSolanaAgentKit, type SolanaAgentKit } from "../../../src/index.js";
 import { readSolanaEnv } from "../../../src/infrastructure/config/solana-env.js";
 import { createSolanaMcpServer, solanaMcpOptions } from "../../../src/interfaces/mcp/server.js";
+import unknownReadiness from "../../fixtures/derived/transfer-readiness-unknown.json" with { type: "json" };
 import { eurOneCreated, eurOneDevnetChallenge } from "../../support/eur-one-topup.js";
 import { startFakeSolanaRpc, type FakeSolanaRpc } from "../../support/fake-solana-rpc.js";
 import { throwawayAddress, throwawayKey, type ThrowawayKey } from "../../support/keys.js";
@@ -154,7 +155,7 @@ describe("Solana MCP server", () => {
   });
 
   it("Transfer not ready through MCP", async () => {
-    const ready = readiness({ ready: false, blockers: ["insufficient_balance"] });
+    const ready = readiness({ verdict: "not_ready", reasons: ["insufficient_balance"] });
     const client = await connect(kitOver(solanaFake(ready)));
     const result = await client.callTool({
       name: "solana_prepare_transfer",
@@ -164,6 +165,24 @@ describe("Solana MCP server", () => {
     const json = firstJson(result) as { code: string; details?: { reasons?: string[] } };
     expect(json.code).toBe("transfer-not-ready");
     expect(json.details?.reasons).toEqual(["insufficient_balance"]);
+  });
+
+  it("Transfer readiness unknown through MCP", async () => {
+    const unknown = { ...unknownReadiness, checks_failed: ["source_token_account"] };
+    const client = await connect(kitOver(solanaFake(unknown)));
+    const result = await client.callTool({
+      name: "solana_prepare_transfer",
+      arguments: {
+        source: unknown.source,
+        destination: unknown.destination,
+        mint: unknown.mint,
+        amount: unknown.amount,
+      },
+    });
+    expect(result.isError).toBe(true);
+    const json = firstJson(result) as { code: string; details?: { checksFailed?: string[] } };
+    expect(json.code).toBe("transfer-readiness-unknown");
+    expect(json.details?.checksFailed).toEqual(["source_token_account"]);
   });
 
   it("Latest slot through MCP", async () => {

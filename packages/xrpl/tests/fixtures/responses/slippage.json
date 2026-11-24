@@ -1,42 +1,51 @@
 {
   "base": "XRP",
   "quote": "USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "domain": null,
   "side": "buy",
   "depth": 10,
+  "depth_effective": 10,
   "amount": "1000",
   "filled": "1000",
   "partial": false,
   "insufficient_liquidity": false,
-  "best_price": "1.3618463814000002",
-  "avg_price": "1.36187791511112124",
-  "slippage_pct": "0.002315511613624353",
-  "transfer_fee_applied": false,
-  "transfer_fee": null,
-  "avg_price_after_fees": null,
+  "book_truncated": false,
+  "best_price": "1.0399896",
+  "worst_price": "1.14",
+  "avg_price": "1.0797493026647504",
+  "slippage_pct": "3.82308656401471707",
+  "transfer_fee_applied": true,
+  "transfer_fee_pct": "0.15",
+  "transfer_fee_issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "avg_price_after_fees": "1.081368926618747526",
   "venues": {
     "best": "clob",
     "amm_status": "ok",
     "clob": {
-      "avg_price": "1.36187791511112124",
-      "cost": "1361.877915111121240003",
-      "slippage_pct": "0.002315511613624353",
+      "avg_price": "1.0797493026647504",
+      "cost": "1079.7493026647504",
+      "slippage_pct": "3.82308656401471707",
       "insufficient_liquidity": false,
-      "avg_price_after_fees": null
+      "avg_price_after_fees": "1.081368926618747526"
     },
     "amm": {
-      "avg_price": "1.828964189749794191",
-      "cost": "1828.964189749794190512",
-      "slippage_pct": "40.383177386071648661",
+      "avg_price": "1.287853581873309643",
+      "cost": "1287.853581873309642585",
+      "slippage_pct": "32.748426456169156632",
       "insufficient_liquidity": false,
-      "avg_price_after_fees": null,
-      "spot_price": "1.302837151719332666",
-      "trading_fee": "0.0022"
-    }
+      "avg_price_after_fees": "1.289785362246119607",
+      "spot_price": "0.970146024516933033",
+      "spot_price_with_fee": "0.972285051630520177",
+      "trading_fee_pct": "0.22"
+    },
+    "amm_ledger_index": 108537765,
+    "amm_age_seconds": 0
   },
   "meta": {
-    "ledger_index": 107738131,
-    "as_of": "2026-10-18T10:58:48.615Z",
-    "age_seconds": 0,
+    "ledger_index": 108537764,
+    "ledger_state": "validated",
+    "as_of": "2026-11-24T09:49:45.264Z",
+    "age_seconds": 3,
     "cache": "hit",
     "stale": false
   }

@@ -1,0 +1,41 @@
+{
+  "paths_may_be_non_optimal": true,
+  "warnings": [],
+  "alternatives": [
+    {
+      "source_amount": {
+        "asset": "0000012FFD9EE5DA93AC614B4DB94D7E0FCE415CA51BED47",
+        "value": null,
+        "value_atomic": "131"
+      },
+      "source_any_issuer": false,
+      "paths_count": 1,
+      "paths": [
+        [
+          {
+            "currency": "USD",
+            "issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+          }
+        ]
+      ],
+      "effective_price": "13.1",
+      "cheapest": true,
+      "suggested_send_max": "133"
+    }
+  ],
+  "source": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "destination": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+  "asset": "USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "amount": "10",
+  "send_max_asset": null,
+  "send_max": null,
+  "source_assets": null,
+  "meta": {
+    "ledger_index": 108537817,
+    "ledger_state": "validated",
+    "as_of": "2026-11-24T09:53:14.996Z",
+    "age_seconds": 0,
+    "cache": "miss",
+    "stale": false
+  }
+}

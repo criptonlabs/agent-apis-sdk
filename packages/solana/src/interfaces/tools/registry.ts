@@ -63,7 +63,7 @@ const purchase = z.object({
   bundle: z
     .string()
     .describe(
-      "Credit bundle id, as listed in the API's prepaid credits offer (details.prepaidOffer.bundles[].id of a credits-required error).",
+      "Credit bundle id, as listed in the API's prepaid credits offer (details.prepaidOffer.bundles[].id of a payment-disabled or credits-required error) or in GET /v1/pro/requirements.",
     ),
 });
 
@@ -154,19 +154,19 @@ function readTools(kit: SolanaAgentKit): ToolDefinition<unknown, unknown>[] {
     ),
     define(
       "solana_token",
-      "SPL token mint data: token program, decimals, supply, mint and freeze authorities, extensions, transfer fee and a safety verdict with reasons. Read-only.",
+      "SPL token mint data: token program, decimals, supply in display units and supply_atomic in base units, mint and freeze authorities, extensions, transfer fee and a safety verdict (safe, warn or danger, the highest level matched) with every matched reason code. Read-only.",
       z.object({ mint: address("Token mint (SOL is not a mint)") }),
       async (i) => unwrap(await data.token(i.mint)),
     ),
     define(
       "solana_transfer_readiness",
-      "Checks whether a SOL or SPL token transfer between two wallets can succeed (balance, token accounts, fees) and returns a verdict with blockers. Read-only.",
+      "Checks whether a SOL or SPL token transfer between two wallets can succeed (balance, token accounts, fees). Returns a verdict (ready, not_ready or unknown), reasons (blocking codes), warnings and checks_failed (token accounts that exist but cannot be decoded), with amount_atomic, transfer_fee_atomic and net_amount_atomic in base units. The verdict is not_ready on any reason, else unknown on any failed check, else ready. Read-only.",
       transfer,
       async (i) => unwrap(await data.transferReadiness(i)),
     ),
     define(
       "solana_prepare_transfer",
-      "Builds an unsigned Solana transfer description (instructions, readiness and token account creation cost) after checking readiness. Returns the unsigned transfer description only; it never signs or sends a transaction. Read-only.",
+      "Builds an unsigned Solana transfer description (instructions, readiness and token account creation cost) after checking readiness. A not_ready verdict fails with transfer-not-ready (details.reasons, details.warnings); an unknown or any other verdict fails with transfer-readiness-unknown (also details.checksFailed). Returns the unsigned transfer description only; it never signs or sends a transaction. Read-only.",
       transfer,
       async (i) => kit.prepareTransfer(i),
     ),

@@ -3,10 +3,13 @@ import type { XrplDataPort } from "../../application/ports.js";
 import { parseAsset } from "../../domain/asset.js";
 import {
   assertClassicAddress,
+  assertCredentials,
   assertDepth,
   assertDestinationTag,
+  assertDomainId,
   assertHistoryWindow,
   assertLimit,
+  assertSide,
 } from "../../domain/validation.js";
 import { PATHS_TIMEOUT_MS } from "../descriptor.js";
 import { RESPONSE_SCHEMAS } from "./schemas.js";
@@ -21,8 +24,8 @@ function limit(value: number | undefined, range: { min: number; max: number }): 
   return opt(value, (v) => String(assertLimit("limit", v, range.min, range.max)));
 }
 
-function asset(field: string, value: string): string {
-  parseAsset(field, value);
+function asset(field: string, value: string, options?: { allowMpt?: boolean }): string {
+  parseAsset(field, value, options);
   return value;
 }
 
@@ -78,9 +81,10 @@ export function createXrplDataClient(
       const base = asset("base", q.base);
       const quote = asset("quote", q.quote);
       const depth = opt(q.depth, (d) => String(assertDepth("depth", d)));
+      const domain = opt(q.domain, (d) => assertDomainId("domain", d));
       return api.request({
         route: "orderbook",
-        query: { base, quote, depth },
+        query: { base, quote, depth, domain },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/orderbook"],
         ...call(options),
       });
@@ -90,9 +94,11 @@ export function createXrplDataClient(
       const quote = asset("quote", q.quote);
       const amount = assertDecimal("amount", q.amount);
       const depth = opt(q.depth, (d) => String(assertDepth("depth", d)));
+      const side = opt(q.side, (s) => assertSide("side", s));
+      const domain = opt(q.domain, (d) => assertDomainId("domain", d));
       return api.request({
         route: "slippage",
-        query: { base, quote, amount, depth },
+        query: { base, quote, amount, depth, side, domain },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/slippage"],
         ...call(options),
       });
@@ -148,9 +154,10 @@ export function createXrplDataClient(
         query: {
           source,
           destination,
-          asset: opt(q.asset, (a) => asset("asset", a)),
+          asset: opt(q.asset, (a) => asset("asset", a, { allowMpt: true })),
           amount: opt(q.amount, (a) => assertDecimal("amount", a)),
           destination_tag: tag,
+          credentials: opt(q.credentials, (c) => assertCredentials("credentials", c).join(",")),
         },
         schema: RESPONSE_SCHEMAS["/v1/xrpl/payment-readiness"],
         ...call(options),

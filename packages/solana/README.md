@@ -32,8 +32,8 @@ const health = await kit.data.health();
 console.log(health.data, health.data.meta);
 
 const prepared = await kit.prepareTransfer({
-  source: "SourceWallet...",
-  destination: "DestinationWallet...",
+  source: "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+  destination: "2wKupLR9q6wXYppw8Gr2NvWxKBUqm4PPJKkQfoxHDBg4",
   mint: "SOL",
   amount: "0.5",
 });
@@ -67,20 +67,22 @@ export CRIPTON_SOLANA_PAYER_KEY="$(cat id.json)"
 
 ## Tools
 
-Addresses and mints are base58 and must decode to 32 bytes; `mint` in transfers is a mint address or `"SOL"`. Amounts are decimal strings in the asset's units (at most 9 decimals for SOL). Invalid inputs are rejected before any request. Every response carries `meta` (`slot`, `commitment` = `finalized`, `as_of`, `age_seconds`, `cache`, `stale`).
+Addresses and mints are base58 and must decode to 32 bytes; `mint` in transfers is a mint address or `"SOL"`. Amounts are decimal strings in the asset's units (at most 9 decimals for SOL). Invalid inputs are rejected before any request. Every response carries `meta` (`slot`, which may be `null`; `commitment` = `finalized`, `as_of`, `age_seconds`, `cache`, `stale`).
 
-| Tool                        | Returns                                                                                                                   | Main inputs                                  |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| `solana_latest_slot`        | Latest slot and block time                                                                                                | none                                         |
-| `solana_network_health`     | Status (up, down, unknown or unavailable), latest slot, probe latency and last probe time                                 | none                                         |
-| `solana_health_history`     | Time buckets with samples, uptime percent and average latency                                                             | `window?` (`1h`, `24h` or `7d`)              |
-| `solana_token`              | Token program, decimals, supply, mint and freeze authorities, extensions, transfer fee, safety verdict, reasons           | `mint` (a mint address; `SOL` is not a mint) |
-| `solana_transfer_readiness` | Verdict on whether the transfer can succeed (balance, token accounts, fees), blockers and warnings                        | `source`, `destination`, `mint`, `amount`    |
-| `solana_prepare_transfer`   | Unsigned transfer description after the readiness check; never signs or sends                                             | `source`, `destination`, `mint`, `amount`    |
-| `solana_credits_status`     | Whether a credit token is configured, whether SIWX spending is on, last known balance, top-up spend; no request, no token | none                                         |
-| `solana_credits_topup`      | Opt-in purchase of one credit bundle (see [Purchase limits](#purchase-limits)); the result never holds the token          | `bundle`                                     |
+| Tool                        | Returns                                                                                                                                                                                                                                  | Main inputs                                  |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| `solana_latest_slot`        | Latest slot and block time                                                                                                                                                                                                               | none                                         |
+| `solana_network_health`     | Status (up, down, unknown or unavailable), latest slot, probe latency and last probe time                                                                                                                                                | none                                         |
+| `solana_health_history`     | Time buckets with samples, uptime percent and average latency                                                                                                                                                                            | `window?` (`1h`, `24h` or `7d`)              |
+| `solana_token`              | Token program, decimals, `supply` in display units and `supply_atomic` in base units, mint and freeze authorities, extensions, transfer fee, safety `verdict` (`safe`, `warn` or `danger`) and its `reasons`                             | `mint` (a mint address; `SOL` is not a mint) |
+| `solana_transfer_readiness` | `verdict` (`ready`, `not_ready` or `unknown`) on whether the transfer can succeed (balance, token accounts, fees), `reasons`, `warnings`, `checks_failed`, and `amount_atomic`, `transfer_fee_atomic`, `net_amount_atomic` in base units | `source`, `destination`, `mint`, `amount`    |
+| `solana_prepare_transfer`   | Unsigned transfer description after the readiness check; never signs or sends                                                                                                                                                            | `source`, `destination`, `mint`, `amount`    |
+| `solana_credits_status`     | Whether a credit token is configured, whether SIWX spending is on, last known balance, top-up spend; no request, no token                                                                                                                | none                                         |
+| `solana_credits_topup`      | Opt-in purchase of one credit bundle (see [Purchase limits](#purchase-limits)); the result never holds the token                                                                                                                         | `bundle`                                     |
 
 Every tool except `solana_credits_topup` is read-only. `solana_credits_topup` is listed only by an MCP server configured with the purchase limits.
+
+Transfer readiness answers `verdict` `not_ready` on any blocking code in `reasons`, else `unknown` when `checks_failed` names a source or destination token account that exists but cannot be decoded, else `ready`. Base-unit amounts carry the `_atomic` names; `transfer_fee_atomic` is the Token-2022 transfer fee (`null` without one) and `net_amount_atomic` what the destination receives. The token `supply` is in display units (`supply_atomic` / 10^`decimals`) and `supply_atomic` in base units; the token `verdict` is the highest level matched (`safe`, `warn` or `danger`).
 
 ### Prepared transfer
 
@@ -88,9 +90,9 @@ Every tool except `solana_credits_topup` is read-only. `solana_credits_topup` is
 
 - `source`, `destination` and `mint` echo the intent;
 - for SOL, `decimals` is 9; for an SPL token, the token program is Token or Token-2022;
-- `amount_raw` equals the intent amount in base units.
+- `amount_atomic` equals the intent amount in base units.
 
-On a mismatch it refuses with `invalid-response` and builds nothing. It refuses with `transfer-not-ready` when the verdict is not ready. It returns:
+On a mismatch it refuses with `invalid-response` and builds nothing. It refuses with `transfer-not-ready` when the verdict is `not_ready`, and with `transfer-readiness-unknown` when it is `unknown` or any other value. It returns:
 
 ```ts
 {
@@ -134,14 +136,14 @@ SOL uses a System transfer. SPL tokens use `TransferChecked` on the mint's token
 
 Exit codes:
 
-| Code | Meaning                                                                          |
-| ---- | -------------------------------------------------------------------------------- |
-| 0    | Success                                                                          |
-| 2    | Invalid input, unknown command, invalid arguments or a secret passed as argument |
-| 3    | Payment error or refusal (transfer-not-ready, over cap, credits required, ...)   |
-| 4    | API problem or invalid API response                                              |
-| 5    | Network error or timeout                                                         |
-| 1    | Any other error                                                                  |
+| Code | Meaning                                                                                                    |
+| ---- | ---------------------------------------------------------------------------------------------------------- |
+| 0    | Success                                                                                                    |
+| 2    | Invalid input, unknown command, invalid arguments or a secret passed as argument                           |
+| 3    | Payment error or refusal (transfer-not-ready, transfer-readiness-unknown, over cap, credits required, ...) |
+| 4    | API problem or invalid API response                                                                        |
+| 5    | Network error or timeout                                                                                   |
+| 1    | Any other error                                                                                            |
 
 ## MCP (Claude Desktop, Cursor)
 
@@ -183,7 +185,7 @@ The ElizaOS plugin (`criptonlabs-solana`) exposes two actions (`PREPARE_SOLANA_T
 ## Payments and spend limits
 
 - The free tier (`/v1/solana/*`) needs no configuration. The paid tier (`/v1/pro/solana/*`) is charged only when you opt in.
-- Most `/v1/pro/solana/*` routes may be paid only with prepaid credits (`credits-required`). Per-call x402 payment, in USDC or EURC on Solana, applies where the API offers it (today transfer readiness).
+- Every `/v1/pro/solana/*` route may be paid per call with x402, in USDC or EURC on Solana, or with prepaid credits; production (API 0.27.0) has no credits-only route. When the kit cannot pay (no payer or no `maxPerCall`), a paid answer raises `payment-disabled` carrying the API's credit offer in `details.prepaidOffer` and its `details.reason` when sent.
 - Opt in with `CRIPTON_TIER=pro`, `CRIPTON_SOLANA_PAYER_KEY` and `CRIPTON_MAX_PER_CALL` (mandatory). `CRIPTON_SESSION_BUDGET` is optional.
 - Limits compare the decimal amount in the payment asset's units (the API offers atomic units; the kit converts). The offered amount is the gross price, VAT included when the API quotes it.
 - A call whose price exceeds `maxPerCall`, or would exceed `sessionBudget`, is refused before any payment is signed.
@@ -245,7 +247,7 @@ Tool and CLI errors have the shape `{ code, message, ... }` (plus `status`, `ret
 | `payment-disabled`, `no-supported-payment-option`, `payment-over-cap`, `payment-budget-exhausted` | Payment is not configured, unsupported or over a limit; `details.options[].amount` is the API's offer in atomic units (6 decimals for USDC and EURC)                                                                |
 | `payment-outcome-unknown`                                                                         | The paid retry got no answer; the amount is counted as spent and the call is not retried                                                                                                                            |
 | `credits-required`                                                                                | The route is paid only with prepaid credits (`details.prepaidOffer`)                                                                                                                                                |
-| `transfer-not-ready`                                                                              | `prepare-transfer` refused (`details.reasons` holds the API blockers, `details.warnings` its warnings)                                                                                                              |
+| `transfer-not-ready`, `transfer-readiness-unknown`                                                | `prepare-transfer` refused: verdict `not_ready` (`details.reasons` holds the API `reasons`, `details.warnings` its `warnings`) or `unknown` (the same plus `details.checksFailed`, the API `checks_failed`)         |
 | `missing-peer-dependency`                                                                         | An optional framework package is not installed                                                                                                                                                                      |
 | other slugs                                                                                       | RFC 9457 problem returned by the API, with its `status` (for example `solana-mint-not-found` 404, `invalid-parameters` 400), and `details.reason`, `details.prepaidOffer`, `details.errors` when the API sends them |
 

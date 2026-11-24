@@ -56,6 +56,8 @@ describe("XRPL CLI", () => {
         SOURCE,
         "--to",
         DESTINATION,
+        "--destination-tag",
+        "12345",
         "--asset",
         "XRP",
         "--amount",

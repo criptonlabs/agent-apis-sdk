@@ -2,42 +2,32 @@
   "status": "ok",
   "nodes": [
     {
-      "member": "honeycluster",
+      "member": "public-node",
       "state": "up",
-      "latency_ms": 449,
-      "ledger_index": 107738129,
-      "ledger_age_s": 8,
-      "load_factor": 1,
+      "latency_ms": 513,
+      "ledger_index": 108537742,
+      "ledger_age_seconds": 6,
+      "load_factor_multiplier": "1",
+      "server_state": null,
+      "complete_ledgers": [
+        {
+          "first_ledger_index": 32570,
+          "last_ledger_index": 108537742
+        }
+      ],
+      "amendment_blocked": false,
       "error": null,
-      "sampled_at": "2026-10-18T10:58:38.977Z"
-    },
-    {
-      "member": "ripple-s1",
-      "state": "up",
-      "latency_ms": 196,
-      "ledger_index": 107738129,
-      "ledger_age_s": 7,
-      "load_factor": 1,
-      "error": null,
-      "sampled_at": "2026-10-18T10:58:38.977Z"
-    },
-    {
-      "member": "ripple-s2",
-      "state": "up",
-      "latency_ms": 233,
-      "ledger_index": 107738129,
-      "ledger_age_s": 8,
-      "load_factor": 1,
-      "error": null,
-      "sampled_at": "2026-10-18T10:58:38.977Z"
+      "sampled_at": "2026-11-24T09:48:16.556Z"
     }
   ],
-  "ledger_index": 107738129,
-  "last_probe_at": "2026-10-18T10:58:38.977Z",
+  "median_latency_ms": 513,
+  "ledger_index": 108537742,
+  "last_probe_at": "2026-11-24T09:48:16.556Z",
   "meta": {
-    "ledger_index": 107738129,
-    "as_of": "2026-10-18T10:58:45.606Z",
-    "age_seconds": 0,
+    "ledger_index": 108537742,
+    "ledger_state": "validated",
+    "as_of": "2026-11-24T09:49:40.232Z",
+    "age_seconds": 1,
     "cache": "hit",
     "stale": false
   }

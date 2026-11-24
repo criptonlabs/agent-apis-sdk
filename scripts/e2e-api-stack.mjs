@@ -1,15 +1,16 @@
-// Local API stack for the SDK testnet/devnet e2e suites (design D15 of change `kit-api-sync`).
+// Local API stack for the SDK testnet/devnet e2e suites (design D15 of change `kit-api-sync` and D11 of change `kit-api-sync-0-27`).
 // The API repository (`API_ROOT`) is read only: this script runs `git archive` (and the
 // read-only `rev-parse`) on it and reads its four env files; it never edits, installs or starts
-// anything inside it. The export of the API's released main (`ce704b9`) lives in the SDK's
-// gitignored `.e2e-api/ce704b9/`, together with the generated test secrets. No env value, seed or
+// anything inside it. The export of the API's released main (`8bbad8ca`, API 0.27.0) lives in the SDK's
+// gitignored `.e2e-api/8bbad8ca/`, together with the generated test secrets. No env value, seed or
 // key is ever printed or written elsewhere.
 // `start` passes `--test-scheduled` to every `wrangler dev`, since the local stack never fires cron
 // triggers by itself; `run` fires the billing Worker's ECB trigger once (the ledger values USD
-// amounts with the latest ECB rate) and stops unless it answers 200, then launches the suites.
+// amounts with the latest ECB rate) and then the gateway's two-minute health cron once (without it
+// XRPL payment readiness stays `unknown`), stops unless each answers 200, then launches the suites.
 // Usage (Node 26):
 //   node scripts/e2e-api-stack.mjs start                     # API stack on http://localhost:8787
-//   node scripts/e2e-api-stack.mjs run <xrpl|solana> [filter]  # ECB trigger, then a kit's test:e2e
+//   node scripts/e2e-api-stack.mjs run <xrpl|solana> [filter]  # ECB and health triggers, then a kit's test:e2e
 import { spawn, spawnSync } from "node:child_process";
 import { createPrivateKey, createPublicKey, randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -17,7 +18,7 @@ import { homedir } from "node:os";
 import { delimiter, join } from "node:path";
 import { parseEnv } from "node:util";
 
-const REV = "ce704b9";
+const REV = "8bbad8ca";
 const PNPM_VERSION = "11.28.4";
 const GATEWAY_PORT = 8787;
 const GATEWAY = `http://localhost:${GATEWAY_PORT}`;
@@ -25,6 +26,8 @@ const GATEWAY = `http://localhost:${GATEWAY_PORT}`;
 const BILLING = `http://localhost:${GATEWAY_PORT + 200}`;
 // The billing Worker's ECB cron (`15 15 * * 1-5`, the public ECB daily feed), URL-encoded.
 const ECB_TRIGGER = `${BILLING}/__scheduled?cron=15+15+*+*+1-5`;
+// The gateway's health cron (`*/2 * * * *`), URL-encoded.
+const HEALTH_TRIGGER = `${GATEWAY}/__scheduled?cron=*/2+*+*+*+*`;
 const SDK_ROOT = join(import.meta.dirname, "..");
 const API_ROOT = join(import.meta.dirname, "..", "..", "kryptonianlabs-apis");
 const EXPORT_DIR = join(import.meta.dirname, "..", ".e2e-api", REV);
@@ -217,10 +220,10 @@ async function gatewayAnswers() {
   }
 }
 
-/** Whether the billing Worker's ECB trigger ran and answered 200. */
-async function ecbTriggerAnswers() {
+/** Whether a cron trigger URL ran and answered 200. */
+async function triggerAnswers(url) {
   try {
-    const response = await fetch(ECB_TRIGGER, { signal: AbortSignal.timeout(30_000) });
+    const response = await fetch(url, { signal: AbortSignal.timeout(30_000) });
     return response.status === 200;
   } catch {
     return false;
@@ -231,8 +234,10 @@ async function run(args) {
   const [kit, ...filter] = args;
   if (kit !== "xrpl" && kit !== "solana") fail("run needs xrpl or solana");
   if (!(await gatewayAnswers())) fail(`no gateway answers on ${GATEWAY}; run start first`);
-  if (!(await ecbTriggerAnswers()))
+  if (!(await triggerAnswers(ECB_TRIGGER)))
     fail(`the billing Worker's ECB trigger on ${BILLING} did not answer 200; restart with start`);
+  if (!(await triggerAnswers(HEALTH_TRIGGER)))
+    fail(`the gateway's health trigger on ${GATEWAY} did not answer 200; restart with start`);
   const env = { ...process.env, ...kitEnv(kit, apiEnv()), CRIPTON_E2E_BASE_URL: GATEWAY };
   runForeground(process.execPath, [PNPM_CJS, "-C", join("packages", kit), "test:e2e", ...filter], {
     cwd: SDK_ROOT,

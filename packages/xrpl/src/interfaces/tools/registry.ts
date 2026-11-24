@@ -10,9 +10,18 @@ const ANNOTATIONS = {
   openWorldHint: true,
 } as const;
 
-const depth = z.number().int().optional().describe("Order book depth: 10, 50, 100 or 200.");
-const asset = (what: string) =>
-  z.string().describe(`${what}: "XRP" or "<currency>.<issuer>", for example "USD.rIssuer...".`);
+const depth = z
+  .number()
+  .int()
+  .optional()
+  .describe(
+    "Order book depth: an integer from 1 to 9007199254740991; the API serves it in buckets of 10, 50 or 100 levels per side, reported as depth_effective.",
+  );
+const ASSET_FORMS =
+  '"XRP" or "CODE.issuer", where CODE is a case-sensitive 3-character code ("usd" and "USD" are different tokens) or a 40-hex code and issuer is a classic XRPL address, for example "USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"; a longer code such as RLUSD goes in its 40-hex form, "524C555344000000000000000000000000000000.rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De"';
+const asset = (what: string) => z.string().describe(`${what}: ${ASSET_FORMS}.`);
+const domain = (effect: string) =>
+  z.string().optional().describe(`PermissionedDomain id (64 hex characters): ${effect}.`);
 const address = (what: string) => z.string().describe(`${what}: a classic XRPL address (r...).`);
 const amount = (what: string) => z.string().describe(`${what}: a decimal string, never a float.`);
 const ranged = (range: { readonly min: number; readonly max: number }, what: string) =>
@@ -76,17 +85,31 @@ export function createXrplTools(kit: XrplAgentKit): ToolDefinition<unknown, unkn
     define(
       "xrpl_orderbook",
       "Funded order book of a market on the XRPL decentralized exchange (bids and asks with real, funded liquidity). Read-only.",
-      z.object({ base: asset("Base asset"), quote: asset("Quote asset"), depth }),
+      z.object({
+        base: asset("Base asset"),
+        quote: asset("Quote asset"),
+        depth,
+        domain: domain("reads the permissioned order book of that domain instead of the open book"),
+      }),
       async (i) => unwrap(await data.orderbook(strip(i))),
     ),
     define(
       "xrpl_slippage",
-      "Estimated slippage of buying an amount of the base asset on the order book and the AMM pool, and the best venue. Read-only.",
+      "Estimated slippage of buying or selling an amount of the base asset on the order book and the AMM pool, and the best venue. Read-only.",
       z.object({
-        base: asset("Base asset"),
-        quote: asset("Quote asset"),
-        amount: amount("Amount of the base asset to buy"),
+        base: asset("Base asset, bought (side buy) or sold (side sell)"),
+        quote: asset("Quote asset, paid (side buy) or received (side sell)"),
+        amount: amount("Amount of the base asset to buy or sell"),
         depth,
+        side: z
+          .enum(["buy", "sell"])
+          .optional()
+          .describe(
+            "Trade direction: buy (the API default) walks the asks, paying quote for the amount of base; sell walks the bids, selling the amount of base for quote.",
+          ),
+        domain: domain(
+          "reads the permissioned order book of that domain instead of the open book; the AMM is then not read",
+        ),
       }),
       async (i) => unwrap(await data.slippage(strip(i))),
     ),
@@ -98,7 +121,7 @@ export function createXrplTools(kit: XrplAgentKit): ToolDefinition<unknown, unkn
     ),
     define(
       "xrpl_account_summary",
-      "Summary of an XRPL account: XRP balance, sequence, owner count, transfer rate and trust lines. Read-only.",
+      "Summary of an XRPL account: XRP balance, sequence, owner count, transfer fee percent and trust lines. Read-only.",
       z.object({ address: address("Account") }),
       async (i) => unwrap(await data.accountSummary(i.address)),
     ),
@@ -141,9 +164,20 @@ export function createXrplTools(kit: XrplAgentKit): ToolDefinition<unknown, unkn
       z.object({
         source: address("Sending account"),
         destination: address("Receiving account"),
-        asset: asset("Asset to send").optional(),
+        asset: z
+          .string()
+          .optional()
+          .describe(
+            `Asset to send: ${ASSET_FORMS}; or a 48-hex MPT issuance id, for example "0000012FFD9EE5DA93AC614B4DB94D7E0FCE415CA51BED47", with amount in whole base units.`,
+          ),
         amount: amount("Amount to send").optional(),
         destinationTag: z.number().int().optional().describe("Destination tag, 0 to 4294967295."),
+        credentials: z
+          .array(z.string())
+          .optional()
+          .describe(
+            "Credential entry ids to present, 1 to 8 distinct ids of 64 hex characters; the deposit_authorized check reads them even when the destination does not require deposit authorization.",
+          ),
       }),
       async (i) => unwrap(await data.paymentReadiness(strip(i))),
     ),
@@ -155,12 +189,15 @@ export function createXrplTools(kit: XrplAgentKit): ToolDefinition<unknown, unkn
         destination: address("Receiving account"),
         asset: asset("Asset the destination receives"),
         amount: amount("Amount the destination receives"),
-        sendMaxAsset: z.string().optional().describe("Asset the source spends at most."),
+        sendMaxAsset: asset("Asset the source spends at most").optional(),
         sendMax: z
           .string()
           .optional()
           .describe("Maximum amount the source spends, decimal string."),
-        sourceAssets: z.array(z.string()).optional().describe("Candidate assets to spend."),
+        sourceAssets: z
+          .array(z.string())
+          .optional()
+          .describe(`Candidate assets to spend, each ${ASSET_FORMS}.`),
       }),
       async (i) => unwrap(await data.paths(strip(i))),
     ),
@@ -173,7 +210,7 @@ export function createXrplTools(kit: XrplAgentKit): ToolDefinition<unknown, unkn
         asset: asset("Asset the destination receives"),
         amount: amount("Amount the destination receives"),
         destinationTag: z.number().int().optional().describe("Destination tag, 0 to 4294967295."),
-        sourceAsset: z.string().optional().describe("Asset to spend for a cross-currency payment."),
+        sourceAsset: asset("Asset to spend for a cross-currency payment").optional(),
         sendMaxTolerancePct: z
           .string()
           .optional()

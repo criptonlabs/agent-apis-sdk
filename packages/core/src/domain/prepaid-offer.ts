@@ -4,7 +4,6 @@ export interface PrepaidBundle {
   amount: string;
   creditedUnits: string;
   approxCalls?: number;
-  activation?: string;
 }
 
 /** The API's prepaid credits offer (402 challenge or free-tier 429), passed through as read. */

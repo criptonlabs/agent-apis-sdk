@@ -32,10 +32,11 @@ const fee = await kit.data.fee();
 console.log(fee.data, fee.data.meta);
 
 const prepared = await kit.preparePayment({
-  source: "rSource...",
-  destination: "rDestination...",
+  source: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+  destination: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
   asset: "XRP",
   amount: "10",
+  destinationTag: 12345, // Bitstamp requires a destination tag
 });
 // `prepared` holds an unsigned Payment; the kit never signs or submits it.
 ```
@@ -61,27 +62,29 @@ Payment is enabled only when both `CRIPTON_XRPL_PAYER_SEED` and `CRIPTON_MAX_PER
 
 ## Tools
 
-Assets are written `"XRP"` or `"<currency>.<issuer>"`; amounts are decimal strings. Every response carries `meta` (`ledger_index`, `as_of`, `age_seconds`, `cache`, `stale`).
+Assets are written `"XRP"` or `"CODE.issuer"`: `CODE` is a case-sensitive 3-character code (`usd` and `USD` are different tokens) or a 40-hex code, and `issuer` is a classic XRPL address, for example `USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B`. A longer code such as RLUSD is written in its 40-hex form: `524C555344000000000000000000000000000000.rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De`. Amounts are decimal strings. Every response carries `meta` (`ledger_index`, which may be `null`; `ledger_state`, `as_of`, `age_seconds`, `cache`, `stale`).
 
-| Tool                        | Returns                                                                                      | Main inputs                                                                                                                       |
-| --------------------------- | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `xrpl_fee`                  | Fee tiers (economy, standard, priority) in drops and the congestion band                     | none                                                                                                                              |
-| `xrpl_network_health`       | Status (ok, degraded, down or unknown), latest ledger index and per-node probe results       | none                                                                                                                              |
-| `xrpl_latest_ledger`        | Latest validated ledger: index, hash, close time                                             | none                                                                                                                              |
-| `xrpl_orderbook`            | Funded order book (bids and asks with funded liquidity)                                      | `base`, `quote`, `depth?`                                                                                                         |
-| `xrpl_slippage`             | Estimated slippage of buying the base amount on the order book and the AMM, and best venue   | `base`, `quote`, `amount`, `depth?`                                                                                               |
-| `xrpl_amm`                  | AMM pool of a pair: the two reserves and the trading fee                                     | `a`, `b`                                                                                                                          |
-| `xrpl_account_summary`      | XRP balance, sequence, owner count, transfer rate and trust lines                            | `address`                                                                                                                         |
-| `xrpl_account_lines`        | Trust lines of an account, paginated with a marker                                           | `address`, `limit?`, `peer?`, `marker?`                                                                                           |
-| `xrpl_account_transactions` | Recent transactions of an account, paginated with a marker                                   | `address`, `limit?`, `marker?`                                                                                                    |
-| `xrpl_token`                | Issuer, currency, transfer fee, freeze and authorization flags, domain, obligations          | `asset`                                                                                                                           |
-| `xrpl_payment_readiness`    | Verdict on whether a payment can succeed (trust line, reserve, destination rules), reasons   | `source`, `destination`, `asset?`, `amount?`, `destinationTag?`                                                                   |
-| `xrpl_paths`                | Multi-hop payment paths with the source amount needed (can take up to about 20 s)            | `source`, `destination`, `asset`, `amount`, `sendMaxAsset?`, `sendMax?`, `sourceAssets?`                                          |
-| `xrpl_prepare_payment`      | Unsigned `Payment` after readiness check, path search and fee choice; never signs or submits | `source`, `destination`, `asset`, `amount`, `destinationTag?`, `sourceAsset?`, `sendMaxTolerancePct?`, `feeTier?`, `maxFeeDrops?` |
-| `xrpl_dex_quote`            | Filled amount, average price, slippage and best venue; refuses above the slippage limit      | `base`, `quote`, `amount`, `depth?`, `maxSlippagePct?`                                                                            |
-| `xrpl_credits_status`       | Whether a credit token is configured, last known balance, top-up spend; no request, no token | none                                                                                                                              |
+| Tool                        | Returns                                                                                               | Main inputs                                                                                                                       |
+| --------------------------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `xrpl_fee`                  | Fee tiers (economy, standard, priority) in drops and the congestion band                              | none                                                                                                                              |
+| `xrpl_network_health`       | Status (ok, degraded, down or unknown), latest ledger index and per-node probe results                | none                                                                                                                              |
+| `xrpl_latest_ledger`        | Latest validated ledger: index, hash, close time                                                      | none                                                                                                                              |
+| `xrpl_orderbook`            | Funded order book (bids and asks with funded liquidity)                                               | `base`, `quote`, `depth?`, `domain?`                                                                                              |
+| `xrpl_slippage`             | Estimated slippage of buying or selling the base amount on the order book and the AMM, and best venue | `base`, `quote`, `amount`, `depth?`, `side?`, `domain?`                                                                           |
+| `xrpl_amm`                  | AMM pool of a pair: the two reserves and the trading fee (`trading_fee_pct`)                          | `a`, `b`                                                                                                                          |
+| `xrpl_account_summary`      | XRP balance, sequence, owner count, transfer fee percent (`transfer_fee_pct`) and trust lines         | `address`                                                                                                                         |
+| `xrpl_account_lines`        | Trust lines of an account, paginated with a marker                                                    | `address`, `limit?`, `peer?`, `marker?`                                                                                           |
+| `xrpl_account_transactions` | Recent transactions of an account, paginated with a marker                                            | `address`, `limit?`, `marker?`                                                                                                    |
+| `xrpl_token`                | Issuer, currency, transfer fee, freeze and authorization flags, domain, obligations                   | `asset`                                                                                                                           |
+| `xrpl_payment_readiness`    | Verdict on whether a payment can succeed (trust line, reserve, destination rules), reasons            | `source`, `destination`, `asset?`, `amount?`, `destinationTag?`, `credentials?`                                                   |
+| `xrpl_paths`                | Multi-hop payment paths with the source amount needed (can take up to about 20 s)                     | `source`, `destination`, `asset`, `amount`, `sendMaxAsset?`, `sendMax?`, `sourceAssets?`                                          |
+| `xrpl_prepare_payment`      | Unsigned `Payment` after readiness check, path search and fee choice; never signs or submits          | `source`, `destination`, `asset`, `amount`, `destinationTag?`, `sourceAsset?`, `sendMaxTolerancePct?`, `feeTier?`, `maxFeeDrops?` |
+| `xrpl_dex_quote`            | Filled amount, average price, slippage and best venue; refuses above the slippage limit               | `base`, `quote`, `amount`, `depth?`, `maxSlippagePct?`                                                                            |
+| `xrpl_credits_status`       | Whether a credit token is configured, last known balance, top-up spend; no request, no token          | none                                                                                                                              |
 
-`depth` is 10, 50, 100 or 200. `sendMaxTolerancePct` is required for cross-currency payments.
+`depth` is an integer from 1 to 9007199254740991; the API serves it in buckets of 10, 50 or 100 levels per side, reported as `depth_effective`. `side` is `buy` (the API default) or `sell`. `domain` is a PermissionedDomain id (64 hex characters) that reads that domain's permissioned order book instead of the open book; slippage then does not read the AMM. The `asset` of `xrpl_payment_readiness` (and only that input) also accepts a 48-hex MPT issuance id, for example `0000012FFD9EE5DA93AC614B4DB94D7E0FCE415CA51BED47`, with `amount` in whole base units. `credentials` is a list of 1 to 8 distinct credential entry ids (64 hex characters each) that the readiness `deposit_authorized` check reads. `sendMaxTolerancePct` is required for cross-currency payments.
+
+In a slippage answer, `partial` is true when `filled` is above 0 and below `amount`; a partial fill reports `avg_price`, `slippage_pct` and `avg_price_after_fees` of the filled part, and `venues.clob` then carries `null` prices and is never `best`.
 
 The `limit` of `xrpl_account_lines` is an integer from 10 to 400 and the `limit` of `xrpl_account_transactions` an integer from 1 to 50. Both are checked before the request; a value out of range fails with `invalid-input`.
 
@@ -95,7 +98,7 @@ The `limit` of `xrpl_account_lines` is an integer from 10 to 400 and the `limit`
 | `fee`                                                                                                                       | Fee tiers and congestion    |
 | `account <address>`                                                                                                         | Account summary             |
 | `token <asset>`                                                                                                             | Issued token data           |
-| `readiness --from --to [--asset --amount --destination-tag]`                                                                | Payment readiness           |
+| `readiness --from --to [--asset --amount --destination-tag --credentials <id[,id...]>]`                                     | Payment readiness           |
 | `prepare-payment --from --to --asset --amount [--destination-tag --source-asset --send-max-tolerance --fee-tier --max-fee]` | Unsigned payment            |
 | `quote-dex --base --quote --amount [--depth --max-slippage]`                                                                | DEX quote                   |
 | `topup <bundle> --max <amount>`                                                                                             | Buy a prepaid credit bundle |

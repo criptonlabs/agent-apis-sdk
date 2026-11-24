@@ -11,7 +11,7 @@ describe("createXrplAgentKit", () => {
     const kit = createXrplAgentKit({ transport: fake.transport });
     const fee = await kit.data.fee();
 
-    expect(fee.data.fee.standard).toBe(feeFixture.fee.standard);
+    expect(fee.data.fee.standard_drops).toBe(feeFixture.fee.standard_drops);
     expect(fake.requests[0]?.url).toBe("https://api.criptonlabs.com/v1/xrpl/fee");
     expect(kit.spent()).toBe("0");
     expect(typeof kit.preparePayment).toBe("function");

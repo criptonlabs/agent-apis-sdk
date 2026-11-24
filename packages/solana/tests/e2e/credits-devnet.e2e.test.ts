@@ -10,11 +10,13 @@ import {
   type SentRequest,
 } from "./e2e-env.js";
 
-// API facts from the released revision `ce704b9`:
+// API facts from the released revision `8bbad8ca` (API 0.27.0):
 // - `eur-1` costs 1.21 EUR, paid with EURC on Solana (bundle table `2026-10-26` in
 //   `src/config/credits.ts`; `openspec/specs/prepaid-credits/spec.md` "Top-up bundles").
-// - `/v1/pro/solana/slot/latest` is credits-only (`src/config/prices.ts`, route table `2026-10-18`)
-//   and debits tier 1, 0.0005 EUR (`src/config/credits.ts`).
+// - Since the API change `per-call-tiers-and-catalog`, every `/v1/pro/*` route takes both per-call
+//   payment and credits, so `/v1/pro/solana/slot/latest` is per-call; without a payer the kit raises
+//   `payment-disabled`, which still carries the refusal `reason` and `prepaidOffer`. It debits
+//   tier 1, 0.0005 EUR (`src/config/credits.ts`).
 // - A SIWX-debited answer carries `X-SIWX-Next-Challenge`; rotation revokes every earlier token of
 //   the wallet, which then answers `credits_invalid` (`openspec/specs/prepaid-credits/spec.md`
 //   "Sign-In-With-X spending", "Token rotation", "Credit refusal").
@@ -40,7 +42,7 @@ function boughtCredits(): Bought {
 }
 
 describe("Solana prepaid credits devnet end to end (opt-in)", () => {
-  it("offers eur-1 at the EURC maximum on a credits-only route without credentials", async () => {
+  it("offers eur-1 at the EURC maximum on a per-call route without credentials", async () => {
     const kit = createSolanaAgentKit({
       baseUrl: guardedBaseUrl(),
       tier: "pro",
@@ -51,7 +53,7 @@ describe("Solana prepaid credits devnet end to end (opt-in)", () => {
 
     expect(error).toBeInstanceOf(CriptonPaymentError);
     const refusal = error as CriptonPaymentError;
-    expect(refusal.code).toBe("credits-required");
+    expect(refusal.code).toBe("payment-disabled");
     const eur1 = refusal.prepaidOffer?.bundles.find((bundle) => bundle.id === "eur-1");
     expect(cmp(decimalOf(eur1?.amount, "the eur-1 offer amount"), EUR_1_MAX)).toBe(0);
   }, 60_000);
@@ -137,7 +139,7 @@ describe("Solana prepaid credits devnet end to end (opt-in)", () => {
     const error = await rejectionOf(oldTokenKit.data.latestSlot());
     expect(error).toBeInstanceOf(CriptonPaymentError);
     const refusal = error as CriptonPaymentError;
-    expect(refusal.code).toBe("credits-required");
+    expect(refusal.code).toBe("payment-disabled");
     expect(refusal.reason).toBe("credits_invalid");
   }, 60_000);
 

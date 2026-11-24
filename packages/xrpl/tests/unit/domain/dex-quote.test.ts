@@ -6,7 +6,8 @@ import {
   type DexQuoteInput,
 } from "../../../src/domain/dex-quote.js";
 
-const RLUSD = "RLUSD.rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De";
+const RLUSD_ISSUER = "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De";
+const RLUSD = `524C555344000000000000000000000000000000.${RLUSD_ISSUER}`;
 
 const input: DexQuoteInput = { base: "XRP", quote: RLUSD, amount: "500" };
 
@@ -14,17 +15,23 @@ function slippage(overrides: Partial<SlippageResponse> = {}): SlippageResponse {
   return {
     base: "XRP",
     quote: RLUSD,
+    domain: null,
     side: "buy",
     depth: 50,
+    depth_effective: 50,
     amount: "500",
     filled: "500",
     partial: false,
     insufficient_liquidity: false,
+    book_truncated: false,
     best_price: "2.1034",
+    worst_price: "2.13",
     avg_price: "2.1122",
     slippage_pct: "0.42",
     transfer_fee_applied: false,
-    transfer_fee: null,
+    // On a buy the taker sends the quote: RLUSD, whose issuer sets no transfer fee.
+    transfer_fee_pct: "0",
+    transfer_fee_issuer: RLUSD_ISSUER,
     avg_price_after_fees: null,
     venues: {
       best: "amm",
@@ -43,11 +50,16 @@ function slippage(overrides: Partial<SlippageResponse> = {}): SlippageResponse {
         insufficient_liquidity: false,
         avg_price_after_fees: null,
         spot_price: "2.1034",
-        trading_fee: "0.003",
+        // spot / (1 - fee) for a buy, fee 0.3 %
+        spot_price_with_fee: "2.109729187562688064",
+        trading_fee_pct: "0.3",
       },
+      amm_ledger_index: 104_200_060,
+      amm_age_seconds: 1,
     },
     meta: {
       ledger_index: 104_200_060,
+      ledger_state: "validated",
       as_of: "2026-10-18T10:00:00.000Z",
       age_seconds: 1,
       cache: "miss",
@@ -96,6 +108,8 @@ describe("buildDexQuote", () => {
             avg_price_after_fees: null,
           },
           amm: null,
+          amm_ledger_index: null,
+          amm_age_seconds: null,
         },
       }),
     );
@@ -109,7 +123,14 @@ describe("buildDexQuote", () => {
     const quote = buildDexQuote(
       input,
       slippage({
-        venues: { best: "clob", amm_status: "unavailable", clob: base.venues.clob, amm: null },
+        venues: {
+          best: "clob",
+          amm_status: "unavailable",
+          clob: base.venues.clob,
+          amm: null,
+          amm_ledger_index: null,
+          amm_age_seconds: null,
+        },
       }),
     );
     expect(quote.ammStatus).toBe("unavailable");

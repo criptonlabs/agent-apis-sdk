@@ -3,7 +3,7 @@ import type { PaymentOption } from "../../src/domain/payment-option.js";
 
 export const RLUSD_HEX = "524C555344000000000000000000000000000000";
 export const PAY_TO = "rN7n7otQDd6FczFgLdSqtcsAUxDkw6fzRH";
-export const PAYER = "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh";
+export const PAYER = "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq";
 export const FEE_URL = "https://api.criptonlabs.com/v1/pro/xrpl/fee";
 export const TX_HASH = "A".repeat(64);
 

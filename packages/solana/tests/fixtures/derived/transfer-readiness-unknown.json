@@ -1,0 +1,36 @@
+{
+  "source": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+  "destination": "2wKupLR9q6wXYppw8Gr2NvWxKBUqm4PPJKkQfoxHDBg4",
+  "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "amount": "1",
+  "amount_atomic": "1000000",
+  "source_balance": {
+    "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "value": "1109.038551",
+    "value_atomic": "1109038551"
+  },
+  "decimals": 6,
+  "token_program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  "source_token_account": "FGETo8T8wMcN2wCjav8VK6eh3dLk63evNDPxzLSJra8B",
+  "destination_token_account": "3XZXfFJHF5ox3yPop16oqYfSWxLpkjsEuvTe2S67G2rj",
+  "verdict": "unknown",
+  "reasons": [],
+  "warnings": [],
+  "checks_failed": ["destination_token_account"],
+  "requires_ata_creation": false,
+  "ata_creation_lamports": null,
+  "transfer_fee_atomic": null,
+  "net_amount_atomic": "1000000",
+  "destination_kind": "wallet",
+  "ui_multiplier": null,
+  "interest_rate_pct": null,
+  "transfer_fee_next": null,
+  "meta": {
+    "slot": 473300329,
+    "commitment": "finalized",
+    "as_of": "2026-11-24T09:50:20.341Z",
+    "age_seconds": 1,
+    "cache": "miss",
+    "stale": false
+  }
+}

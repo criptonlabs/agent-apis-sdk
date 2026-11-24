@@ -3,18 +3,36 @@
   "reasons": ["destination_tag_required"],
   "warnings": [],
   "checks_failed": [],
-  "spendable_xrp": "412525.886965",
+  "spendable_xrp": "95309.46068",
+  "reserve_base_xrp": "1",
+  "reserve_inc_xrp": "0.2",
+  "source_owner_count": 14,
+  "fee_drops": "10",
   "transfer_fee_pct": null,
-  "source": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-  "destination": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+  "source_balance": {
+    "asset": "XRP",
+    "value": "95313.26068"
+  },
+  "required_source_balance": {
+    "asset": "XRP",
+    "value": "13.8"
+  },
+  "max_sendable": {
+    "asset": "XRP",
+    "value": "95309.46068"
+  },
+  "source": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+  "destination": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
   "asset": "XRP",
   "amount": "10",
   "destination_tag": null,
+  "credentials": null,
   "meta": {
-    "ledger_index": 107738129,
-    "as_of": "2026-10-18T10:58:51.080Z",
-    "age_seconds": 1,
-    "cache": "miss",
+    "ledger_index": 108537865,
+    "ledger_state": "validated",
+    "as_of": "2026-11-24T09:57:22.097Z",
+    "age_seconds": 0,
+    "cache": "hit",
     "stale": false
   }
 }

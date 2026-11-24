@@ -1,10 +1,10 @@
 {
-  "slot": 462121534,
-  "block_time": "2026-10-27T15:29:06.000Z",
+  "slot": 473300315,
+  "block_time": "2026-11-24T09:50:17.000Z",
   "meta": {
-    "slot": 462121534,
+    "slot": 473300315,
     "commitment": "finalized",
-    "as_of": "2026-10-27T15:29:06.921Z",
+    "as_of": "2026-11-24T09:50:17.557Z",
     "age_seconds": 0,
     "cache": "miss",
     "stale": false

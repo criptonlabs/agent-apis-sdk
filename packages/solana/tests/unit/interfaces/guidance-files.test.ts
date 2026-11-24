@@ -7,6 +7,7 @@ import { createSolanaAgentKit } from "../../../src/index.js";
 import { solanaCommands } from "../../../src/interfaces/cli/commands.js";
 import { createSolanaMcpServer } from "../../../src/interfaces/mcp/server.js";
 import { startFakeSolanaRpc } from "../../support/fake-solana-rpc.js";
+import { kitOver, solanaFake } from "../../support/interface-kit.js";
 import { throwawayKey } from "../../support/keys.js";
 
 const read = (name: string): string =>
@@ -76,6 +77,32 @@ async function topupDescription(): Promise<string> {
   }
 }
 
+/** The 0.21.0 names API 0.27.0 removed (whole words, case-sensitive), and the uppercase token verdicts. */
+const REMOVED_NAMES = ["blockers", "amount_raw", "net_amount", "SAFE", "WARN", "DANGER"];
+
+/** `safe`, `warn` and `danger` named in that order within one sentence. */
+const TOKEN_VERDICT = /\bsafe\b[^.]*\bwarn\b[^.]*\bdanger\b/;
+
+/** The descriptions of every tool of the Solana MCP server, joined (the purchase tool is off). */
+async function toolDescriptions(): Promise<string> {
+  const server = await createSolanaMcpServer(kitOver(solanaFake()));
+  const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
+  const client = new Client({ name: "test-client", version: "0.0.0" });
+  try {
+    await server.connect(serverSide);
+    await client.connect(clientSide);
+    const { tools } = await client.listTools();
+    return tools.map((t) => t.description ?? "").join("\n");
+  } finally {
+    await client.close();
+    await server.close();
+  }
+}
+
+/** The members of `phrases` that `text` lacks. */
+const lacking = (text: string, phrases: readonly string[]): string[] =>
+  phrases.filter((phrase) => !text.includes(phrase));
+
 describe("Solana guidance files", () => {
   it("Solana guidance files stay truthful", () => {
     const skill = read("SKILL.md");
@@ -138,6 +165,31 @@ describe("Solana guidance files", () => {
     for (const [name, text] of Object.entries(texts)) {
       const missing = UNCONFIRMED_PURCHASE.filter((phrase) => !text.includes(phrase));
       expect.soft(missing, `${name} lacks these phrases`).toEqual([]);
+    }
+  });
+
+  it("Readiness vocabulary in every guidance file", async () => {
+    const docs: Record<string, string> = {
+      "README.md": read("README.md"),
+      "SKILL.md": read("SKILL.md"),
+      ".cursorrules": read(".cursorrules"),
+    };
+    const sources = { ...docs, "tool descriptions": await toolDescriptions() };
+
+    // Soft per source, so the failure lists every source and what it lacks or still says.
+    for (const [name, text] of Object.entries(sources)) {
+      const readinessWords = ["verdict", "reasons", "checks_failed", "transfer-readiness-unknown"];
+      expect.soft(lacking(text, readinessWords), `${name} lacks these readiness names`).toEqual([]);
+      expect.soft(TOKEN_VERDICT.test(text), `${name} states the token verdict`).toBe(true);
+      const removed = REMOVED_NAMES.filter((word) => new RegExp(`\\b${word}\\b`).test(text));
+      expect.soft(removed, `${name} still says these removed names`).toEqual([]);
+    }
+    for (const name of ["SKILL.md", "README.md"]) {
+      expect.soft(docs[name], `${name} names amount_atomic`).toContain("amount_atomic");
+    }
+    for (const [name, text] of Object.entries(docs)) {
+      const supply = lacking(text, ["supply_atomic", "display units"]);
+      expect.soft(supply, `${name} lacks these supply names`).toEqual([]);
     }
   });
 });

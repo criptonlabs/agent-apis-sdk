@@ -18,6 +18,9 @@ import token from "../../fixtures/responses/token.json" with { type: "json" };
 import { DESTINATION, SOURCE, readiness } from "../../support/interface-kit.js";
 
 const USD = `USD.${DESTINATION}`;
+const GATEHUB = "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq";
+const DOMAIN = "DBABFD44A80DB623522628550B270FA5E2A845341E137530728E2E3699181A4E";
+const CREDENTIAL = "006E72B33796BEC170F5732535B6D44E688631B83A0E2E2BBD26E82118EA8290";
 const READY = readiness({ verdict: "ready", reasons: [], warnings: [], checks_failed: [] });
 
 const BODIES: Record<string, object> = {
@@ -231,5 +234,38 @@ describe("XRPL tool input schemas", () => {
     };
     expect(limitOf("xrpl_account_lines")).toMatchObject({ minimum: 10, maximum: 400 });
     expect(limitOf("xrpl_account_transactions")).toMatchObject({ minimum: 1, maximum: 50 });
+  });
+});
+
+describe("XRPL tool inputs for the 0.27 query parameters", () => {
+  it("Slippage tool sells", async () => {
+    const { call, last } = setup();
+    const result = await call("xrpl_slippage", {
+      base: "XRP",
+      quote: USD,
+      amount: "100",
+      side: "sell",
+    });
+    expect(last().path).toBe("/v1/xrpl/slippage");
+    expect(last().query.side, "the request carries side=sell").toBe("sell");
+    expect(result).toEqual(slippage);
+  });
+
+  it("Orderbook tool with a domain", async () => {
+    const { call, last } = setup();
+    await call("xrpl_orderbook", { base: "XRP", quote: USD, domain: DOMAIN });
+    expect(last().path).toBe("/v1/xrpl/orderbook");
+    expect(last().query.domain, "the request carries the domain").toBe(DOMAIN);
+  });
+
+  it("Readiness tool with credentials", async () => {
+    const { call, last } = setup();
+    await call("xrpl_payment_readiness", {
+      source: GATEHUB,
+      destination: DESTINATION,
+      credentials: [CREDENTIAL],
+    });
+    expect(last().path).toBe("/v1/xrpl/payment-readiness");
+    expect(last().query.credentials, "the request carries the credential id").toBe(CREDENTIAL);
   });
 });

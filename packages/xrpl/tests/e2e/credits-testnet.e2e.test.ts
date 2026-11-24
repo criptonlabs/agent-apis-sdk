@@ -3,9 +3,11 @@ import { describe, expect, it } from "vite-plus/test";
 import { createXrplAgentKit } from "../../src/index.js";
 import { decimalOf, guardedBaseUrl, payerSeed, rejectionOf } from "./e2e-env.js";
 
-// API facts from the released revision `ce704b9`:
-// - `/v1/pro/xrpl/fee` is credits-only (`src/config/prices.ts`, route table `2026-10-18`) and debits
-//   tier 1, 0.0005 EUR or 0.0006 USD (`src/config/credits.ts`).
+// API facts from the released revision `8bbad8ca` (API 0.27.0):
+// - Since the API change `per-call-tiers-and-catalog`, every `/v1/pro/*` route takes both per-call
+//   payment and credits, so `/v1/pro/xrpl/fee` is per-call; without a payer the kit raises
+//   `payment-disabled`, which still carries the `prepaidOffer`. It debits tier 1, 0.0005 EUR or
+//   0.0006 USD (`src/config/credits.ts`).
 // - `usd-starter` costs 1.00 USD, paid with RLUSD on the XRP Ledger (bundle table `2026-10-26`,
 //   `openspec/specs/prepaid-credits/spec.md` "Top-up bundles").
 // - A replayed `Idempotency-Key` is served without a new debit and answers the same balance
@@ -30,14 +32,14 @@ function boughtCredits(): Bought {
 }
 
 describe("XRPL prepaid credits testnet end to end (opt-in)", () => {
-  it("answers credits-required with a prepaid offer on a credits-only route without credentials", async () => {
+  it("answers payment-disabled with a prepaid offer on a per-call route without credentials", async () => {
     const kit = createXrplAgentKit({ baseUrl: guardedBaseUrl(), tier: "pro" });
 
     const error = await rejectionOf(kit.data.fee());
 
     expect(error).toBeInstanceOf(CriptonPaymentError);
     const refusal = error as CriptonPaymentError;
-    expect(refusal.code).toBe("credits-required");
+    expect(refusal.code).toBe("payment-disabled");
     expect(refusal.prepaidOffer?.bundles.length ?? 0).toBeGreaterThan(0);
   }, 60_000);
 

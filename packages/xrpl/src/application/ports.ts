@@ -16,7 +16,7 @@ import type {
   TokenResponse,
 } from "../domain/api-types.js";
 
-export type Depth = 10 | 50 | 100 | 200;
+export type Depth = number;
 
 /** Every data method takes the call options last (design D11). */
 export interface XrplDataPort {
@@ -33,6 +33,7 @@ export interface XrplDataPort {
       base: string;
       quote: string;
       depth?: Depth;
+      domain?: string;
     },
     options?: CallOptions,
   ): Promise<KitResponse<OrderbookResponse>>;
@@ -42,6 +43,8 @@ export interface XrplDataPort {
       quote: string;
       amount: string;
       depth?: Depth;
+      side?: "buy" | "sell";
+      domain?: string;
     },
     options?: CallOptions,
   ): Promise<KitResponse<SlippageResponse>>;
@@ -68,6 +71,7 @@ export interface XrplDataPort {
       asset?: string;
       amount?: string;
       destinationTag?: number;
+      credentials?: string[];
     },
     options?: CallOptions,
   ): Promise<KitResponse<ReadinessResponse>>;

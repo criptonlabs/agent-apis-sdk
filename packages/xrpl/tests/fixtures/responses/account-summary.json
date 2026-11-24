@@ -3,313 +3,394 @@
   "balance_xrp": "412602.491965",
   "sequence": 4827,
   "owner_count": 378,
-  "transfer_rate": 1001500000,
+  "ticket_count": 0,
+  "sponsored_owner_count": null,
+  "sponsoring_owner_count": null,
+  "sponsoring_account_count": null,
+  "transfer_fee_pct": "0.15",
+  "flags": {
+    "require_dest_tag": true,
+    "deposit_auth": false,
+    "disallow_xrp": true,
+    "disallow_incoming": {
+      "check": false,
+      "nftoken_offer": false,
+      "paychan": false,
+      "trustline": false
+    },
+    "require_auth": false,
+    "default_ripple": true,
+    "global_freeze": false,
+    "no_freeze": false,
+    "allow_clawback": false,
+    "disable_master": true,
+    "allow_trustline_locking": false
+  },
+  "regular_key": "rUUs1jns6tdUQwAABDJyHMUHvdGNvNADvJ",
+  "signer_list_set": false,
+  "domain": "bitstamp.net",
+  "tick_size": null,
+  "amm_id": null,
+  "vault_id": null,
+  "loan_broker_id": null,
   "trust_lines": [
     {
+      "peer": "rKUK9omZqVEnraCipKNFb5q4tuNTeqEDZS",
       "currency": "BTC",
-      "issuer": "rKUK9omZqVEnraCipKNFb5q4tuNTeqEDZS",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rngJ9Co6MPZxJcyepRv2hMPV1HqaeGCdVU",
       "currency": "USD",
-      "issuer": "rngJ9Co6MPZxJcyepRv2hMPV1HqaeGCdVU",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rGgEwKunXUypZEXvPnyM6bqXb3LVVVnPw6",
       "currency": "USD",
-      "issuer": "rGgEwKunXUypZEXvPnyM6bqXb3LVVVnPw6",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rpykP6AUy6ZQzxvZa6MTvYSPMAg5SgLi15",
       "currency": "USD",
-      "issuer": "rpykP6AUy6ZQzxvZa6MTvYSPMAg5SgLi15",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rHovVjpXrB7hVTTLz9QFMHC7qWMpdq28VU",
       "currency": "BTC",
-      "issuer": "rHovVjpXrB7hVTTLz9QFMHC7qWMpdq28VU",
+      "role": "issuer",
       "balance": "-0.000068000005885",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rhMb2LRHvyouHMF9WoWMJ29mdDTUgEdiA5",
       "currency": "USD",
-      "issuer": "rhMb2LRHvyouHMF9WoWMJ29mdDTUgEdiA5",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rEaaL2rhur9XQhTizUo46Eq2WZxkkpRKiF",
       "currency": "BTC",
-      "issuer": "rEaaL2rhur9XQhTizUo46Eq2WZxkkpRKiF",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rP7UZgvJTmDiPKQD3bvbTQqopJP1UBtjVv",
       "currency": "USD",
-      "issuer": "rP7UZgvJTmDiPKQD3bvbTQqopJP1UBtjVv",
+      "role": "issuer",
       "balance": "-10",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rDP4cLmzMsPkRz7vzpwHt2xep2EB7GmDR5",
       "currency": "USD",
-      "issuer": "rDP4cLmzMsPkRz7vzpwHt2xep2EB7GmDR5",
+      "role": "issuer",
       "balance": "-0.001662844463398812",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rPsgSSsNJv94avAQxojBLtZJLL2w1KSjzk",
       "currency": "BTC",
-      "issuer": "rPsgSSsNJv94avAQxojBLtZJLL2w1KSjzk",
+      "role": "issuer",
       "balance": "-0.00000866259124757",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rwMVjCPUo1W374mkkYL2HbktswzinzY6zq",
       "currency": "BTC",
-      "issuer": "rwMVjCPUo1W374mkkYL2HbktswzinzY6zq",
+      "role": "issuer",
       "balance": "-0.000041075195176",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rJsPTSSKqgUrihbMjxJ5PkKEPv1hnABQmw",
       "currency": "USD",
-      "issuer": "rJsPTSSKqgUrihbMjxJ5PkKEPv1hnABQmw",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rwyzB8ChxXHYyohgPsAyDZEFA16vaRJTGA",
       "currency": "BTC",
-      "issuer": "rwyzB8ChxXHYyohgPsAyDZEFA16vaRJTGA",
+      "role": "issuer",
       "balance": "-0.00000016",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rKRz7ApZkEUNkeMPQtnMrBLj1nNDH5XQGB",
       "currency": "USD",
-      "issuer": "rKRz7ApZkEUNkeMPQtnMrBLj1nNDH5XQGB",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rLif41Z5FAd5sUZpnY3e5DNC3aPsStVXVh",
       "currency": "BTC",
-      "issuer": "rLif41Z5FAd5sUZpnY3e5DNC3aPsStVXVh",
+      "role": "issuer",
       "balance": "-0.1357142842857143",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rPqnPbY4RNYeoUFpPxxWkDixbfYP3ruDTu",
       "currency": "BTC",
-      "issuer": "rPqnPbY4RNYeoUFpPxxWkDixbfYP3ruDTu",
+      "role": "issuer",
       "balance": "-0.019",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rEx9aixkPDiWZpKE66fJeDQmpUSyeVzLkB",
       "currency": "USD",
-      "issuer": "rEx9aixkPDiWZpKE66fJeDQmpUSyeVzLkB",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rsoaDwv8M6UhNy3jCGfsgDJj8jBb5dtukM",
       "currency": "USD",
-      "issuer": "rsoaDwv8M6UhNy3jCGfsgDJj8jBb5dtukM",
+      "role": "issuer",
       "balance": "-0.99",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rDp4bLQCcDdcQYNuvDC7gsUwdYwBJXnjNV",
       "currency": "BTC",
-      "issuer": "rDp4bLQCcDdcQYNuvDC7gsUwdYwBJXnjNV",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rM6MKghzDy7QNAnt62dKi1hQMLQ2JBvhnS",
       "currency": "BTC",
-      "issuer": "rM6MKghzDy7QNAnt62dKi1hQMLQ2JBvhnS",
+      "role": "issuer",
       "balance": "-0.0000039434620027",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rL8dWedJoE99trErh71hr8BM22WnvTopTm",
       "currency": "USD",
-      "issuer": "rL8dWedJoE99trErh71hr8BM22WnvTopTm",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rsgKssuWnginG43iaZABdbs6WS7ob7xw6i",
       "currency": "USD",
-      "issuer": "rsgKssuWnginG43iaZABdbs6WS7ob7xw6i",
+      "role": "issuer",
       "balance": "-0.00914980458663",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rEh2dVaqaEouWXePr7xWTGatJigg9KGigM",
       "currency": "USD",
-      "issuer": "rEh2dVaqaEouWXePr7xWTGatJigg9KGigM",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rU3vj2nq6HwcUnfPLmzCcTxoFb8PZoymQt",
       "currency": "BTC",
-      "issuer": "rU3vj2nq6HwcUnfPLmzCcTxoFb8PZoymQt",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rEKuxCbhavpuHrE5kY2mrmNTSmUcMfVmNQ",
       "currency": "USD",
-      "issuer": "rEKuxCbhavpuHrE5kY2mrmNTSmUcMfVmNQ",
+      "role": "issuer",
       "balance": "-1",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rJqpb3eExwUwC89L2atbPqXmGxUoSir9Xp",
       "currency": "USD",
-      "issuer": "rJqpb3eExwUwC89L2atbPqXmGxUoSir9Xp",
+      "role": "issuer",
       "balance": "-0.0099999999998",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rJA6mGHsw5yCynLFRe3rjGqaCMk2YpmuMy",
       "currency": "BTC",
-      "issuer": "rJA6mGHsw5yCynLFRe3rjGqaCMk2YpmuMy",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rQNe3dH3D8Mzoh1kUoBuaoahwBSKdRwBaU",
       "currency": "BTC",
-      "issuer": "rQNe3dH3D8Mzoh1kUoBuaoahwBSKdRwBaU",
+      "role": "issuer",
       "balance": "-0.0000775865813885",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rpWca8z9ZPgWFUzehk94DExSE8eMpiJoNE",
       "currency": "BTC",
-      "issuer": "rpWca8z9ZPgWFUzehk94DExSE8eMpiJoNE",
-      "balance": "-0.000954198864131257",
-      "limit": "0"
+      "role": "issuer",
+      "balance": "-0.0009541988641312572",
+      "line_limit": "0"
     },
     {
+      "peer": "rhJdSXEzt5j8ALQo5e7hPNzHKdwmiHKTtq",
       "currency": "BTC",
-      "issuer": "rhJdSXEzt5j8ALQo5e7hPNzHKdwmiHKTtq",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rQnLSAJEmB8g6sd1xmUP9aGxmy7ZbW6tAv",
       "currency": "BTC",
-      "issuer": "rQnLSAJEmB8g6sd1xmUP9aGxmy7ZbW6tAv",
+      "role": "issuer",
       "balance": "-0.0000816727432243",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "r98uqLUnrv9TggCjwoUCjQMnsZirEL6aV6",
       "currency": "BTC",
-      "issuer": "r98uqLUnrv9TggCjwoUCjQMnsZirEL6aV6",
+      "role": "issuer",
       "balance": "-0.013245610526316",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rptANXJfQbqELFUCGzA3w1nL8x1zfokmXM",
       "currency": "USD",
-      "issuer": "rptANXJfQbqELFUCGzA3w1nL8x1zfokmXM",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rQsdJS9HJDmr7qkvnxXgHQwMmpABCR7owc",
       "currency": "USD",
-      "issuer": "rQsdJS9HJDmr7qkvnxXgHQwMmpABCR7owc",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "r9tirhuKqJ8hSyPJyeUBgeeA5vsk2MDUYQ",
       "currency": "USD",
-      "issuer": "r9tirhuKqJ8hSyPJyeUBgeeA5vsk2MDUYQ",
+      "role": "issuer",
       "balance": "-0.3023456",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rQhmfZZ73NQUxSPF5c8AL6h5CUzhVTBtjE",
       "currency": "USD",
-      "issuer": "rQhmfZZ73NQUxSPF5c8AL6h5CUzhVTBtjE",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rG37fnMJXmTbx9bCrG1bZtFRzcBo4YeJbE",
       "currency": "BTC",
-      "issuer": "rG37fnMJXmTbx9bCrG1bZtFRzcBo4YeJbE",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rN4RFpzHCearXwhrWTF1uknhD4wGHAwYT2",
       "currency": "BTC",
-      "issuer": "rN4RFpzHCearXwhrWTF1uknhD4wGHAwYT2",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rE2f4i2j8ooUBUKM6jZmwmkjLigwsy5yvP",
       "currency": "BTC",
-      "issuer": "rE2f4i2j8ooUBUKM6jZmwmkjLigwsy5yvP",
+      "role": "issuer",
       "balance": "-0.0000451623794572",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rBVL1xHyDd3gka7QH2nvXAZEW2cbYFaN4f",
       "currency": "BTC",
-      "issuer": "rBVL1xHyDd3gka7QH2nvXAZEW2cbYFaN4f",
+      "role": "issuer",
       "balance": "-0.1100000076209764",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rH4atJs1JwBsorgpgAMBpi44R5zVe3H9Uf",
       "currency": "USD",
-      "issuer": "rH4atJs1JwBsorgpgAMBpi44R5zVe3H9Uf",
+      "role": "issuer",
       "balance": "-0.7358485432939",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rM7qmghoc3en9WwRA8BWoLSdokiMj7vZaw",
       "currency": "USD",
-      "issuer": "rM7qmghoc3en9WwRA8BWoLSdokiMj7vZaw",
+      "role": "issuer",
       "balance": "-0.27658",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rs2UmDA126TkBzw6f2NY28fbcn8YW572ig",
       "currency": "BTC",
-      "issuer": "rs2UmDA126TkBzw6f2NY28fbcn8YW572ig",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "ram4N9y2k2Vtv3g3fWiTep9gkuqBQYG7oX",
       "currency": "BTC",
-      "issuer": "ram4N9y2k2Vtv3g3fWiTep9gkuqBQYG7oX",
+      "role": "issuer",
       "balance": "-0.124274077015425",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rMZKeAt1vMjhuNCWDiB4SdzJRiymdpERw4",
       "currency": "USD",
-      "issuer": "rMZKeAt1vMjhuNCWDiB4SdzJRiymdpERw4",
+      "role": "issuer",
       "balance": "-17651.09704977037",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "r4MdceDesjyRB6g6wkiURinfVhMvPKK5RY",
       "currency": "BTC",
-      "issuer": "r4MdceDesjyRB6g6wkiURinfVhMvPKK5RY",
+      "role": "issuer",
       "balance": "-0.001830045499009697",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rP723BpeYtfTwrPSFZBnPDMnUXZSiATCnB",
       "currency": "USD",
-      "issuer": "rP723BpeYtfTwrPSFZBnPDMnUXZSiATCnB",
+      "role": "holder",
       "balance": "0",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rNPJy24bP3UQGoxFajfePg4zmBnTeHkkZ7",
       "currency": "BTC",
-      "issuer": "rNPJy24bP3UQGoxFajfePg4zmBnTeHkkZ7",
+      "role": "issuer",
       "balance": "-0.00000185917078419",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rn964ijXjqm59m3qCPhJjBJzBg7q5161We",
       "currency": "USD",
-      "issuer": "rn964ijXjqm59m3qCPhJjBJzBg7q5161We",
+      "role": "issuer",
       "balance": "-20",
-      "limit": "0"
+      "line_limit": "0"
     },
     {
+      "peer": "rLaEJzmBY27tZ63Cp5KrJaFEuWJVboBWDV",
       "currency": "BTC",
-      "issuer": "rLaEJzmBY27tZ63Cp5KrJaFEuWJVboBWDV",
+      "role": "issuer",
       "balance": "-1.545675713040349",
-      "limit": "0"
+      "line_limit": "0"
     }
   ],
   "lines_truncated": true,
+  "is_issuer": true,
   "meta": {
-    "ledger_index": 107738132,
-    "as_of": "2026-10-18T10:58:51.080Z",
+    "ledger_index": 108537766,
+    "ledger_state": "validated",
+    "as_of": "2026-11-24T09:49:52.015Z",
     "age_seconds": 0,
     "cache": "miss",
     "stale": false

@@ -27,6 +27,8 @@ import token from "../../fixtures/responses/token.json" with { type: "json" };
 import { DESTINATION, SOURCE, readiness } from "../../support/interface-kit.js";
 
 const USD = `USD.${DESTINATION}`;
+const GATEHUB = "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq";
+const CREDENTIAL = "006E72B33796BEC170F5732535B6D44E688631B83A0E2E2BBD26E82118EA8290";
 const READY = readiness({ verdict: "ready", reasons: [], warnings: [], checks_failed: [] });
 
 /** The recorded `usd-starter` top-up challenge with its RLUSD `xrpl:0` entry priced at `amount`. */
@@ -287,5 +289,69 @@ describe("XRPL CLI commands map flags to requests", () => {
       topupSpent: "0",
     });
     expectTokenAbsent([r.out.join(""), r.err.join("")], token);
+  });
+
+  it("Readiness command with credentials", async () => {
+    const r = run([
+      "readiness",
+      "--from",
+      GATEHUB,
+      "--to",
+      DESTINATION,
+      "--credentials",
+      CREDENTIAL,
+      "--json",
+    ]);
+    expect(await r.done, `exit code (stderr: ${r.err.join("")})`).toBe(0);
+    const url = r.urls()[0];
+    expect(url?.pathname).toBe("/v1/xrpl/payment-readiness");
+    expect(url?.searchParams.get("credentials"), "the request carries the credential id").toBe(
+      CREDENTIAL,
+    );
+    expect(JSON.parse(r.out.join(""))).toEqual(READY);
+  });
+
+  it("Readiness command with an invalid credential", async () => {
+    const r = run([
+      "readiness",
+      "--from",
+      GATEHUB,
+      "--to",
+      DESTINATION,
+      "--credentials",
+      "006E72",
+      "--json",
+    ]);
+    expect(await r.done).toBe(2);
+    const printed = r.out.join("");
+    expect(printed, "standard output holds the error JSON").toContain("invalid-input");
+    expect(JSON.parse(printed)).toMatchObject({
+      code: "invalid-input",
+      details: { field: "credentials" },
+    });
+    expect(r.urls()).toHaveLength(0);
+  });
+
+  it("Depth text that is not decimal digits rejected", async () => {
+    for (const text of ["1e2", "0x14", " 20 "]) {
+      const r = run([
+        "quote-dex",
+        "--base",
+        "XRP",
+        "--quote",
+        USD,
+        "--amount",
+        "100",
+        "--depth",
+        text,
+        "--json",
+      ]);
+      expect(await r.done, `exit code for depth ${JSON.stringify(text)}`).toBe(2);
+      expect(JSON.parse(r.out.join("")), `error for depth ${JSON.stringify(text)}`).toMatchObject({
+        code: "invalid-input",
+        details: { field: "depth" },
+      });
+      expect(r.urls(), `requests for depth ${JSON.stringify(text)}`).toHaveLength(0);
+    }
   });
 });

@@ -56,3 +56,25 @@ description = "Placeholder lines in .env.example"
 condition = "AND"
 paths = ['''^\.env\.example$''']
 regexes = ['''(?i)=\s*<[^>]*>\s*$''']
+
+[[allowlists]]
+description = "Public example values of the API 0.27.0 OpenAPI snapshot (exact values, no paths)"
+regexTarget = "secret"
+regexes = [
+  # PYUSD Token-2022 associated token address, x402 preflight example (source_token_account)
+  '''^2cxUQZpW2N3ErXA4C58ZXdCdg2yakyeHhyrsCK33mx6F$''',
+  # PYUSD Token-2022 associated token address, x402 preflight example (destination_token_account)
+  '''^HJEW6unDU6rmK1g2sWMHLoETYEA3APoWJHYCkSXkg2K2$''',
+  # Public token account owner, token_owner example
+  '''^fr6yQkDmWy6R6pecbUsxXaw6EvRJznZ2HsK5frQgud8$''',
+  # Public XRPL RegularKey of the Bitstamp example (regular_key)
+  '''^rUUs1jns6tdUQwAABDJyHMUHvdGNvNADvJ$''',
+  # 87-character example transaction signature, Solana payment verify parameter
+  '''^B7yABUkY4RudiDfoax94mfqVv2YuNJ4AVsg7LjdFT9Qm8bScsw3PoB2LxpuUqzCkiniKQJ9AKXfSfWaw1kWYFaF$''',
+  # Public SPL token account (source) of the recorded Solana transfer-readiness fixture
+  '''^FGETo8T8wMcN2wCjav8VK6eh3dLk63evNDPxzLSJra8B$''',
+  # Public SPL token account (destination) of the recorded Solana transfer-readiness fixture
+  '''^3XZXfFJHF5ox3yPop16oqYfSWxLpkjsEuvTe2S67G2rj$''',
+  # Public example Credential id of the kit-api-sync-0-27 xrpl-data-client spec
+  '''^006E72B33796BEC170F5732535B6D44E688631B83A0E2E2BBD26E82118EA8290$''',
+]

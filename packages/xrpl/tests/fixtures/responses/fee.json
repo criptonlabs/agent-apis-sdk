@@ -1,15 +1,30 @@
 {
-  "fee": { "economy": "10", "standard": "5000", "priority": "5000" },
-  "congestion": { "score": 0, "band": "low", "load_factor_assumed": false },
-  "base_fee": "10",
-  "median_fee": "5000",
-  "minimum_fee": "10",
-  "open_ledger_fee": "10",
-  "current_queue_size": "0",
-  "max_queue_size": "54320",
+  "fee": {
+    "economy_drops": "10",
+    "standard_drops": "10",
+    "priority_drops": "12"
+  },
+  "congestion": {
+    "score": 0,
+    "band": "low",
+    "load_factor_assumed": false,
+    "load_factor_multiplier": "1"
+  },
+  "queue_full": false,
+  "escalation_multiplier": "1",
+  "base_fee_drops": "10",
+  "median_fee_drops": "5000",
+  "minimum_fee_drops": "10",
+  "open_ledger_fee_drops": "10",
+  "current_queue_size": 0,
+  "max_queue_size": 20420,
+  "current_ledger_size": 94,
+  "expected_ledger_size": 1021,
+  "ledger_fill_ratio": "0.092066601371204701",
   "meta": {
-    "ledger_index": 107738131,
-    "as_of": "2026-10-18T10:58:44.624Z",
+    "ledger_index": 108537764,
+    "ledger_state": "open",
+    "as_of": "2026-11-24T09:49:38.390Z",
     "age_seconds": 0,
     "cache": "miss",
     "stale": false

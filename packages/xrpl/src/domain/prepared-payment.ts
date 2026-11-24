@@ -1,6 +1,7 @@
 import {
   addPercentFloor,
   CriptonRefusalError,
+  CriptonResponseError,
   CriptonValidationError,
   cmp,
   maxDecimals,
@@ -62,8 +63,8 @@ export class PaymentNotReadyError extends CriptonRefusalError {
   }
 }
 
-function toTxAmount(field: string, asset: string, value: string): TxAmount {
-  const parsed = parseAsset(field, asset);
+function toTxAmount(assetField: string, field: string, asset: string, value: string): TxAmount {
+  const parsed = parseAsset(assetField, asset);
   if (parsed.kind === "issued") {
     return { currency: parsed.currency, issuer: parsed.issuer, value };
   }
@@ -98,12 +99,12 @@ function validatedAmount(intent: PaymentIntent): TxAmount {
   if (intent.destinationTag !== undefined) {
     assertDestinationTag("destinationTag", intent.destinationTag);
   }
-  return toTxAmount("amount", intent.asset, intent.amount);
+  return toTxAmount("asset", "amount", intent.asset, intent.amount);
 }
 
 function cappedFee(intent: PaymentIntent, fee: FeeResponse): { tier: FeeTier; drops: string } {
   const tier: FeeTier = intent.feeTier ?? "standard";
-  const drops = fee.fee[tier];
+  const drops = fee.fee[`${tier}_drops`];
   if (intent.maxFeeDrops !== undefined && cmp(drops, intent.maxFeeDrops) > 0) {
     throw new PaymentNotReadyError("fee-over-cap", [], [], []);
   }
@@ -127,8 +128,19 @@ function crossCurrencyLeg(
     (alt) => alt.source_amount.asset === intent.sourceAsset,
   );
   if (alternative === undefined) throw new PaymentNotReadyError("no-path-found", [], [], []);
-  const value = addPercentFloor(alternative.source_amount.value, tolerance, 15);
-  return { alternative, sendMax: toTxAmount("sourceAsset", intent.sourceAsset as string, value) };
+  const sourceValue = alternative.source_amount.value;
+  if (sourceValue === null) throw new CriptonResponseError("Path source amount has no value");
+  const value = addPercentFloor(sourceValue, tolerance, 15);
+  return {
+    alternative,
+    sendMax: toTxAmount("sourceAsset", "sourceAsset", intent.sourceAsset as string, value),
+  };
+}
+
+/** Refuses, before any request, an `asset` or `sourceAsset` outside the payment grammar (no MPT). */
+export function assertPaymentAssets(intent: PaymentIntent): void {
+  parseAsset("asset", intent.asset);
+  if (intent.sourceAsset !== undefined) parseAsset("sourceAsset", intent.sourceAsset);
 }
 
 export function buildPreparedPayment(

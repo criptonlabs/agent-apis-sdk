@@ -3,12 +3,15 @@
   "headers": {
     "content-type": "application/problem+json",
     "cache-control": "no-store",
-    "payment-required": "eyJ4NDAyVmVyc2lvbiI6MiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby9jcmVkaXRzL3Rva2VuIn0sImFjY2VwdHMiOltdLCJleHRlbnNpb25zIjp7InNpZ24taW4td2l0aC14Ijp7ImluZm8iOnsiZG9tYWluIjoiYXBpLmNyaXB0b25sYWJzLmNvbSIsInVyaSI6Imh0dHBzOi8vYXBpLmNyaXB0b25sYWJzLmNvbS92MS9wcm8vY3JlZGl0cy90b2tlbiIsInZlcnNpb24iOiIxIiwibm9uY2UiOiI2YWY2MDIwMTQ4MDJhMzNlMzg5NWU4YWE5MzlhMGY4ZiIsImlzc3VlZEF0IjoiMjAyNi0xMS0xMlQxODoxNDoyNVoiLCJleHBpcmF0aW9uVGltZSI6IjIwMjYtMTEtMTJUMTg6MTk6MjVaIn0sInN1cHBvcnRlZENoYWlucyI6W3siY2hhaW5JZCI6InNvbGFuYTo1ZXlrdDRVc0Z2OFA4TkpkVFJFcFkxdnpxS3FaS3ZkcCIsInR5cGUiOiJlZDI1NTE5Iiwic2lnbmF0dXJlU2NoZW1lIjoic2l3cyJ9XSwic2NoZW1hIjp7IiRzY2hlbWEiOiJodHRwczovL2pzb24tc2NoZW1hLm9yZy9kcmFmdC8yMDIwLTEyL3NjaGVtYSIsInR5cGUiOiJvYmplY3QiLCJwcm9wZXJ0aWVzIjp7ImRvbWFpbiI6eyJ0eXBlIjoic3RyaW5nIn0sImFkZHJlc3MiOnsidHlwZSI6InN0cmluZyJ9LCJzdGF0ZW1lbnQiOnsidHlwZSI6InN0cmluZyJ9LCJ1cmkiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6InVyaSJ9LCJ2ZXJzaW9uIjp7InR5cGUiOiJzdHJpbmcifSwiY2hhaW5JZCI6eyJ0eXBlIjoic3RyaW5nIn0sInR5cGUiOnsidHlwZSI6InN0cmluZyJ9LCJub25jZSI6eyJ0eXBlIjoic3RyaW5nIn0sImlzc3VlZEF0Ijp7InR5cGUiOiJzdHJpbmciLCJmb3JtYXQiOiJkYXRlLXRpbWUifSwiZXhwaXJhdGlvblRpbWUiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6ImRhdGUtdGltZSJ9LCJub3RCZWZvcmUiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6ImRhdGUtdGltZSJ9LCJyZXF1ZXN0SWQiOnsidHlwZSI6InN0cmluZyJ9LCJyZXNvdXJjZXMiOnsidHlwZSI6ImFycmF5IiwiaXRlbXMiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6InVyaSJ9fSwic2lnbmF0dXJlIjp7InR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbImRvbWFpbiIsImFkZHJlc3MiLCJ1cmkiLCJ2ZXJzaW9uIiwiY2hhaW5JZCIsInR5cGUiLCJub25jZSIsImlzc3VlZEF0Iiwic2lnbmF0dXJlIl19fX19"
+    "payment-required": "eyJ4NDAyVmVyc2lvbiI6MiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby9jcmVkaXRzL3Rva2VuIiwic2VydmljZU5hbWUiOiJDcmlwdG9ubGFicyBBZ2VudCBBUElzIiwidGFncyI6WyJ4cnBsIiwic29sYW5hIiwicHJlLXBheW1lbnQtY2hlY2siLCJtYXJrZXQtbWV0cmljcyIsInBheW1lbnQtdmVyaWZpY2F0aW9uIl0sImljb25VcmwiOiJodHRwczovL2FwaS5jcmlwdG9ubGFicy5jb20vaWNvbi5wbmcifSwiYWNjZXB0cyI6W10sImV4dGVuc2lvbnMiOnsic2lnbi1pbi13aXRoLXgiOnsiaW5mbyI6eyJkb21haW4iOiJhcGkuY3JpcHRvbmxhYnMuY29tIiwidXJpIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby9jcmVkaXRzL3Rva2VuIiwidmVyc2lvbiI6IjEiLCJub25jZSI6IjZiMDU1ZGU4MDExMGY5YmFkNWRkOGI5ODcyN2Y1NWM5IiwiaXNzdWVkQXQiOiIyMDI2LTExLTI0VDA5OjUwOjMyWiIsImV4cGlyYXRpb25UaW1lIjoiMjAyNi0xMS0yNFQwOTo1NTozMloifSwic3VwcG9ydGVkQ2hhaW5zIjpbeyJjaGFpbklkIjoic29sYW5hOjVleWt0NFVzRnY4UDhOSmRUUkVwWTF2enFLcVpLdmRwIiwidHlwZSI6ImVkMjU1MTkiLCJzaWduYXR1cmVTY2hlbWUiOiJzaXdzIn1dLCJzY2hlbWEiOnsiJHNjaGVtYSI6Imh0dHBzOi8vanNvbi1zY2hlbWEub3JnL2RyYWZ0LzIwMjAtMTIvc2NoZW1hIiwidHlwZSI6Im9iamVjdCIsInByb3BlcnRpZXMiOnsiZG9tYWluIjp7InR5cGUiOiJzdHJpbmcifSwiYWRkcmVzcyI6eyJ0eXBlIjoic3RyaW5nIn0sInN0YXRlbWVudCI6eyJ0eXBlIjoic3RyaW5nIn0sInVyaSI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoidXJpIn0sInZlcnNpb24iOnsidHlwZSI6InN0cmluZyJ9LCJjaGFpbklkIjp7InR5cGUiOiJzdHJpbmcifSwidHlwZSI6eyJ0eXBlIjoic3RyaW5nIn0sIm5vbmNlIjp7InR5cGUiOiJzdHJpbmcifSwiaXNzdWVkQXQiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6ImRhdGUtdGltZSJ9LCJleHBpcmF0aW9uVGltZSI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoiZGF0ZS10aW1lIn0sIm5vdEJlZm9yZSI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoiZGF0ZS10aW1lIn0sInJlcXVlc3RJZCI6eyJ0eXBlIjoic3RyaW5nIn0sInJlc291cmNlcyI6eyJ0eXBlIjoiYXJyYXkiLCJpdGVtcyI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoidXJpIn19LCJzaWduYXR1cmUiOnsidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsiZG9tYWluIiwiYWRkcmVzcyIsInVyaSIsInZlcnNpb24iLCJjaGFpbklkIiwidHlwZSIsIm5vbmNlIiwiaXNzdWVkQXQiLCJzaWduYXR1cmUiXX19fX0="
   },
   "body": {
     "x402Version": 2,
     "resource": {
-      "url": "https://api.criptonlabs.com/v1/pro/credits/token"
+      "url": "https://api.criptonlabs.com/v1/pro/credits/token",
+      "serviceName": "Criptonlabs Agent APIs",
+      "tags": ["xrpl", "solana", "pre-payment-check", "market-metrics", "payment-verification"],
+      "iconUrl": "https://api.criptonlabs.com/icon.png"
     },
     "accepts": [],
     "extensions": {
@@ -17,9 +20,9 @@
           "domain": "api.criptonlabs.com",
           "uri": "https://api.criptonlabs.com/v1/pro/credits/token",
           "version": "1",
-          "nonce": "6af602014802a33e3895e8aa939a0f8f",
-          "issuedAt": "2026-11-12T18:14:25Z",
-          "expirationTime": "2026-11-12T18:19:25Z"
+          "nonce": "6b055de80110f9bad5dd8b98727f55c9",
+          "issuedAt": "2026-11-24T09:50:32Z",
+          "expirationTime": "2026-11-24T09:55:32Z"
         },
         "supportedChains": [
           {
@@ -102,98 +105,5 @@
     "status": 402,
     "detail": "A valid payment is required. Sign one of the accepted payment options and retry.",
     "instance": "/v1/pro/credits/token"
-  },
-  "paymentRequired": {
-    "x402Version": 2,
-    "resource": {
-      "url": "https://api.criptonlabs.com/v1/pro/credits/token"
-    },
-    "accepts": [],
-    "extensions": {
-      "sign-in-with-x": {
-        "info": {
-          "domain": "api.criptonlabs.com",
-          "uri": "https://api.criptonlabs.com/v1/pro/credits/token",
-          "version": "1",
-          "nonce": "6af602014802a33e3895e8aa939a0f8f",
-          "issuedAt": "2026-11-12T18:14:25Z",
-          "expirationTime": "2026-11-12T18:19:25Z"
-        },
-        "supportedChains": [
-          {
-            "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
-            "type": "ed25519",
-            "signatureScheme": "siws"
-          }
-        ],
-        "schema": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "domain": {
-              "type": "string"
-            },
-            "address": {
-              "type": "string"
-            },
-            "statement": {
-              "type": "string"
-            },
-            "uri": {
-              "type": "string",
-              "format": "uri"
-            },
-            "version": {
-              "type": "string"
-            },
-            "chainId": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "nonce": {
-              "type": "string"
-            },
-            "issuedAt": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "expirationTime": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "notBefore": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "requestId": {
-              "type": "string"
-            },
-            "resources": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              }
-            },
-            "signature": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "domain",
-            "address",
-            "uri",
-            "version",
-            "chainId",
-            "type",
-            "nonce",
-            "issuedAt",
-            "signature"
-          ]
-        }
-      }
-    }
   }
 }

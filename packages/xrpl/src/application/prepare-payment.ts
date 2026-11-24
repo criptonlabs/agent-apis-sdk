@@ -1,6 +1,7 @@
 import { CriptonValidationError } from "@criptonlabs/agent-apis-core";
 import type { PathsResponse, ReadinessResponse } from "../domain/api-types.js";
 import {
+  assertPaymentAssets,
   buildPreparedPayment,
   PaymentNotReadyError,
   type PaymentIntent,
@@ -45,6 +46,7 @@ export async function preparePayment(
       "sendMaxTolerancePct is required for a cross-currency payment",
     );
   }
+  assertPaymentAssets(intent);
   const readiness = await readinessOf(data, intent);
   assertReady(readiness);
   const paths = await pathsOf(data, intent);

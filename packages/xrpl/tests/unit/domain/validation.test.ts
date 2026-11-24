@@ -29,8 +29,8 @@ describe("classic address validation", () => {
   });
 
   it("returns a valid classic address unchanged", () => {
-    expect(assertClassicAddress("address", "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh")).toBe(
-      "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+    expect(assertClassicAddress("address", "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq")).toBe(
+      "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
     );
   });
 
@@ -55,11 +55,11 @@ describe("destination tag validation", () => {
 });
 
 describe("depth validation", () => {
-  it.each([10, 50, 100, 200] as const)("accepts depth %i", (depth) => {
+  it.each([1, 10, 20, 25, 201, 9007199254740991])("accepts depth %i", (depth) => {
     expect(assertDepth("depth", depth)).toBe(depth);
   });
 
-  it.each([0, 25, 201, "10", 10.5])("rejects depth %j", (value) => {
+  it.each([0, -1, 9007199254740992, 10.5, "10"])("rejects depth %j", (value) => {
     expectInvalid(() => assertDepth("depth", value), "depth");
   });
 });

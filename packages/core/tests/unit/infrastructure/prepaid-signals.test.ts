@@ -22,10 +22,9 @@ const offerInfo = {
       amount: "1.00",
       credited_units: "1",
       approx_calls: 1000,
-      activation: "confirmed",
     },
   ],
-  client_setup: { note: "note", guide: "https://api.criptonlabs.com/docs/guides/payments.md" },
+  client_setup: { guide: "https://api.criptonlabs.com/docs/guides/payments.md" },
 };
 const expectedOffer = {
   bundleVersion: "v1",
@@ -151,7 +150,7 @@ describe("prepaid signals", () => {
     });
   });
 
-  it("Offer assets and activation surfaced", async () => {
+  it("Offer assets surfaced", async () => {
     const fake = new FakeTransport().respond(loadFixture("challenge-fee-credits-only"));
     const client = new ApiClient(descriptor, { tier: "pro", transport: fake.transport });
     const error = await call(client).catch((e: unknown) => e);
@@ -167,9 +166,6 @@ describe("prepaid signals", () => {
         },
       },
     });
-    expect((error as CriptonPaymentError).prepaidOffer?.bundles).toContainEqual(
-      expect.objectContaining({ id: "eur-10", activation: "finalized" }),
-    );
   });
 
   it("Malformed offer assets left out", async () => {
@@ -179,14 +175,41 @@ describe("prepaid signals", () => {
     const client = new ApiClient(descriptor, { tier: "pro", transport: fake.transport });
     const error = await call(client).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(CriptonPaymentError);
-    expect(error).toMatchObject({
-      code: "credits-required",
-      prepaidOffer: {
-        ...expectedOffer,
-        bundles: [{ ...expectedOffer.bundles[0], activation: "confirmed" }],
-      },
-    });
+    expect(error).toMatchObject({ code: "credits-required", prepaidOffer: expectedOffer });
     expect((error as CriptonPaymentError).prepaidOffer).not.toHaveProperty("assets");
+  });
+
+  it("Malformed offer asset member left out", async () => {
+    const fake = new FakeTransport().respond(
+      prepaidChallenge([], undefined, {
+        ...offerInfo,
+        assets: { USD: [{ asset: "USDC", network: SOLANA_MAINNET }, { asset: "RLUSD" }] },
+      }),
+    );
+    const client = new ApiClient(descriptor, { tier: "pro", transport: fake.transport });
+    const error = await call(client).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(CriptonPaymentError);
+    expect((error as CriptonPaymentError).prepaidOffer?.assets).toStrictEqual({
+      USD: [{ asset: "USDC", network: SOLANA_MAINNET }],
+    });
+  });
+
+  it("Bundle activation not surfaced", async () => {
+    const bundle = { id: "eur-10", amount: "12.10", credited_units: "11.5", approx_calls: 23000 };
+    const fake = new FakeTransport().respond(
+      prepaidChallenge([], undefined, {
+        ...offerInfo,
+        bundles: [{ ...bundle, activation: "finalized" }],
+      }),
+    );
+    const client = new ApiClient(descriptor, { tier: "pro", transport: fake.transport });
+    const error = await call(client).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(CriptonPaymentError);
+    const bundles = (error as CriptonPaymentError).prepaidOffer?.bundles;
+    expect(bundles).toStrictEqual([
+      { id: "eur-10", amount: "12.10", creditedUnits: "11.5", approxCalls: 23000 },
+    ]);
+    expect(bundles?.[0]).not.toHaveProperty("activation");
   });
 
   it("Malformed prepaid offer ignored", async () => {

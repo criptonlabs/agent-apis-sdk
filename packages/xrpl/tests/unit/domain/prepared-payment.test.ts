@@ -1,4 +1,4 @@
-import { CriptonValidationError } from "@criptonlabs/agent-apis-core";
+import { CriptonResponseError, CriptonValidationError } from "@criptonlabs/agent-apis-core";
 import { describe, expect, it } from "vite-plus/test";
 import type {
   FeeResponse,
@@ -10,30 +10,34 @@ import {
   PaymentNotReadyError,
   type PaymentIntent,
 } from "../../../src/domain/prepared-payment.js";
+import feeFixture from "../../fixtures/responses/fee.json" with { type: "json" };
+import pathsFixture from "../../fixtures/responses/paths.json" with { type: "json" };
+import readinessFixture from "../../fixtures/responses/payment-readiness.json" with { type: "json" };
 
-const SOURCE = "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh";
+const SOURCE = "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq";
 const DESTINATION = "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B";
+const ISSUER = "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B";
 const RLUSD_ISSUER = "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De";
-const RLUSD_HEX = "524C555344000000000000000000000000000000";
 
-function meta(ledgerIndex: number, asOf = "2026-10-18T10:00:00.000Z") {
+function meta(ledgerIndex: number, ledgerState: "validated" | "open" = "validated") {
   return {
     ledger_index: ledgerIndex,
-    as_of: asOf,
+    ledger_state: ledgerState,
+    as_of: "2026-10-18T10:00:00.000Z",
     age_seconds: 2,
     cache: "miss" as const,
     stale: false,
   };
 }
 
+// 0.27.0 bodies: the recorded fixtures with the parties, amounts and tiers of each scenario.
 function readiness(ledgerIndex = 104_200_050, amount = "10"): ReadinessResponse {
   return {
+    ...readinessFixture,
     verdict: "ready",
     reasons: [],
     warnings: [],
     checks_failed: [],
-    spendable_xrp: "250.5",
-    transfer_fee_pct: null,
     source: SOURCE,
     destination: DESTINATION,
     asset: "XRP",
@@ -45,39 +49,48 @@ function readiness(ledgerIndex = 104_200_050, amount = "10"): ReadinessResponse 
 
 function fee(
   ledgerIndex = 104_200_052,
-  tiers: { economy: string; standard: string; priority: string } = {
-    economy: "10",
-    standard: "12",
-    priority: "5000",
+  tiers: { economy_drops: string; standard_drops: string; priority_drops: string } = {
+    economy_drops: "10",
+    standard_drops: "12",
+    priority_drops: "5000",
   },
 ): FeeResponse {
-  return {
-    fee: tiers,
-    congestion: { score: 0.12, band: "low", load_factor_assumed: false },
-    base_fee: "10",
-    median_fee: "11",
-    minimum_fee: "10",
-    open_ledger_fee: "10",
-    current_queue_size: "0",
-    max_queue_size: "2000",
-    meta: meta(ledgerIndex),
-  } satisfies FeeResponse;
+  return { ...feeFixture, fee: tiers, meta: meta(ledgerIndex, "open") } satisfies FeeResponse;
 }
 
-function paths(ledgerIndex = 104_200_051): PathsResponse {
+/** A 1 XRP path spending USD of the issuer (so any issuer). */
+function paths(ledgerIndex = 104_200_051, value: string | null = "1.394"): PathsResponse {
   return {
+    ...pathsFixture,
+    paths_may_be_non_optimal: true,
     alternatives: [
       {
-        source_amount: { asset: `USD.${SOURCE}`, value: "1.394" },
+        source_amount: { asset: `USD.${ISSUER}`, value },
+        source_any_issuer: true,
         paths_count: 1,
         paths: [[{ currency: "XRP" }]],
+        effective_price: "1.394",
+        cheapest: true,
+        suggested_send_max: "1.40794",
       },
     ],
-    paths_may_be_non_optimal: true,
-    warnings: [],
+    source: SOURCE,
+    destination: DESTINATION,
+    asset: "XRP",
+    amount: "1",
+    source_assets: [`USD.${ISSUER}`],
     meta: meta(ledgerIndex),
   } satisfies PathsResponse;
 }
+
+const crossCurrencyIntent: PaymentIntent = {
+  source: SOURCE,
+  destination: DESTINATION,
+  asset: "XRP",
+  amount: "1",
+  sourceAsset: `USD.${ISSUER}`,
+  sendMaxTolerancePct: "1",
+};
 
 function catchError(run: () => unknown): unknown {
   try {
@@ -144,36 +157,45 @@ describe("buildPreparedPayment", () => {
     });
   });
 
-  it("Currency code longer than three characters", () => {
+  it("keeps the case of a lower-case standard code in the Amount", () => {
     const result = buildPreparedPayment(
-      { ...xrpIntent, asset: `RLUSD.${RLUSD_ISSUER}`, amount: "5" },
+      { ...xrpIntent, asset: `usd.${DESTINATION}`, amount: "25.5" },
       readiness(),
       null,
       fee(),
     );
     expect(result.transaction.Amount).toEqual({
-      currency: RLUSD_HEX,
-      issuer: RLUSD_ISSUER,
-      value: "5",
+      currency: "usd",
+      issuer: DESTINATION,
+      value: "25.5",
     });
+  });
+
+  it("Currency code longer than three characters", () => {
+    const error = catchError(() =>
+      buildPreparedPayment(
+        { ...xrpIntent, asset: `RLUSD.${RLUSD_ISSUER}`, amount: "5" },
+        readiness(),
+        null,
+        fee(),
+      ),
+    );
+    expect(error).toBeInstanceOf(CriptonValidationError);
+    expect((error as CriptonValidationError).code).toBe("invalid-input");
+    expect((error as CriptonValidationError).field).toBe("asset");
   });
 
   it("Path found", () => {
     const found = paths();
     const result = buildPreparedPayment(
-      {
-        ...xrpIntent,
-        amount: "1",
-        sourceAsset: `USD.${SOURCE}`,
-        sendMaxTolerancePct: "1",
-      },
+      { ...crossCurrencyIntent, destinationTag: 12345 },
       readiness(),
       found,
       fee(),
     );
     expect(result.transaction.SendMax).toEqual({
       currency: "USD",
-      issuer: SOURCE,
+      issuer: ISSUER,
       value: "1.40794",
     });
     expect(result.transaction.Paths).toEqual(found.alternatives[0]?.paths);
@@ -191,6 +213,30 @@ describe("buildPreparedPayment", () => {
     );
     expect(error).toBeInstanceOf(PaymentNotReadyError);
     expect((error as PaymentNotReadyError).code).toBe("fee-over-cap");
+  });
+
+  it("Matched path without a source value", () => {
+    const error = catchError(() =>
+      buildPreparedPayment(
+        crossCurrencyIntent,
+        readiness(104_200_050, "1"),
+        paths(104_200_051, null),
+        fee(),
+      ),
+    );
+    expect(error).toBeInstanceOf(CriptonResponseError);
+    expect((error as CriptonResponseError).code).toBe("invalid-response");
+  });
+
+  it("Economy tier read in drops", () => {
+    const result = buildPreparedPayment(
+      { ...xrpIntent, amount: "1", feeTier: "economy" },
+      readiness(104_200_050, "1"),
+      null,
+      fee(104_200_052, { economy_drops: "10", standard_drops: "12", priority_drops: "15" }),
+    );
+    expect(result.transaction.Fee).toBe("10");
+    expect(result.fee.tier).toBe("economy");
   });
 
   it("Precision kept", () => {

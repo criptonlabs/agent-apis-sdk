@@ -13,6 +13,7 @@ import historyFixture from "../../fixtures/responses/health-history.json" with {
 import tokenFixture from "../../fixtures/responses/token.json" with { type: "json" };
 import readinessFixture from "../../fixtures/responses/transfer-readiness-spl.json" with { type: "json" };
 import solReadinessFixture from "../../fixtures/responses/transfer-readiness-sol.json" with { type: "json" };
+import formerReadinessFixture from "../../fixtures/derived/transfer-readiness-spl-0.21.0.json" with { type: "json" };
 
 const SOURCE = readinessFixture.source;
 const DESTINATION = readinessFixture.destination;
@@ -61,7 +62,7 @@ describe("Solana data client", () => {
     expect(sent(fake).pathname).toBe(`/v1/solana/token/${USDC}`);
     expect(result.data.decimals).toBe(6);
     expect(result.data.token_program).toBe(tokenFixture.token_program);
-    expect(result.data.verdict).toBe("WARN");
+    expect(result.data.verdict).toBe("warn");
     expect(result.data.reasons).toEqual(["mint_authority_set", "freeze_authority_set"]);
   });
 
@@ -161,5 +162,71 @@ describe("Solana data client", () => {
     const { fake, client } = setup(historyFixture);
     expect(await field(() => client.healthHistory({ window: "30d" as "7d" }))).toBe("window");
     expect(fake.requests).toHaveLength(0);
+  });
+});
+
+describe("Solana responses follow API contract 0.27.0", () => {
+  const intent = { source: SOURCE, destination: DESTINATION, mint: USDC, amount: "1" };
+
+  it("Transfer readiness in the readiness vocabulary", async () => {
+    const body = structuredClone(readinessFixture) as Record<string, any>;
+    body.verdict = "not_ready";
+    body.reasons = ["insufficient_balance"];
+    body.checks_failed = [];
+    body.amount = "1";
+    body.amount_atomic = "1000000";
+    body.net_amount_atomic = "1000000";
+    const { client } = setup(body);
+    const result = await client.transferReadiness(intent);
+    const data = result.data as Record<string, any>;
+    expect(data.verdict).toBe("not_ready");
+    expect(data.reasons).toEqual(["insufficient_balance"]);
+    expect(data.checks_failed).toEqual([]);
+    expect(data.amount).toBe("1");
+    expect(data.amount_atomic).toBe("1000000");
+    expect(data.net_amount_atomic).toBe("1000000");
+    expect(data).not.toHaveProperty("ready");
+    expect(data).not.toHaveProperty("blockers");
+    expect(data).not.toHaveProperty("amount_raw");
+    expect(data).not.toHaveProperty("net_amount");
+  });
+
+  it("Former transfer readiness body rejected", async () => {
+    const { client } = setup(formerReadinessFixture);
+    const error = await client.transferReadiness(intent).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(CriptonResponseError);
+    expect(error).toMatchObject({ code: "invalid-response" });
+  });
+
+  it("Token supply in both units", async () => {
+    const body = structuredClone(tokenFixture) as Record<string, any>;
+    body.decimals = 6;
+    body.supply = "7276486003.588914";
+    body.supply_atomic = "7276486003588914";
+    body.transfer_fee_pct = null;
+    body.transfer_fee_max = null;
+    const { client } = setup(body);
+    const result = await client.token(USDC);
+    const data = result.data as Record<string, any>;
+    expect(data.supply).toBe("7276486003.588914");
+    expect(data.supply_atomic).toBe("7276486003588914");
+    expect(data.transfer_fee_pct).toBeNull();
+    expect(data.transfer_fee_max).toBeNull();
+  });
+
+  it("Unknown slot passed through", async () => {
+    const body = structuredClone(readinessFixture) as Record<string, any>;
+    body.meta.slot = null;
+    const { client } = setup(body);
+    const result = await client.transferReadiness(intent);
+    expect(result.data.meta.slot).toBeNull();
+  });
+
+  it("Solana health history uptime as a decimal string", async () => {
+    const body = structuredClone(historyFixture) as Record<string, any>;
+    body.buckets[0].uptime_pct = "100";
+    const { client } = setup(body);
+    const result = await client.healthHistory({ window: "1h" });
+    expect(result.data.buckets[0]?.uptime_pct).toBe("100");
   });
 });

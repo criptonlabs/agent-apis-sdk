@@ -9,6 +9,7 @@ import {
 } from "../../../src/domain/prepared-transfer.js";
 import solFixture from "../../fixtures/responses/transfer-readiness-sol.json" with { type: "json" };
 import splFixture from "../../fixtures/responses/transfer-readiness-spl.json" with { type: "json" };
+import unknownFixture from "../../fixtures/derived/transfer-readiness-unknown.json" with { type: "json" };
 
 const SOURCE = "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM";
 const DESTINATION = "2wKupLR9q6wXYppw8Gr2NvWxKBUqm4PPJKkQfoxHDBg4";
@@ -54,9 +55,10 @@ function catchError(run: () => unknown): unknown {
 
 describe("readiness gate", () => {
   const notReady = splReadiness({
-    ready: false,
-    blockers: ["insufficient_balance"],
+    verdict: "not_ready",
+    reasons: ["insufficient_balance"],
     warnings: ["memo_required"],
+    checks_failed: [],
   });
 
   it("Transfer not ready", () => {
@@ -66,6 +68,23 @@ describe("readiness gate", () => {
     expect(refusal.code).toBe("transfer-not-ready");
     expect(refusal.reasons).toEqual(["insufficient_balance"]);
     expect(refusal.warnings).toEqual(["memo_required"]);
+    expect(refusal.checksFailed).toEqual([]);
+  });
+
+  it("Transfer readiness unknown", () => {
+    const readiness = unknownFixture as TransferReadinessResponse;
+    const error = catchError(() => planTransfer(splIntent, readiness));
+    expect(error).toBeInstanceOf(TransferNotReadyError);
+    const refusal = error as TransferNotReadyError;
+    expect(refusal.code).toBe("transfer-readiness-unknown");
+    expect(refusal.reasons).toEqual([]);
+    expect(refusal.checksFailed).toEqual(["destination_token_account"]);
+  });
+
+  it("Unlisted verdict refused", () => {
+    const error = catchError(() => planTransfer(splIntent, splReadiness({ verdict: "deferred" })));
+    expect(error).toBeInstanceOf(TransferNotReadyError);
+    expect((error as TransferNotReadyError).code).toBe("transfer-readiness-unknown");
   });
 
   it("serializes reasons and warnings under details", () => {
@@ -80,7 +99,8 @@ describe("readiness gate", () => {
 
 describe("transfer planning", () => {
   it("Raw amount taken from readiness", () => {
-    const plan = planTransfer(splIntent, splReadiness({ amount: "1", amount_raw: "1000000" }));
+    const readiness = splReadiness({ verdict: "ready", amount: "1", amount_atomic: "1000000" });
+    const plan = planTransfer(splIntent, readiness);
     expect(plan.kind).toBe("spl");
     expect(plan.kind === "spl" && plan.amountRaw).toBe("1000000");
   });
@@ -163,7 +183,7 @@ function expectInvalidResponse(run: () => unknown): void {
 
 describe("readiness verification", () => {
   it("Readiness amount does not match the intent", () => {
-    const readiness = splReadiness({ decimals: 6, amount_raw: "2000000" });
+    const readiness = splReadiness({ decimals: 6, amount_atomic: "2000000" });
     expectInvalidResponse(() => planTransfer({ ...splIntent, amount: "1" }, readiness));
   });
 
@@ -188,15 +208,15 @@ describe("readiness verification", () => {
   });
 
   it("SOL readiness with wrong decimals refused", () => {
-    const readiness = solReadiness({ decimals: 6, amount_raw: "10000" });
+    const readiness = solReadiness({ decimals: 6, amount_atomic: "10000" });
     expectInvalidResponse(() => planTransfer(solIntent, readiness));
   });
 
   it("verifies the readiness before trusting its ready verdict", () => {
     const readiness = splReadiness({
-      amount_raw: "2000000",
-      ready: false,
-      blockers: ["insufficient_balance"],
+      amount_atomic: "2000000",
+      verdict: "not_ready",
+      reasons: ["insufficient_balance"],
     });
     expectInvalidResponse(() => planTransfer(splIntent, readiness));
   });

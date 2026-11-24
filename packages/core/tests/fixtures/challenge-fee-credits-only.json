@@ -3,14 +3,17 @@
   "headers": {
     "content-type": "application/problem+json",
     "cache-control": "no-store",
-    "payment-required": "eyJ4NDAyVmVyc2lvbiI6MiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby94cnBsL2ZlZSIsImRlc2NyaXB0aW9uIjoiQ3VycmVudCBYUlBMIGZlZSB0aWVycyBpbiBkcm9wcyB3aXRoIGEgY29uZ2VzdGlvbiBzY29yZS4iLCJtaW1lVHlwZSI6ImFwcGxpY2F0aW9uL2pzb24ifSwiYWNjZXB0cyI6W10sImV4dGVuc2lvbnMiOnsiY29tLmNyaXB0b25sYWJzL3ByZXBhaWQtY3JlZGl0cyI6eyJpbmZvIjp7ImJ1bmRsZV92ZXJzaW9uIjoiMjAyNi0xMC0yNiIsInRvcHVwX3VybCI6Imh0dHBzOi8vYXBpLmNyaXB0b25sYWJzLmNvbS92MS9wcm8vY3JlZGl0cy97aWR9IiwiYXNzZXRzIjp7IkVVUiI6W3siYXNzZXQiOiJFVVJDIiwibmV0d29yayI6InNvbGFuYTo1ZXlrdDRVc0Z2OFA4TkpkVFJFcFkxdnpxS3FaS3ZkcCJ9XSwiVVNEIjpbeyJhc3NldCI6IlVTREMiLCJuZXR3b3JrIjoic29sYW5hOjVleWt0NFVzRnY4UDhOSmRUUkVwWTF2enFLcVpLdmRwIn0seyJhc3NldCI6IlJMVVNEIiwibmV0d29yayI6InhycGw6MCJ9XX0sImJ1bmRsZXMiOlt7ImlkIjoiZXVyLTEiLCJhbW91bnQiOiIxLjIxIiwiY3JlZGl0ZWRfdW5pdHMiOiIxIiwiYXBwcm94X2NhbGxzIjoyMDAwLCJhY3RpdmF0aW9uIjoiY29uZmlybWVkIn0seyJpZCI6ImV1ci0yIiwiYW1vdW50IjoiMi40MiIsImNyZWRpdGVkX3VuaXRzIjoiMi4yIiwiYXBwcm94X2NhbGxzIjo0NDAwLCJhY3RpdmF0aW9uIjoiY29uZmlybWVkIn0seyJpZCI6ImV1ci0xMCIsImFtb3VudCI6IjEyLjEwIiwiY3JlZGl0ZWRfdW5pdHMiOiIxMS41IiwiYXBwcm94X2NhbGxzIjoyMzAwMCwiYWN0aXZhdGlvbiI6ImZpbmFsaXplZCJ9LHsiaWQiOiJldXItNTAiLCJhbW91bnQiOiI2MC41MCIsImNyZWRpdGVkX3VuaXRzIjoiNjAiLCJhcHByb3hfY2FsbHMiOjEyMDAwMCwiYWN0aXZhdGlvbiI6ImZpbmFsaXplZCJ9LHsiaWQiOiJ1c2Qtc3RhcnRlciIsImFtb3VudCI6IjEuMDAiLCJjcmVkaXRlZF91bml0cyI6IjAuODIiLCJhcHByb3hfY2FsbHMiOjEzNjYsImFjdGl2YXRpb24iOiJjb25maXJtZWQifSx7ImlkIjoidXNkLTEiLCJhbW91bnQiOiIxLjIxIiwiY3JlZGl0ZWRfdW5pdHMiOiIxIiwiYXBwcm94X2NhbGxzIjoxNjY2LCJhY3RpdmF0aW9uIjoiY29uZmlybWVkIn0seyJpZCI6InVzZC0yIiwiYW1vdW50IjoiMi40MiIsImNyZWRpdGVkX3VuaXRzIjoiMi4yIiwiYXBwcm94X2NhbGxzIjozNjY2LCJhY3RpdmF0aW9uIjoiY29uZmlybWVkIn0seyJpZCI6InVzZC0xMCIsImFtb3VudCI6IjEyLjEwIiwiY3JlZGl0ZWRfdW5pdHMiOiIxMS41IiwiYXBwcm94X2NhbGxzIjoxOTE2NiwiYWN0aXZhdGlvbiI6ImZpbmFsaXplZCJ9LHsiaWQiOiJ1c2QtNTAiLCJhbW91bnQiOiI2MC41MCIsImNyZWRpdGVkX3VuaXRzIjoiNjAiLCJhcHByb3hfY2FsbHMiOjEwMDAwMCwiYWN0aXZhdGlvbiI6ImZpbmFsaXplZCJ9XSwiY2xpZW50X3NldHVwIjp7Im5vdGUiOiJ4NDAyIGNsaWVudHMgY2FwIHBheW1lbnRzIGF0IDEgVVNEIGJ5IGRlZmF1bHQ6IHVzZC1zdGFydGVyICgxLjAwIFVTRCkgbmVlZHMgbm8gc2V0dXA7IGZvciBsYXJnZXIgYnVuZGxlcyBzZXQgc3BlbmRDb250cm9scy5tYXhBbW91bnRQZXJQYXltZW50IHRvIGF0IGxlYXN0IHRoZSBidW5kbGUgYW1vdW50LCBhbmQgbGlzdCBFVVJDIGluIHNwZW5kQ29udHJvbHMuYWxsb3dlZEFzc2V0cy4iLCJndWlkZSI6Imh0dHBzOi8vYXBpLmNyaXB0b25sYWJzLmNvbS9kb2NzL2d1aWRlcy9wYXltZW50cy5tZCNwcmVwYWlkLWNyZWRpdHMifX0sInNjaGVtYSI6eyJ0eXBlIjoib2JqZWN0In19LCJzaWduLWluLXdpdGgteCI6eyJpbmZvIjp7ImRvbWFpbiI6ImFwaS5jcmlwdG9ubGFicy5jb20iLCJ1cmkiOiJodHRwczovL2FwaS5jcmlwdG9ubGFicy5jb20vdjEvcHJvL3hycGwvZmVlIiwidmVyc2lvbiI6IjEiLCJub25jZSI6IjZhZjYwMWZmYmY3NDRmMTE5ZGQ3ODU0MjgwNTFlNmViIiwiaXNzdWVkQXQiOiIyMDI2LTExLTEyVDE4OjE0OjIzWiIsImV4cGlyYXRpb25UaW1lIjoiMjAyNi0xMS0xMlQxODoxOToyM1oifSwic3VwcG9ydGVkQ2hhaW5zIjpbeyJjaGFpbklkIjoic29sYW5hOjVleWt0NFVzRnY4UDhOSmRUUkVwWTF2enFLcVpLdmRwIiwidHlwZSI6ImVkMjU1MTkiLCJzaWduYXR1cmVTY2hlbWUiOiJzaXdzIn1dLCJzY2hlbWEiOnsiJHNjaGVtYSI6Imh0dHBzOi8vanNvbi1zY2hlbWEub3JnL2RyYWZ0LzIwMjAtMTIvc2NoZW1hIiwidHlwZSI6Im9iamVjdCIsInByb3BlcnRpZXMiOnsiZG9tYWluIjp7InR5cGUiOiJzdHJpbmcifSwiYWRkcmVzcyI6eyJ0eXBlIjoic3RyaW5nIn0sInN0YXRlbWVudCI6eyJ0eXBlIjoic3RyaW5nIn0sInVyaSI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoidXJpIn0sInZlcnNpb24iOnsidHlwZSI6InN0cmluZyJ9LCJjaGFpbklkIjp7InR5cGUiOiJzdHJpbmcifSwidHlwZSI6eyJ0eXBlIjoic3RyaW5nIn0sIm5vbmNlIjp7InR5cGUiOiJzdHJpbmcifSwiaXNzdWVkQXQiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6ImRhdGUtdGltZSJ9LCJleHBpcmF0aW9uVGltZSI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoiZGF0ZS10aW1lIn0sIm5vdEJlZm9yZSI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoiZGF0ZS10aW1lIn0sInJlcXVlc3RJZCI6eyJ0eXBlIjoic3RyaW5nIn0sInJlc291cmNlcyI6eyJ0eXBlIjoiYXJyYXkiLCJpdGVtcyI6eyJ0eXBlIjoic3RyaW5nIiwiZm9ybWF0IjoidXJpIn19LCJzaWduYXR1cmUiOnsidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsiZG9tYWluIiwiYWRkcmVzcyIsInVyaSIsInZlcnNpb24iLCJjaGFpbklkIiwidHlwZSIsIm5vbmNlIiwiaXNzdWVkQXQiLCJzaWduYXR1cmUiXX19fX0="
+    "payment-required": "eyJ4NDAyVmVyc2lvbiI6MiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby94cnBsL2ZlZSIsImRlc2NyaXB0aW9uIjoiQ3VycmVudCBYUlBMIGZlZSB0aWVycyBpbiBkcm9wcyB3aXRoIGEgY29uZ2VzdGlvbiBzY29yZS4iLCJtaW1lVHlwZSI6ImFwcGxpY2F0aW9uL2pzb24iLCJzZXJ2aWNlTmFtZSI6IkNyaXB0b25sYWJzIEFnZW50IEFQSXMiLCJ0YWdzIjpbInhycGwiLCJzb2xhbmEiLCJwcmUtcGF5bWVudC1jaGVjayIsIm1hcmtldC1tZXRyaWNzIiwicGF5bWVudC12ZXJpZmljYXRpb24iXSwiaWNvblVybCI6Imh0dHBzOi8vYXBpLmNyaXB0b25sYWJzLmNvbS9pY29uLnBuZyJ9LCJhY2NlcHRzIjpbXSwiZXh0ZW5zaW9ucyI6eyJjb20uY3JpcHRvbmxhYnMvcHJlcGFpZC1jcmVkaXRzIjp7ImluZm8iOnsiYnVuZGxlX3ZlcnNpb24iOiIyMDI2LTEwLTI2IiwidG9wdXBfdXJsIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby9jcmVkaXRzL3tpZH0iLCJhc3NldHMiOnsiRVVSIjpbeyJhc3NldCI6IkVVUkMiLCJuZXR3b3JrIjoic29sYW5hOjVleWt0NFVzRnY4UDhOSmRUUkVwWTF2enFLcVpLdmRwIn1dLCJVU0QiOlt7ImFzc2V0IjoiVVNEQyIsIm5ldHdvcmsiOiJzb2xhbmE6NWV5a3Q0VXNGdjhQOE5KZFRSRXBZMXZ6cUtxWkt2ZHAifSx7ImFzc2V0IjoiUkxVU0QiLCJuZXR3b3JrIjoieHJwbDowIn1dfSwiYnVuZGxlcyI6W3siaWQiOiJldXItMSIsImFtb3VudCI6IjEuMjEiLCJjcmVkaXRlZF91bml0cyI6IjEiLCJhcHByb3hfY2FsbHMiOjIwMDB9LHsiaWQiOiJldXItMiIsImFtb3VudCI6IjIuNDIiLCJjcmVkaXRlZF91bml0cyI6IjIuMiIsImFwcHJveF9jYWxscyI6NDQwMH0seyJpZCI6ImV1ci0xMCIsImFtb3VudCI6IjEyLjEwIiwiY3JlZGl0ZWRfdW5pdHMiOiIxMS41IiwiYXBwcm94X2NhbGxzIjoyMzAwMH0seyJpZCI6ImV1ci01MCIsImFtb3VudCI6IjYwLjUwIiwiY3JlZGl0ZWRfdW5pdHMiOiI2MCIsImFwcHJveF9jYWxscyI6MTIwMDAwfSx7ImlkIjoidXNkLXN0YXJ0ZXIiLCJhbW91bnQiOiIxLjAwIiwiY3JlZGl0ZWRfdW5pdHMiOiIwLjgyIiwiYXBwcm94X2NhbGxzIjoxMzY2fSx7ImlkIjoidXNkLTEiLCJhbW91bnQiOiIxLjIxIiwiY3JlZGl0ZWRfdW5pdHMiOiIxIiwiYXBwcm94X2NhbGxzIjoxNjY2fSx7ImlkIjoidXNkLTIiLCJhbW91bnQiOiIyLjQyIiwiY3JlZGl0ZWRfdW5pdHMiOiIyLjIiLCJhcHByb3hfY2FsbHMiOjM2NjZ9LHsiaWQiOiJ1c2QtMTAiLCJhbW91bnQiOiIxMi4xMCIsImNyZWRpdGVkX3VuaXRzIjoiMTEuNSIsImFwcHJveF9jYWxscyI6MTkxNjZ9LHsiaWQiOiJ1c2QtNTAiLCJhbW91bnQiOiI2MC41MCIsImNyZWRpdGVkX3VuaXRzIjoiNjAiLCJhcHByb3hfY2FsbHMiOjEwMDAwMH1dLCJjbGllbnRfc2V0dXAiOnsiZ3VpZGUiOiJodHRwczovL2FwaS5jcmlwdG9ubGFicy5jb20vZG9jcy9ndWlkZXMvcGF5bWVudHMubWQjY2xpZW50LXNldHVwIn19LCJzY2hlbWEiOnsidHlwZSI6Im9iamVjdCJ9fSwic2lnbi1pbi13aXRoLXgiOnsiaW5mbyI6eyJkb21haW4iOiJhcGkuY3JpcHRvbmxhYnMuY29tIiwidXJpIjoiaHR0cHM6Ly9hcGkuY3JpcHRvbmxhYnMuY29tL3YxL3Byby94cnBsL2ZlZSIsInZlcnNpb24iOiIxIiwibm9uY2UiOiI2YjA1NWRlNDBjZDJhYmNmOGRkOTYxMmQ5NWJlYzdjMyIsImlzc3VlZEF0IjoiMjAyNi0xMS0yNFQwOTo1MDoyOFoiLCJleHBpcmF0aW9uVGltZSI6IjIwMjYtMTEtMjRUMDk6NTU6MjhaIn0sInN1cHBvcnRlZENoYWlucyI6W3siY2hhaW5JZCI6InNvbGFuYTo1ZXlrdDRVc0Z2OFA4TkpkVFJFcFkxdnpxS3FaS3ZkcCIsInR5cGUiOiJlZDI1NTE5Iiwic2lnbmF0dXJlU2NoZW1lIjoic2l3cyJ9XSwic2NoZW1hIjp7IiRzY2hlbWEiOiJodHRwczovL2pzb24tc2NoZW1hLm9yZy9kcmFmdC8yMDIwLTEyL3NjaGVtYSIsInR5cGUiOiJvYmplY3QiLCJwcm9wZXJ0aWVzIjp7ImRvbWFpbiI6eyJ0eXBlIjoic3RyaW5nIn0sImFkZHJlc3MiOnsidHlwZSI6InN0cmluZyJ9LCJzdGF0ZW1lbnQiOnsidHlwZSI6InN0cmluZyJ9LCJ1cmkiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6InVyaSJ9LCJ2ZXJzaW9uIjp7InR5cGUiOiJzdHJpbmcifSwiY2hhaW5JZCI6eyJ0eXBlIjoic3RyaW5nIn0sInR5cGUiOnsidHlwZSI6InN0cmluZyJ9LCJub25jZSI6eyJ0eXBlIjoic3RyaW5nIn0sImlzc3VlZEF0Ijp7InR5cGUiOiJzdHJpbmciLCJmb3JtYXQiOiJkYXRlLXRpbWUifSwiZXhwaXJhdGlvblRpbWUiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6ImRhdGUtdGltZSJ9LCJub3RCZWZvcmUiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6ImRhdGUtdGltZSJ9LCJyZXF1ZXN0SWQiOnsidHlwZSI6InN0cmluZyJ9LCJyZXNvdXJjZXMiOnsidHlwZSI6ImFycmF5IiwiaXRlbXMiOnsidHlwZSI6InN0cmluZyIsImZvcm1hdCI6InVyaSJ9fSwic2lnbmF0dXJlIjp7InR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbImRvbWFpbiIsImFkZHJlc3MiLCJ1cmkiLCJ2ZXJzaW9uIiwiY2hhaW5JZCIsInR5cGUiLCJub25jZSIsImlzc3VlZEF0Iiwic2lnbmF0dXJlIl19fX19"
   },
   "body": {
     "x402Version": 2,
     "resource": {
       "url": "https://api.criptonlabs.com/v1/pro/xrpl/fee",
       "description": "Current XRPL fee tiers in drops with a congestion score.",
-      "mimeType": "application/json"
+      "mimeType": "application/json",
+      "serviceName": "Criptonlabs Agent APIs",
+      "tags": ["xrpl", "solana", "pre-payment-check", "market-metrics", "payment-verification"],
+      "iconUrl": "https://api.criptonlabs.com/icon.png"
     },
     "accepts": [],
     "extensions": {
@@ -41,69 +44,59 @@
               "id": "eur-1",
               "amount": "1.21",
               "credited_units": "1",
-              "approx_calls": 2000,
-              "activation": "confirmed"
+              "approx_calls": 2000
             },
             {
               "id": "eur-2",
               "amount": "2.42",
               "credited_units": "2.2",
-              "approx_calls": 4400,
-              "activation": "confirmed"
+              "approx_calls": 4400
             },
             {
               "id": "eur-10",
               "amount": "12.10",
               "credited_units": "11.5",
-              "approx_calls": 23000,
-              "activation": "finalized"
+              "approx_calls": 23000
             },
             {
               "id": "eur-50",
               "amount": "60.50",
               "credited_units": "60",
-              "approx_calls": 120000,
-              "activation": "finalized"
+              "approx_calls": 120000
             },
             {
               "id": "usd-starter",
               "amount": "1.00",
               "credited_units": "0.82",
-              "approx_calls": 1366,
-              "activation": "confirmed"
+              "approx_calls": 1366
             },
             {
               "id": "usd-1",
               "amount": "1.21",
               "credited_units": "1",
-              "approx_calls": 1666,
-              "activation": "confirmed"
+              "approx_calls": 1666
             },
             {
               "id": "usd-2",
               "amount": "2.42",
               "credited_units": "2.2",
-              "approx_calls": 3666,
-              "activation": "confirmed"
+              "approx_calls": 3666
             },
             {
               "id": "usd-10",
               "amount": "12.10",
               "credited_units": "11.5",
-              "approx_calls": 19166,
-              "activation": "finalized"
+              "approx_calls": 19166
             },
             {
               "id": "usd-50",
               "amount": "60.50",
               "credited_units": "60",
-              "approx_calls": 100000,
-              "activation": "finalized"
+              "approx_calls": 100000
             }
           ],
           "client_setup": {
-            "note": "x402 clients cap payments at 1 USD by default: usd-starter (1.00 USD) needs no setup; for larger bundles set spendControls.maxAmountPerPayment to at least the bundle amount, and list EURC in spendControls.allowedAssets.",
-            "guide": "https://api.criptonlabs.com/docs/guides/payments.md#prepaid-credits"
+            "guide": "https://api.criptonlabs.com/docs/guides/payments.md#client-setup"
           }
         },
         "schema": {
@@ -115,9 +108,9 @@
           "domain": "api.criptonlabs.com",
           "uri": "https://api.criptonlabs.com/v1/pro/xrpl/fee",
           "version": "1",
-          "nonce": "6af601ffbf744f119dd785428051e6eb",
-          "issuedAt": "2026-11-12T18:14:23Z",
-          "expirationTime": "2026-11-12T18:19:23Z"
+          "nonce": "6b055de40cd2abcf8dd9612d95bec7c3",
+          "issuedAt": "2026-11-24T09:50:28Z",
+          "expirationTime": "2026-11-24T09:55:28Z"
         },
         "supportedChains": [
           {
@@ -200,196 +193,5 @@
     "status": 402,
     "detail": "A valid payment is required. Sign one of the accepted payment options and retry.",
     "instance": "/v1/pro/xrpl/fee"
-  },
-  "paymentRequired": {
-    "x402Version": 2,
-    "resource": {
-      "url": "https://api.criptonlabs.com/v1/pro/xrpl/fee",
-      "description": "Current XRPL fee tiers in drops with a congestion score.",
-      "mimeType": "application/json"
-    },
-    "accepts": [],
-    "extensions": {
-      "com.criptonlabs/prepaid-credits": {
-        "info": {
-          "bundle_version": "2026-10-26",
-          "topup_url": "https://api.criptonlabs.com/v1/pro/credits/{id}",
-          "assets": {
-            "EUR": [
-              {
-                "asset": "EURC",
-                "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"
-              }
-            ],
-            "USD": [
-              {
-                "asset": "USDC",
-                "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"
-              },
-              {
-                "asset": "RLUSD",
-                "network": "xrpl:0"
-              }
-            ]
-          },
-          "bundles": [
-            {
-              "id": "eur-1",
-              "amount": "1.21",
-              "credited_units": "1",
-              "approx_calls": 2000,
-              "activation": "confirmed"
-            },
-            {
-              "id": "eur-2",
-              "amount": "2.42",
-              "credited_units": "2.2",
-              "approx_calls": 4400,
-              "activation": "confirmed"
-            },
-            {
-              "id": "eur-10",
-              "amount": "12.10",
-              "credited_units": "11.5",
-              "approx_calls": 23000,
-              "activation": "finalized"
-            },
-            {
-              "id": "eur-50",
-              "amount": "60.50",
-              "credited_units": "60",
-              "approx_calls": 120000,
-              "activation": "finalized"
-            },
-            {
-              "id": "usd-starter",
-              "amount": "1.00",
-              "credited_units": "0.82",
-              "approx_calls": 1366,
-              "activation": "confirmed"
-            },
-            {
-              "id": "usd-1",
-              "amount": "1.21",
-              "credited_units": "1",
-              "approx_calls": 1666,
-              "activation": "confirmed"
-            },
-            {
-              "id": "usd-2",
-              "amount": "2.42",
-              "credited_units": "2.2",
-              "approx_calls": 3666,
-              "activation": "confirmed"
-            },
-            {
-              "id": "usd-10",
-              "amount": "12.10",
-              "credited_units": "11.5",
-              "approx_calls": 19166,
-              "activation": "finalized"
-            },
-            {
-              "id": "usd-50",
-              "amount": "60.50",
-              "credited_units": "60",
-              "approx_calls": 100000,
-              "activation": "finalized"
-            }
-          ],
-          "client_setup": {
-            "note": "x402 clients cap payments at 1 USD by default: usd-starter (1.00 USD) needs no setup; for larger bundles set spendControls.maxAmountPerPayment to at least the bundle amount, and list EURC in spendControls.allowedAssets.",
-            "guide": "https://api.criptonlabs.com/docs/guides/payments.md#prepaid-credits"
-          }
-        },
-        "schema": {
-          "type": "object"
-        }
-      },
-      "sign-in-with-x": {
-        "info": {
-          "domain": "api.criptonlabs.com",
-          "uri": "https://api.criptonlabs.com/v1/pro/xrpl/fee",
-          "version": "1",
-          "nonce": "6af601ffbf744f119dd785428051e6eb",
-          "issuedAt": "2026-11-12T18:14:23Z",
-          "expirationTime": "2026-11-12T18:19:23Z"
-        },
-        "supportedChains": [
-          {
-            "chainId": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
-            "type": "ed25519",
-            "signatureScheme": "siws"
-          }
-        ],
-        "schema": {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "type": "object",
-          "properties": {
-            "domain": {
-              "type": "string"
-            },
-            "address": {
-              "type": "string"
-            },
-            "statement": {
-              "type": "string"
-            },
-            "uri": {
-              "type": "string",
-              "format": "uri"
-            },
-            "version": {
-              "type": "string"
-            },
-            "chainId": {
-              "type": "string"
-            },
-            "type": {
-              "type": "string"
-            },
-            "nonce": {
-              "type": "string"
-            },
-            "issuedAt": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "expirationTime": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "notBefore": {
-              "type": "string",
-              "format": "date-time"
-            },
-            "requestId": {
-              "type": "string"
-            },
-            "resources": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              }
-            },
-            "signature": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "domain",
-            "address",
-            "uri",
-            "version",
-            "chainId",
-            "type",
-            "nonce",
-            "issuedAt",
-            "signature"
-          ]
-        }
-      }
-    }
   }
 }

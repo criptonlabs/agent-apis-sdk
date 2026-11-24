@@ -14,7 +14,13 @@ import { solanaCommands } from "../../../src/interfaces/cli/commands.js";
 import token from "../../fixtures/responses/token.json" with { type: "json" };
 import { eurOneCreated, eurOneDevnetChallenge } from "../../support/eur-one-topup.js";
 import { startFakeSolanaRpc } from "../../support/fake-solana-rpc.js";
-import { DESTINATION, SOURCE, healthFixture, solanaFake } from "../../support/interface-kit.js";
+import {
+  DESTINATION,
+  SOURCE,
+  healthFixture,
+  readiness,
+  solanaFake,
+} from "../../support/interface-kit.js";
 import { throwawayKey } from "../../support/keys.js";
 
 const TRANSFER_FLAGS = ["--from", SOURCE, "--to", DESTINATION, "--mint", "SOL", "--amount", "0.01"];
@@ -27,6 +33,8 @@ interface RunOptions {
   env?: NodeJS.ProcessEnv;
   /** Answered in order instead of the Solana data routes. */
   responses?: readonly ResponseFixture[];
+  /** A ready-made fake transport (answers the Solana routes by URL), instead of `responses`. */
+  fake?: FakeTransport;
   /** The kit clock (SIWX challenge expiry). */
   clock?: FakeClock;
 }
@@ -39,7 +47,7 @@ function fakeFor(responses: RunOptions["responses"]): FakeTransport {
 }
 
 function run(argv: string[], options: RunOptions = {}) {
-  const fake = fakeFor(options.responses);
+  const fake = options.fake ?? fakeFor(options.responses);
   const out: string[] = [];
   const err: string[] = [];
   const done = runCli(
@@ -97,7 +105,7 @@ describe("Solana CLI commands map flags to requests", () => {
       mint: "SOL",
       amount: "0.01",
     });
-    expect(r.json()).toMatchObject({ ready: true });
+    expect(r.json()).toMatchObject({ verdict: "ready" });
   });
 
   it("prepare-transfer prints the unsigned transfer for a ready SOL readiness", async () => {
@@ -106,6 +114,15 @@ describe("Solana CLI commands map flags to requests", () => {
     const result = r.json() as { transaction: { feePayer: string; recentBlockhash: unknown } };
     expect(result.transaction.feePayer).toBe(SOURCE);
     expect(result.transaction.recentBlockhash).toBeNull();
+  });
+
+  it("Transfer readiness unknown in the CLI", async () => {
+    const unknown = { verdict: "unknown", checks_failed: ["destination_token_account"] };
+    const r = run(["prepare-transfer", ...TRANSFER_FLAGS, "--json"], {
+      fake: solanaFake(readiness(unknown)),
+    });
+    expect(await r.done).toBe(3);
+    expect(r.json()).toMatchObject({ code: "transfer-readiness-unknown" });
   });
 
   it("readiness without --mint exits 2 naming the flag and sends nothing", async () => {

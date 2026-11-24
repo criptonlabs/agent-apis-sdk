@@ -6,7 +6,9 @@ Applies when writing XRP Ledger payment or DEX code.
 - Use `xrpl_prepare_payment` to get an unsigned `Payment`; the kit never signs or submits it.
 - Check readiness first and surface its reasons; do not submit when the verdict is not ready.
 - Read `meta.stale` on every response and treat stale data as possibly out of date.
-- Amounts are decimal strings; never use floats. Assets are `"XRP"` or `"<currency>.<issuer>"`.
+- Amounts are decimal strings; never use floats. Assets are written `"XRP"` or `"CODE.issuer"`: `CODE` is a case-sensitive 3-character code (`usd` and `USD` are different tokens) or a 40-hex code, and `issuer` is a classic XRPL address, for example `USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B`. A longer code such as RLUSD is written in its 40-hex form: `524C555344000000000000000000000000000000.rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De`.
+- `depth` is an integer from 1 to 9007199254740991; the API serves it in buckets of 10, 50 or 100 levels per side, reported as `depth_effective`. `xrpl_slippage` takes `side` (`buy`, the API default, or `sell`); `xrpl_orderbook` and `xrpl_slippage` take `domain` (a 64-hex PermissionedDomain id); `xrpl_payment_readiness` takes `credentials` (1 to 8 distinct 64-hex credential entry ids), and its `asset` (only that input) also accepts a 48-hex MPT issuance id such as `0000012FFD9EE5DA93AC614B4DB94D7E0FCE415CA51BED47`, with `amount` in whole base units.
+- Slippage `partial` is true when `filled` is above 0 and below `amount`; a partial fill reports `avg_price`, `slippage_pct` and `avg_price_after_fees` of the filled part.
 - Free routes live under `/v1/xrpl/*`; paid routes under `/v1/pro/xrpl/*`. Credit purchases use `/v1/pro/credits/*`; the price index is `GET /v1/pro/requirements`.
 - Payment is opt-in: `CRIPTON_TIER=pro`, `CRIPTON_XRPL_PAYER_SEED` and a mandatory `CRIPTON_MAX_PER_CALL`; `CRIPTON_SESSION_BUDGET` is optional.
 - Never hardcode prices or amounts to pay; read them from the API (`GET /v1/pro/requirements`, `kit.prices()`, `kit.priceOf(resource)`).

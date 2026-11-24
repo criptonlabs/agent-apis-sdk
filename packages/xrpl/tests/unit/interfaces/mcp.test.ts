@@ -10,6 +10,7 @@ import { FakeTransport } from "../../../../core/tests/support/fake-transport.js"
 import { createXrplMcpServer } from "../../../src/interfaces/mcp/server.js";
 import { createXrplAgentKit, type XrplAgentKit } from "../../../src/index.js";
 import { readXrplEnv } from "../../../src/infrastructure/config/xrpl-env.js";
+import slippage from "../../fixtures/responses/slippage.json" with { type: "json" };
 import {
   DESTINATION,
   SOURCE,
@@ -115,5 +116,25 @@ describe("XRPL MCP server", () => {
     };
     expect(json.code).toBe("payment-not-ready");
     expect(json.details?.reasons).toEqual(["source_line_missing"]);
+  });
+
+  it("Invalid side through MCP", async () => {
+    const fake = new FakeTransport().respond({ body: slippage });
+    const client = await connect(kitOver(fake));
+
+    // The SDK reports an input validation failure as an error result or as a rejected call.
+    const outcome = await client
+      .callTool({
+        name: "xrpl_slippage",
+        arguments: { base: "XRP", quote: `USD.${DESTINATION}`, amount: "100", side: "short" },
+      })
+      .then(
+        (result) => ({ failed: result.isError === true, text: JSON.stringify(result.content) }),
+        (error: unknown) => ({ failed: true, text: String(error) }),
+      );
+
+    expect(outcome.failed, "the call fails").toBe(true);
+    expect(outcome.text, "the failure names side").toContain("side");
+    expect(fake.requests, "the handler does not run, so no request is sent").toHaveLength(0);
   });
 });

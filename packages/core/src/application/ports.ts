@@ -104,13 +104,19 @@ export interface RotationResult {
 export interface PriceIndexEntry {
   resource: string;
   mode: string;
-  debit: CreditBalance | null;
+  denominations: readonly {
+    denomination: "EUR" | "USD" | (string & {});
+    /** Decimal string of consumption units. */
+    debit: string;
+    approxCalls?: number;
+  }[];
   prices: readonly {
     amount: string;
     asset: string;
     network?: string;
     mint?: string;
     issuer?: string;
+    currency?: string;
   }[];
 }
 

@@ -1,0 +1,42 @@
+{
+  "verdict": "ready",
+  "reasons": [],
+  "warnings": ["transfer_fee"],
+  "checks_failed": [],
+  "spendable_xrp": "412525.891965",
+  "reserve_base_xrp": "1",
+  "reserve_inc_xrp": "0.2",
+  "source_owner_count": 378,
+  "fee_drops": "10",
+  "transfer_fee_pct": "1",
+  "source_balance": {
+    "asset": "0000012FFD9EE5DA93AC614B4DB94D7E0FCE415CA51BED47",
+    "value_atomic": "1000",
+    "value": "10"
+  },
+  "required_source_balance": {
+    "asset": "0000012FFD9EE5DA93AC614B4DB94D7E0FCE415CA51BED47",
+    "value_atomic": "152",
+    "value": "1.52"
+  },
+  "max_sendable": {
+    "asset": "0000012FFD9EE5DA93AC614B4DB94D7E0FCE415CA51BED47",
+    "value_atomic": "990",
+    "value": "9.9"
+  },
+  "source": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "destination": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+  "asset": "0000012FFD9EE5DA93AC614B4DB94D7E0FCE415CA51BED47",
+  "asset_currency_ascii": null,
+  "amount": "150",
+  "destination_tag": null,
+  "credentials": null,
+  "meta": {
+    "ledger_index": 108537742,
+    "ledger_state": "validated",
+    "as_of": "2026-11-24T09:49:52.015Z",
+    "age_seconds": 6,
+    "cache": "miss",
+    "stale": false
+  }
+}

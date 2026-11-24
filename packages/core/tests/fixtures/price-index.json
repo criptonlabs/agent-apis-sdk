@@ -33,98 +33,382 @@
     },
     "routes": [
       {
+        "resource": "/v1/pro/xrpl/fee",
+        "description": "Current XRPL fee tiers in drops with a congestion score.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Ffee",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-fee.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/health",
+        "description": "Overall and per-node health of the upstream XRPL nodes (alias of network health).",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fhealth",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-health.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/network/health",
+        "description": "Overall and per-node health of the upstream XRPL nodes.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fnetwork%2Fhealth",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-network-health.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/health/history",
+        "description": "Bucketed upstream probe history with uptime and latency per node.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fhealth%2Fhistory",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-health-history.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/ledger/latest",
+        "description": "Latest validated ledger index, hash and close time.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fledger%2Flatest",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-ledger-latest.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/account/{address}/lines",
+        "description": "One page of an account's trust lines, with an opaque cursor for the next page.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Faccount%2F%7Baddress%7D%2Flines",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-account-lines.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/account/{address}/transactions",
+        "description": "One page of an account's most recent validated transactions, newest first.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Faccount%2F%7Baddress%7D%2Ftransactions",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-account-transactions.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/orderbook",
+        "description": "CLOB order book for a currency pair with unfunded offers removed.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Forderbook",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-orderbook.md"
+        }
+      },
+      {
         "resource": "/v1/pro/xrpl/slippage",
-        "description": "Slippage and average price for buying an amount of base currency.",
+        "description": "Slippage and average price for buying or selling an amount of base currency.",
         "mode": "both",
-        "debit": {
-          "EUR": "0.01",
-          "USD": "0.012"
-        },
-        "approx_calls": {
-          "EUR": 100,
-          "USD": 68
-        },
-        "price": {
-          "amount": "0.01452",
-          "asset": "USDC"
-        },
-        "prices": [
+        "denominations": [
           {
-            "amount": "0.01452",
-            "asset": "USDC",
-            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
           },
           {
-            "amount": "0.0121",
-            "asset": "EURC",
-            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
-          },
-          {
-            "amount": "0.01452",
-            "asset": "RLUSD",
-            "network": "xrpl:0",
-            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-            "currency": "524C555344000000000000000000000000000000"
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
           }
         ],
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fslippage",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-slippage.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/payment-readiness",
-        "description": "Pre-payment check: can this payment from source to destination succeed now?",
-        "mode": "both",
-        "debit": {
-          "EUR": "0.01",
-          "USD": "0.012"
-        },
-        "approx_calls": {
-          "EUR": 100,
-          "USD": 68
-        },
-        "price": {
-          "amount": "0.01452",
-          "asset": "USDC"
-        },
-        "prices": [
-          {
-            "amount": "0.01452",
-            "asset": "USDC",
-            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-          },
-          {
-            "amount": "0.0121",
-            "asset": "EURC",
-            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
-          },
-          {
-            "amount": "0.01452",
-            "asset": "RLUSD",
-            "network": "xrpl:0",
-            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-            "currency": "524C555344000000000000000000000000000000"
-          }
-        ],
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fpayment-readiness",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-payment-readiness.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/paths",
-        "description": "Multi-hop payment paths and their source cost.",
-        "mode": "both",
-        "debit": {
-          "EUR": "0.02",
-          "USD": "0.024"
-        },
-        "approx_calls": {
-          "EUR": 50,
-          "USD": 34
-        },
-        "price": {
+        "price_per_call": {
           "amount": "0.02904",
           "asset": "USDC"
         },
@@ -144,27 +428,32 @@
             "asset": "RLUSD",
             "network": "xrpl:0",
             "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-            "currency": "524C555344000000000000000000000000000000"
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
           }
         ],
         "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fpaths",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-paths.md"
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fslippage",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-slippage.md"
         }
       },
       {
-        "resource": "/v1/pro/solana/transfer-readiness",
-        "description": "Will this Solana transfer succeed? A verdict for SOL or an SPL or Token-2022 token.",
+        "resource": "/v1/pro/xrpl/amm/{a}/{b}",
+        "description": "AMM pool reserves and trading fee for an asset pair.",
         "mode": "both",
-        "debit": {
-          "EUR": "0.01",
-          "USD": "0.012"
-        },
-        "approx_calls": {
-          "EUR": 100,
-          "USD": 68
-        },
-        "price": {
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
           "amount": "0.01452",
           "asset": "USDC"
         },
@@ -184,162 +473,10 @@
             "asset": "RLUSD",
             "network": "xrpl:0",
             "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-            "currency": "524C555344000000000000000000000000000000"
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
           }
         ],
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Ftransfer-readiness",
-          "docs": "https://api.criptonlabs.com/docs/solana-transfer-readiness.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/fee",
-        "description": "Current XRPL fee tiers in drops with a congestion score.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
-        },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Ffee",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-fee.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/health",
-        "description": "Overall and per-node health of the upstream XRPL nodes (alias of network health).",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
-        },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fhealth",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-health.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/network/health",
-        "description": "Overall and per-node health of the upstream XRPL nodes.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
-        },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fnetwork%2Fhealth",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-network-health.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/health/history",
-        "description": "Bucketed upstream probe history with uptime and latency per node.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
-        },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fhealth%2Fhistory",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-health-history.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/ledger/latest",
-        "description": "Latest validated ledger index, hash and close time.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
-        },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fledger%2Flatest",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-ledger-latest.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/account/{address}/lines",
-        "description": "One page of an account's trust lines, with an opaque cursor for the next page.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Faccount%2F%7Baddress%7D%2Flines",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-account-lines.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/account/{address}/transactions",
-        "description": "One page of an account's most recent validated transactions, newest first.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Faccount%2F%7Baddress%7D%2Ftransactions",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-account-transactions.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/orderbook",
-        "description": "CLOB order book for a currency pair with unfunded offers removed.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Forderbook",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-orderbook.md"
-        }
-      },
-      {
-        "resource": "/v1/pro/xrpl/amm/{a}/{b}",
-        "description": "AMM pool reserves and trading fee for an asset pair.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Famm%2F%7Ba%7D%2F%7Bb%7D",
           "docs": "https://api.criptonlabs.com/docs/xrpl-amm.md"
@@ -348,49 +485,223 @@
       {
         "resource": "/v1/pro/xrpl/account/{address}/summary",
         "description": "XRP balance, sequence, owner count, transfer rate and trust lines (capped) for an account.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Faccount%2F%7Baddress%7D%2Fsummary",
           "docs": "https://api.criptonlabs.com/docs/xrpl-account-summary.md"
         }
       },
       {
+        "resource": "/v1/pro/xrpl/payment-readiness",
+        "description": "Pre-payment check: can this payment from source to destination succeed now?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fpayment-readiness",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-payment-readiness.md"
+        }
+      },
+      {
         "resource": "/v1/pro/xrpl/token/{asset}",
         "description": "Issuer data for an issued asset: flags, domain, transfer fee and total issued.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Ftoken%2F%7Basset%7D",
           "docs": "https://api.criptonlabs.com/docs/xrpl-token.md"
         }
       },
       {
+        "resource": "/v1/pro/xrpl/paths",
+        "description": "Multi-hop payment paths and their source cost.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.05",
+            "approx_calls": 20
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.06",
+            "approx_calls": 13
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.0726",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.0726",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0605",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.0726",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fpaths",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-paths.md"
+        }
+      },
+      {
         "resource": "/v1/pro/solana/slot/latest",
         "description": "Latest finalized Solana slot and its block time.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Fslot%2Flatest",
           "docs": "https://api.criptonlabs.com/docs/solana-slot-latest.md"
@@ -399,15 +710,43 @@
       {
         "resource": "/v1/pro/solana/health",
         "description": "Whether Solana data is currently being served: latest probe status and finalized slot.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Fhealth",
           "docs": "https://api.criptonlabs.com/docs/solana-health.md"
@@ -416,35 +755,991 @@
       {
         "resource": "/v1/pro/solana/health/history",
         "description": "Bucketed history of Solana probe results over 1 hour, 24 hours or 7 days.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Fhealth%2Fhistory",
           "docs": "https://api.criptonlabs.com/docs/solana-health-history.md"
         }
       },
       {
+        "resource": "/v1/pro/solana/transfer-readiness",
+        "description": "Will this Solana transfer succeed? A verdict for SOL or an SPL or Token-2022 token.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Ftransfer-readiness",
+          "docs": "https://api.criptonlabs.com/docs/solana-transfer-readiness.md"
+        }
+      },
+      {
         "resource": "/v1/pro/solana/token/{mint}",
-        "description": "Is this Solana token safe to hold or receive? A SAFE, WARN or DANGER verdict.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
+        "description": "Is this Solana token safe to hold or receive? A safe, warn or danger verdict.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Ftoken%2F%7Bmint%7D",
           "docs": "https://api.criptonlabs.com/docs/solana-token.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/mpt/{mpt_issuance_id}",
+        "description": "MPT issuance: issuer, supply, scale, transfer fee and flags.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fmpt%2F%7Bmpt_issuance_id%7D",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-mpt.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/solana/account/{address}/fee-readiness",
+        "description": "Can this Solana account pay the fees of N transactions now?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Faccount%2F%7Baddress%7D%2Ffee-readiness",
+          "docs": "https://api.criptonlabs.com/docs/solana-fee-readiness.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/solana/account/{address}/token-hygiene",
+        "description": "Which of this wallet's Solana token accounts can be closed for rent, or are delegated or frozen?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Faccount%2F%7Baddress%7D%2Ftoken-hygiene",
+          "docs": "https://api.criptonlabs.com/docs/solana-token-hygiene.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/address/{address}/kind",
+        "description": "What kind of XRPL address is this, and what does a payment to it need?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Faddress%2F%7Baddress%7D%2Fkind",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-address-kind.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/solana/address/{address}/kind",
+        "description": "What kind of Solana account is this address, and should a payment go to it?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Faddress%2F%7Baddress%7D%2Fkind",
+          "docs": "https://api.criptonlabs.com/docs/solana-address-kind.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/stablecoin/{asset}",
+        "description": "Is this XRPL issued currency the canonical stablecoin it claims to be?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fstablecoin%2F%7Basset%7D",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-stablecoin.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/solana/stablecoin/{mint}",
+        "description": "Is this Solana mint the canonical stablecoin it claims to be?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Fstablecoin%2F%7Bmint%7D",
+          "docs": "https://api.criptonlabs.com/docs/solana-stablecoin.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/payment/verify",
+        "description": "Did this settled payment deliver the expected asset and amount to the expected account?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fpayment%2Fverify",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-payment-verify.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/solana/payment/verify",
+        "description": "Did this settled Solana payment deliver the expected amount to the expected recipient?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Fpayment%2Fverify",
+          "docs": "https://api.criptonlabs.com/docs/solana-payment-verify.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/x402/preflight",
+        "description": "Can this payer settle this x402 payment requirement right now?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fx402%2Fpreflight",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-x402-preflight.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/solana/x402/preflight",
+        "description": "Can this payer settle this x402 payment requirement right now?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fsolana%2Fx402%2Fpreflight",
+          "docs": "https://api.criptonlabs.com/docs/solana-x402-preflight.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/domain/{domain_id}/eligibility",
+        "description": "Is this account a member of this XRPL permissioned domain, as its owner or through an accepted, unexpired credential?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fdomain%2F%7Bdomain_id%7D%2Feligibility",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-domain-eligibility.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/account/{address}/offers",
+        "description": "One page of an account's open DEX offers, with how funded each one is.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Faccount%2F%7Baddress%7D%2Foffers",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-account-offers.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/account/{address}/commitments",
+        "description": "An account's escrows, payment channels and checks by direction, its deposit preauthorizations, tickets and owner reserve, and what blocks deleting it.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Faccount%2F%7Baddress%7D%2Fcommitments",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-account-commitments.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/metrics/pressure",
+        "description": "Buy or sell pressure of a pair's funded order book: a score from 0 to 100 and its band, from the depth near mid.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fmetrics%2Fpressure",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-pressure.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/metrics/peg",
+        "description": "How far a registry stablecoin trades from its peg on the XRP Ledger DEX: the deviation of each price route, their median and a status.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fmetrics%2Fpeg",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-peg.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/metrics/fx-basis",
+        "description": "The EUR/USD rate the XRP Ledger DEX implies through the EUR registry stablecoin against each USD registry stablecoin, and its basis to the ECB reference rate.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.05",
+            "approx_calls": 20
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.06",
+            "approx_calls": 13
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.0726",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.0726",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0605",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.0726",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fmetrics%2Ffx-basis",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-fx-basis.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/metrics/arbitrage",
+        "description": "Whether a pair's AMM pool and its order book are apart after the AMM fee: per direction the gap, the executable size and the profit after transfer fees.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fmetrics%2Farbitrage",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-arbitrage.md"
+        }
+      },
+      {
+        "resource": "/v1/pro/xrpl/metrics/liquidity-stress",
+        "description": "How stressed a registry stablecoin's liquidity is against its peg default: a score from 0 to 100, its band and the four weighted components behind it.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=%2Fv1%2Fpro%2Fxrpl%2Fmetrics%2Fliquidity-stress",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-liquidity-stress.md"
         }
       }
     ],
@@ -453,15 +1748,43 @@
         "name": "xrpl_fee",
         "resource": "mcp://criptonlabs/pro/xrpl_fee",
         "description": "Current XRPL fee tiers in drops with a congestion score.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_fee",
           "docs": "https://api.criptonlabs.com/docs/xrpl-fee.md"
@@ -471,70 +1794,20 @@
         "name": "xrpl_latest_ledger",
         "resource": "mcp://criptonlabs/pro/xrpl_latest_ledger",
         "description": "Latest validated ledger index, hash and close time.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
-        },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_latest_ledger",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-ledger-latest.md"
-        }
-      },
-      {
-        "name": "xrpl_network_health",
-        "resource": "mcp://criptonlabs/pro/xrpl_network_health",
-        "description": "Overall and per-node health of the upstream XRPL nodes.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
-        },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_network_health",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-network-health.md"
-        }
-      },
-      {
-        "name": "xrpl_orderbook",
-        "resource": "mcp://criptonlabs/pro/xrpl_orderbook",
-        "description": "CLOB order book for a currency pair with unfunded offers removed.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_orderbook",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-orderbook.md"
-        }
-      },
-      {
-        "name": "xrpl_slippage",
-        "resource": "mcp://criptonlabs/pro/xrpl_slippage",
-        "description": "Slippage and average price for buying an amount of base currency.",
         "mode": "both",
-        "debit": {
-          "EUR": "0.01",
-          "USD": "0.012"
-        },
-        "approx_calls": {
-          "EUR": 100,
-          "USD": 68
-        },
-        "price": {
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
           "amount": "0.01452",
           "asset": "USDC"
         },
@@ -554,7 +1827,146 @@
             "asset": "RLUSD",
             "network": "xrpl:0",
             "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-            "currency": "524C555344000000000000000000000000000000"
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_latest_ledger",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-ledger-latest.md"
+        }
+      },
+      {
+        "name": "xrpl_network_health",
+        "resource": "mcp://criptonlabs/pro/xrpl_network_health",
+        "description": "Overall and per-node health of the upstream XRPL nodes.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_network_health",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-network-health.md"
+        }
+      },
+      {
+        "name": "xrpl_orderbook",
+        "resource": "mcp://criptonlabs/pro/xrpl_orderbook",
+        "description": "CLOB order book for a currency pair with unfunded offers removed.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_orderbook",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-orderbook.md"
+        }
+      },
+      {
+        "name": "xrpl_slippage",
+        "resource": "mcp://criptonlabs/pro/xrpl_slippage",
+        "description": "Slippage and average price for buying or selling an amount of base currency.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
           }
         ],
         "links": {
@@ -566,106 +1978,20 @@
         "name": "xrpl_amm",
         "resource": "mcp://criptonlabs/pro/xrpl_amm",
         "description": "AMM pool reserves and trading fee for an asset pair.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_amm",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-amm.md"
-        }
-      },
-      {
-        "name": "xrpl_account_summary",
-        "resource": "mcp://criptonlabs/pro/xrpl_account_summary",
-        "description": "XRP balance, sequence, owner count, transfer rate and trust lines (capped) for an account.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_account_summary",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-account-summary.md"
-        }
-      },
-      {
-        "name": "xrpl_account_lines",
-        "resource": "mcp://criptonlabs/pro/xrpl_account_lines",
-        "description": "One page of an account's trust lines, with an opaque cursor for the next page.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_account_lines",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-account-lines.md"
-        }
-      },
-      {
-        "name": "xrpl_account_transactions",
-        "resource": "mcp://criptonlabs/pro/xrpl_account_transactions",
-        "description": "One page of an account's most recent validated transactions, newest first.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_account_transactions",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-account-transactions.md"
-        }
-      },
-      {
-        "name": "xrpl_token",
-        "resource": "mcp://criptonlabs/pro/xrpl_token",
-        "description": "Issuer data for an issued asset: flags, domain, transfer fee and total issued.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
-        },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
-        "links": {
-          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_token",
-          "docs": "https://api.criptonlabs.com/docs/xrpl-token.md"
-        }
-      },
-      {
-        "name": "xrpl_payment_readiness",
-        "resource": "mcp://criptonlabs/pro/xrpl_payment_readiness",
-        "description": "Pre-payment check: can this payment from source to destination succeed now?",
         "mode": "both",
-        "debit": {
-          "EUR": "0.01",
-          "USD": "0.012"
-        },
-        "approx_calls": {
-          "EUR": 100,
-          "USD": 68
-        },
-        "price": {
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
           "amount": "0.01452",
           "asset": "USDC"
         },
@@ -685,7 +2011,238 @@
             "asset": "RLUSD",
             "network": "xrpl:0",
             "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-            "currency": "524C555344000000000000000000000000000000"
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_amm",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-amm.md"
+        }
+      },
+      {
+        "name": "xrpl_account_summary",
+        "resource": "mcp://criptonlabs/pro/xrpl_account_summary",
+        "description": "XRP balance, sequence, owner count, transfer rate and trust lines (capped) for an account.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_account_summary",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-account-summary.md"
+        }
+      },
+      {
+        "name": "xrpl_account_lines",
+        "resource": "mcp://criptonlabs/pro/xrpl_account_lines",
+        "description": "One page of an account's trust lines, with an opaque cursor for the next page.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_account_lines",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-account-lines.md"
+        }
+      },
+      {
+        "name": "xrpl_account_transactions",
+        "resource": "mcp://criptonlabs/pro/xrpl_account_transactions",
+        "description": "One page of an account's most recent validated transactions, newest first.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_account_transactions",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-account-transactions.md"
+        }
+      },
+      {
+        "name": "xrpl_token",
+        "resource": "mcp://criptonlabs/pro/xrpl_token",
+        "description": "Issuer data for an issued asset: flags, domain, transfer fee and total issued.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_token",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-token.md"
+        }
+      },
+      {
+        "name": "xrpl_payment_readiness",
+        "resource": "mcp://criptonlabs/pro/xrpl_payment_readiness",
+        "description": "Pre-payment check: can this payment from source to destination succeed now?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
           }
         ],
         "links": {
@@ -698,35 +2255,40 @@
         "resource": "mcp://criptonlabs/pro/xrpl_paths",
         "description": "Multi-hop payment paths and their source cost.",
         "mode": "both",
-        "debit": {
-          "EUR": "0.02",
-          "USD": "0.024"
-        },
-        "approx_calls": {
-          "EUR": 50,
-          "USD": 34
-        },
-        "price": {
-          "amount": "0.02904",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.05",
+            "approx_calls": 20
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.06",
+            "approx_calls": 13
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.0726",
           "asset": "USDC"
         },
         "prices": [
           {
-            "amount": "0.02904",
+            "amount": "0.0726",
             "asset": "USDC",
             "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
           },
           {
-            "amount": "0.0242",
+            "amount": "0.0605",
             "asset": "EURC",
             "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
           },
           {
-            "amount": "0.02904",
+            "amount": "0.0726",
             "asset": "RLUSD",
             "network": "xrpl:0",
             "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-            "currency": "524C555344000000000000000000000000000000"
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
           }
         ],
         "links": {
@@ -735,19 +2297,23 @@
         }
       },
       {
-        "name": "solana_transfer_readiness",
-        "resource": "mcp://criptonlabs/pro/solana_transfer_readiness",
-        "description": "Will this Solana transfer succeed? A verdict for SOL or an SPL or Token-2022 token.",
+        "name": "xrpl_mpt",
+        "resource": "mcp://criptonlabs/pro/xrpl_mpt",
+        "description": "MPT issuance: issuer, supply, scale, transfer fee and flags.",
         "mode": "both",
-        "debit": {
-          "EUR": "0.01",
-          "USD": "0.012"
-        },
-        "approx_calls": {
-          "EUR": 100,
-          "USD": 68
-        },
-        "price": {
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
           "amount": "0.01452",
           "asset": "USDC"
         },
@@ -767,7 +2333,606 @@
             "asset": "RLUSD",
             "network": "xrpl:0",
             "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-            "currency": "524C555344000000000000000000000000000000"
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_mpt",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-mpt.md"
+        }
+      },
+      {
+        "name": "xrpl_address_kind",
+        "resource": "mcp://criptonlabs/pro/xrpl_address_kind",
+        "description": "What kind of XRPL address is this, and what does a payment to it need?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_address_kind",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-address-kind.md"
+        }
+      },
+      {
+        "name": "xrpl_stablecoin",
+        "resource": "mcp://criptonlabs/pro/xrpl_stablecoin",
+        "description": "Is this XRPL issued currency the canonical stablecoin it claims to be?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_stablecoin",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-stablecoin.md"
+        }
+      },
+      {
+        "name": "xrpl_payment_verify",
+        "resource": "mcp://criptonlabs/pro/xrpl_payment_verify",
+        "description": "Did this settled payment deliver the expected asset and amount to the expected account?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_payment_verify",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-payment-verify.md"
+        }
+      },
+      {
+        "name": "xrpl_x402_preflight",
+        "resource": "mcp://criptonlabs/pro/xrpl_x402_preflight",
+        "description": "Can this payer settle this x402 payment requirement right now?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_x402_preflight",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-x402-preflight.md"
+        }
+      },
+      {
+        "name": "xrpl_domain_eligibility",
+        "resource": "mcp://criptonlabs/pro/xrpl_domain_eligibility",
+        "description": "Is this account a member of this XRPL permissioned domain, as its owner or through an accepted, unexpired credential?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_domain_eligibility",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-domain-eligibility.md"
+        }
+      },
+      {
+        "name": "xrpl_account_offers",
+        "resource": "mcp://criptonlabs/pro/xrpl_account_offers",
+        "description": "One page of an account's open DEX offers, with how funded each one is.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_account_offers",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-account-offers.md"
+        }
+      },
+      {
+        "name": "xrpl_account_commitments",
+        "resource": "mcp://criptonlabs/pro/xrpl_account_commitments",
+        "description": "An account's escrows, payment channels and checks by direction, its deposit preauthorizations, tickets and owner reserve, and what blocks deleting it.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_account_commitments",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-account-commitments.md"
+        }
+      },
+      {
+        "name": "xrpl_metrics_pressure",
+        "resource": "mcp://criptonlabs/pro/xrpl_metrics_pressure",
+        "description": "Buy or sell pressure of a pair's funded order book: a score from 0 to 100 and its band, from the depth near mid.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_metrics_pressure",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-pressure.md"
+        }
+      },
+      {
+        "name": "xrpl_metrics_peg",
+        "resource": "mcp://criptonlabs/pro/xrpl_metrics_peg",
+        "description": "How far a registry stablecoin trades from its peg on the XRP Ledger DEX: the deviation of each price route, their median and a status.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_metrics_peg",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-peg.md"
+        }
+      },
+      {
+        "name": "xrpl_metrics_fx_basis",
+        "resource": "mcp://criptonlabs/pro/xrpl_metrics_fx_basis",
+        "description": "The EUR/USD rate the XRP Ledger DEX implies through the EUR registry stablecoin against each USD registry stablecoin, and its basis to the ECB reference rate.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.05",
+            "approx_calls": 20
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.06",
+            "approx_calls": 13
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.0726",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.0726",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0605",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.0726",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_metrics_fx_basis",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-fx-basis.md"
+        }
+      },
+      {
+        "name": "xrpl_metrics_arbitrage",
+        "resource": "mcp://criptonlabs/pro/xrpl_metrics_arbitrage",
+        "description": "Whether a pair's AMM pool and its order book are apart after the AMM fee: per direction the gap, the executable size and the profit after transfer fees.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_metrics_arbitrage",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-arbitrage.md"
+        }
+      },
+      {
+        "name": "xrpl_metrics_liquidity_stress",
+        "resource": "mcp://criptonlabs/pro/xrpl_metrics_liquidity_stress",
+        "description": "How stressed a registry stablecoin's liquidity is against its peg default: a score from 0 to 100, its band and the four weighted components behind it.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.03",
+            "approx_calls": 33
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.036",
+            "approx_calls": 22
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.04356",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.04356",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0363",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.04356",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fxrpl_metrics_liquidity_stress",
+          "docs": "https://api.criptonlabs.com/docs/xrpl-metrics-liquidity-stress.md"
+        }
+      },
+      {
+        "name": "solana_transfer_readiness",
+        "resource": "mcp://criptonlabs/pro/solana_transfer_readiness",
+        "description": "Will this Solana transfer succeed? A verdict for SOL or an SPL or Token-2022 token.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
           }
         ],
         "links": {
@@ -778,16 +2943,44 @@
       {
         "name": "solana_token",
         "resource": "mcp://criptonlabs/pro/solana_token",
-        "description": "Is this Solana token safe to hold or receive? A SAFE, WARN or DANGER verdict.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.001",
-          "USD": "0.0012"
+        "description": "Is this Solana token safe to hold or receive? A safe, warn or danger verdict.",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 1000,
-          "USD": 683
-        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fsolana_token",
           "docs": "https://api.criptonlabs.com/docs/solana-token.md"
@@ -797,15 +2990,43 @@
         "name": "solana_latest_slot",
         "resource": "mcp://criptonlabs/pro/solana_latest_slot",
         "description": "Latest finalized Solana slot and its block time.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fsolana_latest_slot",
           "docs": "https://api.criptonlabs.com/docs/solana-slot-latest.md"
@@ -815,18 +3036,322 @@
         "name": "solana_network_health",
         "resource": "mcp://criptonlabs/pro/solana_network_health",
         "description": "Whether Solana data is currently being served: latest probe status and finalized slot.",
-        "mode": "credits",
-        "debit": {
-          "EUR": "0.0005",
-          "USD": "0.0006"
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
         },
-        "approx_calls": {
-          "EUR": 2000,
-          "USD": 1366
-        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
         "links": {
           "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fsolana_network_health",
           "docs": "https://api.criptonlabs.com/docs/solana-health.md"
+        }
+      },
+      {
+        "name": "solana_fee_readiness",
+        "resource": "mcp://criptonlabs/pro/solana_fee_readiness",
+        "description": "Can this Solana account pay the fees of N transactions now?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fsolana_fee_readiness",
+          "docs": "https://api.criptonlabs.com/docs/solana-fee-readiness.md"
+        }
+      },
+      {
+        "name": "solana_token_hygiene",
+        "resource": "mcp://criptonlabs/pro/solana_token_hygiene",
+        "description": "Which of this wallet's Solana token accounts can be closed for rent, or are delegated or frozen?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fsolana_token_hygiene",
+          "docs": "https://api.criptonlabs.com/docs/solana-token-hygiene.md"
+        }
+      },
+      {
+        "name": "solana_address_kind",
+        "resource": "mcp://criptonlabs/pro/solana_address_kind",
+        "description": "What kind of Solana account is this address, and should a payment go to it?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fsolana_address_kind",
+          "docs": "https://api.criptonlabs.com/docs/solana-address-kind.md"
+        }
+      },
+      {
+        "name": "solana_stablecoin",
+        "resource": "mcp://criptonlabs/pro/solana_stablecoin",
+        "description": "Is this Solana mint the canonical stablecoin it claims to be?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0005",
+            "approx_calls": 2000
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.0006",
+            "approx_calls": 1366
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fsolana_stablecoin",
+          "docs": "https://api.criptonlabs.com/docs/solana-stablecoin.md"
+        }
+      },
+      {
+        "name": "solana_payment_verify",
+        "resource": "mcp://criptonlabs/pro/solana_payment_verify",
+        "description": "Did this settled Solana payment deliver the expected amount to the expected recipient?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.0025",
+            "approx_calls": 400
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.003",
+            "approx_calls": 273
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.01452",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.01452",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0121",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.01452",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fsolana_payment_verify",
+          "docs": "https://api.criptonlabs.com/docs/solana-payment-verify.md"
+        }
+      },
+      {
+        "name": "solana_x402_preflight",
+        "resource": "mcp://criptonlabs/pro/solana_x402_preflight",
+        "description": "Can this payer settle this x402 payment requirement right now?",
+        "mode": "both",
+        "denominations": [
+          {
+            "denomination": "EUR",
+            "debit": "0.02",
+            "approx_calls": 50
+          },
+          {
+            "denomination": "USD",
+            "debit": "0.024",
+            "approx_calls": 34
+          }
+        ],
+        "price_per_call": {
+          "amount": "0.02904",
+          "asset": "USDC"
+        },
+        "prices": [
+          {
+            "amount": "0.02904",
+            "asset": "USDC",
+            "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          {
+            "amount": "0.0242",
+            "asset": "EURC",
+            "mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr"
+          },
+          {
+            "amount": "0.02904",
+            "asset": "RLUSD",
+            "network": "xrpl:0",
+            "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+            "currency": "524C555344000000000000000000000000000000",
+            "currency_ascii": "RLUSD"
+          }
+        ],
+        "links": {
+          "requirements": "https://api.criptonlabs.com/v1/pro/requirements?resource=mcp%3A%2F%2Fcriptonlabs%2Fpro%2Fsolana_x402_preflight",
+          "docs": "https://api.criptonlabs.com/docs/solana-x402-preflight.md"
         }
       }
     ],

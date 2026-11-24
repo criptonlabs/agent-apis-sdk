@@ -1,35 +1,180 @@
 {
   "base": "XRP",
   "quote": "USD.rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+  "domain": null,
   "depth": 10,
+  "depth_effective": 10,
+  "asks_truncated": true,
+  "bids_truncated": true,
+  "best_bid": "0.955000019676293222",
+  "best_ask": "1.0399896",
+  "mid": "0.997494809838146611",
+  "spread_price": "0.084989580323706778",
+  "spread_bps": "852.03",
+  "crossed": false,
+  "funded_total": {
+    "ask_depth": "1562.553774",
+    "bid_depth": "11290.564603"
+  },
+  "depth_bands": [
+    {
+      "half_width_bps": "10",
+      "ask_depth": "0",
+      "bid_depth": "0"
+    },
+    {
+      "half_width_bps": "50",
+      "ask_depth": "0",
+      "bid_depth": "0"
+    },
+    {
+      "half_width_bps": "100",
+      "ask_depth": "0",
+      "bid_depth": "0"
+    }
+  ],
   "asks": [
-    { "gets": "62.015934", "pays": "84.45617530704124", "price": "1.3618463814000002" },
-    { "gets": "30075", "pays": "40958.541", "price": "1.36188" },
-    { "gets": "20", "pays": "29.12", "price": "1.456" },
-    { "gets": "20", "pays": "29.16", "price": "1.458" },
-    { "gets": "100", "pays": "146", "price": "1.46" },
-    { "gets": "500", "pays": "740", "price": "1.48" },
-    { "gets": "500", "pays": "762.5", "price": "1.525" },
-    { "gets": "500", "pays": "810", "price": "1.62" },
-    { "gets": "600", "pays": "1008", "price": "1.68" },
-    { "gets": "122", "pays": "205.936", "price": "1.688" }
+    {
+      "gets": "12.493774",
+      "pays": "12.9933950247504",
+      "price": "1.0399896",
+      "owner": "rsPrWzpYp5jj278vHVgp1tMvbKdHAZGFbi",
+      "expires_at": null
+    },
+    {
+      "gets": "100",
+      "pays": "104",
+      "price": "1.04",
+      "owner": "rNXuZrzmCQLxCNiFJLsKhZbDq3maZ1uEkU",
+      "expires_at": null
+    },
+    {
+      "gets": "100",
+      "pays": "105",
+      "price": "1.05",
+      "owner": "r9cyWmzhsLqgVsUfkssKuzPGpTiQzcR9L3",
+      "expires_at": null
+    },
+    {
+      "gets": "500",
+      "pays": "540",
+      "price": "1.08",
+      "owner": "r9cyWmzhsLqgVsUfkssKuzPGpTiQzcR9L3",
+      "expires_at": null
+    },
+    {
+      "gets": "0.02",
+      "pays": "0.021999",
+      "price": "1.09995",
+      "owner": "rH4krKvBq84TvA7bscvuf2hzW5HBhgMVoD",
+      "expires_at": null
+    },
+    {
+      "gets": "250",
+      "pays": "275",
+      "price": "1.1",
+      "owner": "rL5GetGSnvorYFgM8c8G35b7mD8xcndjNk",
+      "expires_at": "2027-11-21T14:08:02.000Z"
+    },
+    {
+      "gets": "0.02",
+      "pays": "0.022411",
+      "price": "1.12055",
+      "owner": "rH4krKvBq84TvA7bscvuf2hzW5HBhgMVoD",
+      "expires_at": null
+    },
+    {
+      "gets": "500",
+      "pays": "570",
+      "price": "1.14",
+      "owner": "rL5GetGSnvorYFgM8c8G35b7mD8xcndjNk",
+      "expires_at": "2027-11-17T15:43:02.000Z"
+    },
+    {
+      "gets": "0.02",
+      "pays": "0.022823",
+      "price": "1.14115",
+      "owner": "rH4krKvBq84TvA7bscvuf2hzW5HBhgMVoD",
+      "expires_at": null
+    },
+    {
+      "gets": "100",
+      "pays": "114.98",
+      "price": "1.1498",
+      "owner": "rBci5N2MQdXjZtUQzFxrQHM6kssarRASTi",
+      "expires_at": null
+    }
   ],
   "bids": [
-    { "gets": "100", "pays": "129", "price": "1.29" },
-    { "gets": "1000", "pays": "1285", "price": "1.285" },
-    { "gets": "100", "pays": "128", "price": "1.28" },
-    { "gets": "100", "pays": "126", "price": "1.26" },
-    { "gets": "11352.85075", "pays": "14023.15477525449", "price": "1.235210000030564129" },
-    { "gets": "200", "pays": "246", "price": "1.23" },
-    { "gets": "0.000001", "pays": "0.000001192636261608", "price": "1.192636261608" },
-    { "gets": "500", "pays": "605", "price": "1.21" },
-    { "gets": "0.1", "pays": "0.12", "price": "1.2" },
-    { "gets": "500", "pays": "565", "price": "1.13" }
+    {
+      "gets": "33.568219",
+      "pays": "32.05764980549812",
+      "price": "0.955000019676293222",
+      "owner": "raHmRZScJY6cGBxQajh1fzcR5m5kPimhjs",
+      "expires_at": null
+    },
+    {
+      "gets": "100",
+      "pays": "95.1",
+      "price": "0.951",
+      "owner": "rBci5N2MQdXjZtUQzFxrQHM6kssarRASTi",
+      "expires_at": null
+    },
+    {
+      "gets": "420.872",
+      "pays": "400",
+      "price": "0.950407724913988101",
+      "owner": "rDYyZGgcaozaz8pwZK1wLcjmvGLcsRyRDv",
+      "expires_at": "2026-11-26T09:00:00.000Z"
+    },
+    {
+      "gets": "10000",
+      "pays": "9420",
+      "price": "0.942",
+      "owner": "r9cyWmzhsLqgVsUfkssKuzPGpTiQzcR9L3",
+      "expires_at": null
+    },
+    {
+      "gets": "100",
+      "pays": "94",
+      "price": "0.94",
+      "owner": "rBci5N2MQdXjZtUQzFxrQHM6kssarRASTi",
+      "expires_at": null
+    },
+    {
+      "gets": "0.02",
+      "pays": "0.018782",
+      "price": "0.9391",
+      "owner": "rH4krKvBq84TvA7bscvuf2hzW5HBhgMVoD",
+      "expires_at": null
+    },
+    {
+      "gets": "535.3",
+      "pays": "500",
+      "price": "0.934055669717915188",
+      "owner": "rDYyZGgcaozaz8pwZK1wLcjmvGLcsRyRDv",
+      "expires_at": "2026-11-26T09:00:00.000Z"
+    },
+    {
+      "gets": "100",
+      "pays": "93",
+      "price": "0.93",
+      "owner": "rBci5N2MQdXjZtUQzFxrQHM6kssarRASTi",
+      "expires_at": null
+    },
+    {
+      "gets": "0.804384",
+      "pays": "0.7458728822036945",
+      "price": "0.927259719491803044",
+      "owner": "rPAYRgjB8ntx6pfjg1d6vYpncGWGfccrXG",
+      "expires_at": null
+    }
   ],
   "meta": {
-    "ledger_index": 107738131,
-    "as_of": "2026-10-18T10:58:48.615Z",
-    "age_seconds": 0,
+    "ledger_index": 108537764,
+    "ledger_state": "validated",
+    "as_of": "2026-11-24T09:49:45.264Z",
+    "age_seconds": 1,
     "cache": "miss",
     "stale": false
   }

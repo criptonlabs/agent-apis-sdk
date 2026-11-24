@@ -25,14 +25,14 @@ import { paid, problem } from "../../support/x402-fixtures.js";
 
 const xrpl = { network: "xrpl", productToken: "agent-apis-xrpl/0.1.0" };
 const solana = { network: "solana", productToken: "agent-apis-solana/0.1.0" };
-const feeSchema = z.object({ fee: z.object({ standard: z.string() }) });
+const feeSchema = z.object({ fee: z.object({ standard_drops: z.string() }) });
 const readinessSchema = z.object({ verdict: z.string() });
 const tokenSchema = z.object({ mint: z.string() });
 const FEE_URL = "https://api.criptonlabs.com/v1/pro/xrpl/fee";
 const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
 const READINESS_QUERY = {
-  source: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
-  destination: "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+  source: "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+  destination: "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
   asset: "XRP",
   amount: "10",
 };
@@ -176,7 +176,7 @@ describe("credit spending", () => {
     const fake = new FakeTransport().respond(creditPaidFee());
     const client = xrplCreditClient(fake, token);
     const result = await feeCall(client);
-    expect(result.data.fee.standard).toBe("5000");
+    expect(result.data.fee.standard_drops).toBe("10");
     expect(fake.requests).toHaveLength(1);
     expect(fake.requests[0]?.url).toBe(FEE_URL);
     expectBearer(fake, 0, token);
@@ -205,9 +205,9 @@ describe("credit spending", () => {
       schema: readinessSchema,
     });
     expect(result.data.verdict).toBe("not_ready");
-    expect(result.receipt).toMatchObject({ network: "xrpl:0", amount: "0.01452" });
+    expect(result.receipt).toMatchObject({ network: "xrpl:0", amount: "0.04356" });
     expect(payer.signed).toHaveLength(1);
-    expect(payer.signed[0]).toMatchObject({ network: "xrpl:0", amount: "0.01452" });
+    expect(payer.signed[0]).toMatchObject({ network: "xrpl:0", amount: "0.04356" });
     expect(fake.requests).toHaveLength(2);
     expectBearer(fake, 0, token);
     expect(fake.requests[1]?.headers["payment-signature"]).toBe("fake-signature");
@@ -236,7 +236,7 @@ describe("credit spending", () => {
     expect(error).toBeInstanceOf(CriptonPaymentError);
     expect(error).toMatchObject({ code: "payment-disabled", reason: "credits_insufficient" });
     expect((error as CriptonPaymentError).options).toEqual(
-      expect.arrayContaining([expect.objectContaining({ network: "xrpl:0", amount: "0.01452" })]),
+      expect.arrayContaining([expect.objectContaining({ network: "xrpl:0", amount: "0.04356" })]),
     );
     expect(fake.requests).toHaveLength(1);
   });
@@ -287,7 +287,7 @@ describe("credit spending", () => {
     const client = xrplCreditClient(fake, creditToken());
     await feeCall(client);
     const result = await feeCall(client);
-    expect(result.data.fee.standard).toBe("5000");
+    expect(result.data.fee.standard_drops).toBe("10");
     expect(client.lastKnownBalance()).toEqual(BALANCE);
   });
 

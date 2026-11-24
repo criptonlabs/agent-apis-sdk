@@ -35,9 +35,11 @@ describe("XRPL kit price lookup and spend", () => {
     expect(index.routes).toContainEqual(
       expect.objectContaining({
         resource: "/v1/pro/xrpl/fee",
-        mode: "credits",
-        debit: { EUR: "0.0005", USD: "0.0006" },
-        prices: [],
+        mode: "both",
+        denominations: [
+          { denomination: "EUR", debit: "0.0005", approxCalls: 2000 },
+          { denomination: "USD", debit: "0.0006", approxCalls: 1366 },
+        ],
       }),
     );
   });

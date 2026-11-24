@@ -51,7 +51,7 @@ describe("Solana CLI", () => {
   });
 
   it("Transfer not ready in the CLI", async () => {
-    const fake = solanaFake(readiness({ ready: false, blockers: ["insufficient_balance"] }));
+    const fake = solanaFake(readiness({ verdict: "not_ready", reasons: ["insufficient_balance"] }));
     const { io, out } = capture();
     const argv = [
       "prepare-transfer",
