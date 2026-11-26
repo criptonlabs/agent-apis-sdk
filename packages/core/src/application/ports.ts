@@ -10,6 +10,12 @@ export interface X402Payer {
   ): Promise<Record<string, string>>;
   /** Decimal amount of the option in the asset's units; absent means `option.amount` already is. */
   decimalAmount?(option: PaymentOption): string;
+  /**
+   * Runs `task` (signing and the paid retry) after every earlier task of the same exclusive group
+   * has settled, and settles with the task's outcome; may reject before running `task`, in which
+   * case nothing was signed. Absent: payments may overlap.
+   */
+  exclusive?<T>(task: () => Promise<T>): Promise<T>;
 }
 
 export interface PaymentReceipt {

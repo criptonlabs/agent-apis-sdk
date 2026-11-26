@@ -1,13 +1,16 @@
 import {
+  ApiClient,
   CriptonPaymentError,
   CriptonValidationError,
   type PaymentOption,
 } from "@criptonlabs/agent-apis-core";
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
 import { Wallet } from "xrpl";
+import { z } from "zod";
 import { FakeTransport } from "../../../../core/tests/support/fake-transport.js";
-import { problem } from "../../../../core/tests/support/x402-fixtures.js";
+import { challenge, paid, problem } from "../../../../core/tests/support/x402-fixtures.js";
 import { createXrplAgentKit } from "../../../src/index.js";
+import { XRPL_DESCRIPTOR } from "../../../src/infrastructure/descriptor.js";
 import { createXrplPayer } from "../../../src/infrastructure/x402/xrpl-payer.js";
 import { createFakeXrplClientFactory } from "../../support/fake-xrpl-client-factory.js";
 
@@ -124,5 +127,128 @@ describe("XRPL kit wallet", () => {
     expect(fake.requests[0]?.url).toContain("/v1/pro/xrpl/payment-readiness");
     expect(fake.requests.some((r) => "payment-signature" in r.headers)).toBe(false);
     expect(kit.spent()).toBe("0");
+  });
+});
+
+const feeSchema = z.object({
+  fee: z.object({ standard: z.string() }),
+  meta: z.object({ stale: z.boolean() }),
+});
+
+/** An XRPL testnet payer for `seed` signing on the shared fake factory (it records every signing). */
+function testnetClient(seed: string, fake: FakeTransport, events: string[]): ApiClient {
+  const wallet = createXrplPayer({
+    seed,
+    network: "testnet",
+    clientFactory: createFakeXrplClientFactory({ events }).factory,
+  });
+  return new ApiClient(XRPL_DESCRIPTOR, {
+    tier: "pro",
+    transport: fake.transport,
+    wallet,
+    payment: { maxPerCall: "0.05" },
+  });
+}
+
+const payFee = (client: ApiClient) => client.request({ route: "fee", schema: feeSchema });
+
+/** One macrotask turn: every continuation that can run without the pending paid retry has run. */
+const nextTurn = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+/** Two 402 challenges, then a first paid retry that stays pending, then an answer for the second. */
+function twoChallengesFirstRetryPending(fake: FakeTransport) {
+  fake.respond(challenge(testnetOption())).respond(challenge(testnetOption()));
+  const firstRetry = fake.defer();
+  fake.respond(paid());
+  return firstRetry;
+}
+
+describe("XRPL payments of one account", () => {
+  it("Two kits of one account pay one at a time", async () => {
+    const seed = Wallet.generate().seed as string;
+    const events: string[] = [];
+    const fake = new FakeTransport();
+    const firstRetry = twoChallengesFirstRetryPending(fake);
+    const kitA = testnetClient(seed, fake, events);
+    const kitB = testnetClient(seed, fake, events);
+
+    const calls = Promise.allSettled([payFee(kitA), payFee(kitB)]);
+    await firstRetry.reached;
+    await nextTurn();
+    expect(events, "only the first payment is signed while its paid retry is pending").toEqual([
+      "sign",
+    ]);
+    events.push("release");
+    firstRetry.release(paid());
+    const results = await calls;
+
+    expect(events).toEqual(["sign", "release", "sign"]);
+    expect(results.map((r) => r.status)).toEqual(["fulfilled", "fulfilled"]);
+  });
+
+  it("A kit created after another kit's payments finished still pays one at a time", async () => {
+    const seed = Wallet.generate().seed as string;
+    const events: string[] = [];
+    const fake = new FakeTransport().respond(challenge(testnetOption())).respond(paid());
+    const kitA = testnetClient(seed, fake, events);
+    await payFee(kitA);
+    const kitB = testnetClient(seed, fake, events);
+    events.length = 0;
+    const firstRetry = twoChallengesFirstRetryPending(fake);
+
+    const calls = Promise.allSettled([payFee(kitA), payFee(kitB)]);
+    await firstRetry.reached;
+    await nextTurn();
+    expect(events, "only the first payment is signed while its paid retry is pending").toEqual([
+      "sign",
+    ]);
+    events.push("release");
+    firstRetry.release(paid());
+    const results = await calls;
+
+    expect(events).toEqual(["sign", "release", "sign"]);
+    expect(results.map((r) => r.status)).toEqual(["fulfilled", "fulfilled"]);
+  });
+
+  it("Different accounts pay independently", async () => {
+    const events: string[] = [];
+    const fake = new FakeTransport();
+    const firstRetry = twoChallengesFirstRetryPending(fake);
+    const kitA = testnetClient(Wallet.generate().seed as string, fake, events);
+    const kitB = testnetClient(Wallet.generate().seed as string, fake, events);
+
+    const calls = Promise.allSettled([payFee(kitA), payFee(kitB)]);
+    await firstRetry.reached;
+    await nextTurn();
+    expect(events, "the second payment is signed without waiting").toEqual(["sign", "sign"]);
+    firstRetry.release(paid());
+    const results = await calls;
+
+    expect(results.map((r) => r.status)).toEqual(["fulfilled", "fulfilled"]);
+  });
+
+  it("Payment busy after the wait limit", async () => {
+    vi.useFakeTimers();
+    try {
+      const events: string[] = [];
+      const fake = new FakeTransport();
+      const firstRetry = twoChallengesFirstRetryPending(fake);
+      const kit = testnetClient(Wallet.generate().seed as string, fake, events);
+
+      const calls = Promise.allSettled([payFee(kit), payFee(kit)]);
+      await firstRetry.reached;
+      await vi.advanceTimersByTimeAsync(20_000);
+
+      firstRetry.release(paid());
+      const results = await calls;
+      const rejected = results.filter((r) => r.status === "rejected");
+      expect(rejected, "the waiting call fails once the wait limit passed").toHaveLength(1);
+      const error = (rejected[0] as PromiseRejectedResult).reason;
+      expect(error).toBeInstanceOf(CriptonPaymentError);
+      expect(error).toMatchObject({ code: "payment-busy" });
+      expect(events, "the second payment is never signed").toEqual(["sign"]);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

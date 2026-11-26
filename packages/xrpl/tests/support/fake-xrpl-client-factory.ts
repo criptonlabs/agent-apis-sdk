@@ -15,7 +15,11 @@ export interface FakeXrplClientFactory {
 
 /** Answers connect, getLedgerIndex, autofill and account_objects with plausible testnet data; records submissions. */
 export function createFakeXrplClientFactory(
-  options: { ticketSequences?: number[] } = {},
+  options: {
+    ticketSequences?: number[];
+    /** When given, every autofill (one per signing) appends `"sign"` to it. */
+    events?: string[];
+  } = {},
 ): FakeXrplClientFactory {
   const wsUrls: string[] = [];
   const requests: string[] = [];
@@ -29,6 +33,7 @@ export function createFakeXrplClientFactory(
     isConnected: () => true,
     getLedgerIndex: async () => 14_000_000,
     autofill: async (tx: unknown) => {
+      options.events?.push("sign");
       const payment = tx as Record<string, unknown>;
       const ticket = payment.TicketSequence !== undefined;
       return {

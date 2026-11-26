@@ -1,7 +1,8 @@
+import { add, type PaymentReceipt } from "@criptonlabs/agent-apis-core";
 import { describe, expect, it } from "vite-plus/test";
 import { Wallet } from "xrpl";
 import { RLUSD_ISSUER, createXrplAgentKit } from "../../src/index.js";
-import { guardedBaseUrl, payerSeed } from "./e2e-env.js";
+import { decimalOf, guardedBaseUrl, payerSeed } from "./e2e-env.js";
 
 // Public mainnet accounts: the API reads XRPL data from mainnet while payments run on testnet.
 // The prepare is unsigned and never submitted. Bitstamp requires a destination tag.
@@ -73,4 +74,45 @@ describe("XRPL x402 testnet end to end (opt-in)", () => {
     expect(Number(kit.spent())).toBeGreaterThan(0);
     // Live ledger: autofill, signing and the API settlement (up to 8 s) exceed the 5 s default.
   }, 60_000);
+
+  // Design D5 of `kit-xrpl-concurrent-payments`: one wallet, two paid calls started together. The
+  // kit signs one XRPL payment at a time per account, so the second payment waits for the first
+  // paid retry and both calls answer; amounts come from the receipts, never from this file.
+  it("Two paid calls at once from one wallet", async () => {
+    const baseUrl = guardedBaseUrl();
+    const seed = payerSeed();
+    const source = Wallet.fromSeed(seed).classicAddress;
+
+    const kit = createXrplAgentKit({
+      baseUrl,
+      tier: "pro",
+      wallet: { seed, network: "testnet" },
+      payment: { maxPerCall: "0.05", sessionBudget: "0.2" },
+    });
+    const [first, second] = await Promise.all([
+      kit.data.paymentReadiness({ source, destination: RLUSD_ISSUER.testnet }),
+      kit.data.paymentReadiness({ source, destination: RLUSD_ISSUER.testnet }),
+    ]);
+
+    expect(first.data.meta).toBeDefined();
+    expect(second.data.meta).toBeDefined();
+    const receipts = [first.receipt, second.receipt].filter(
+      (receipt): receipt is PaymentReceipt => receipt !== null,
+    );
+    expect(receipts).toHaveLength(2);
+    expect(receipts.map((receipt) => receipt.network)).toEqual(["xrpl:1", "xrpl:1"]);
+    const [firstReceipt, secondReceipt] = receipts;
+    expect(firstReceipt?.transaction).toBeTruthy();
+    expect(secondReceipt?.transaction).toBeTruthy();
+    expect(firstReceipt?.transaction).not.toBe(secondReceipt?.transaction);
+    expect(kit.spent()).toBe(
+      add(
+        decimalOf(firstReceipt?.amount, "the first receipt amount"),
+        decimalOf(secondReceipt?.amount, "the second receipt amount"),
+      ),
+    );
+    // Two settlements run one after the other (about 8.5 s each), each with autofill, signing and
+    // the paid retry, whose floor is 30 s (api-client.ts): 120 s covers two of those floors plus
+    // signing, as the top-up test does for one.
+  }, 120_000);
 });

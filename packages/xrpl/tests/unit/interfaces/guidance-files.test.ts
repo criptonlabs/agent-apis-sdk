@@ -193,6 +193,20 @@ describe("Guidance files", () => {
     }
   });
 
+  it("One payment at a time stated in every guidance file", () => {
+    const texts = {
+      "README.md": read("README.md"),
+      "SKILL.md": read("SKILL.md"),
+      ".cursorrules": read(".cursorrules"),
+    };
+
+    for (const [name, text] of Object.entries(texts)) {
+      for (const phrase of ["one at a time", "payment-busy", "two processes"]) {
+        expect(text, `${name} contains "${phrase}"`).toContain(phrase);
+      }
+    }
+  });
+
   it("Depth range stated", async () => {
     const tools = await listedTools();
     const out: string[] = [];

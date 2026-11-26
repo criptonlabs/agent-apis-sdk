@@ -29,7 +29,7 @@ import {
   type RecordedRequest,
   type ScriptedResponse,
 } from "../../support/fake-transport.js";
-import { TX_HASH, feeBody } from "../../support/x402-fixtures.js";
+import { TX_HASH, challenge, feeBody, paid, xrplOption } from "../../support/x402-fixtures.js";
 
 const xrpl = { network: "xrpl", productToken: "agent-apis-xrpl/0.1.0" };
 const USD_STARTER_URL = "https://api.criptonlabs.com/v1/pro/credits/usd-starter";
@@ -172,6 +172,9 @@ async function ambiguousTopup(token: string) {
   const error = await outcome(() => kit.topup({ bundle: "usd-starter", maxAmount: "1.00" }));
   return { fake, kit, error };
 }
+
+/** One macrotask turn: every continuation that can run without the pending paid retry has run. */
+const nextTurn = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 describe("top-up", () => {
   it("Top-up within its cap", async () => {
@@ -381,6 +384,28 @@ describe("top-up", () => {
     expect(error).toBeInstanceOf(CriptonProblemError);
     expect((error as CriptonProblemError).code).toBe("payment-settlement-failed");
     expectDecimal(kit.topupSpent(), "0");
+  });
+
+  it("Top-up waits for a pending paid call", async () => {
+    const token = creditToken();
+    const fake = scripted(challenge(xrplOption()));
+    const paidRetry = fake.defer();
+    fake.respond(usdStarterChallenge()).respond(usdStarterCreated(token));
+    const wallet = new FakePayer({
+      exclusive: true,
+      selectOption: (accepts) => accepts.find(isXrpl) ?? null,
+    });
+    const kit = client(fake, { tier: "pro", wallet, payment: { maxPerCall: "0.05" } });
+    const paidCall = kit.request({ route: "fee", schema: feeSchema });
+    await paidRetry.reached;
+    const topup = kit.topup({ bundle: "usd-starter", maxAmount: "1.00" });
+    await nextTurn();
+    wallet.log.push("release");
+    paidRetry.release(paid());
+    const [callResult, topupResult] = await Promise.all([paidCall, topup]);
+    expect(wallet.log).toEqual(["sign", "release", "sign"]);
+    expect(callResult.data.fee.standard).toBe("10");
+    expect(topupResult.token === token, "topupResult.token holds the bought token").toBe(true);
   });
 
   it("Invalid top-up budget", () => {

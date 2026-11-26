@@ -127,6 +127,23 @@ async function sendSigned(
   }
 }
 
+/**
+ * Signs and sends the paid retry inside the payer's exclusive section when it has one, directly
+ * otherwise; the section ends when the paid retry returns or throws, or when signing throws (design D1).
+ */
+function signAndSend(
+  required: PaymentRequired,
+  chosen: Chosen,
+  retry: PaidRetry,
+  reservation: string,
+): Promise<Response> {
+  const task = async (): Promise<Response> => {
+    const headers = await chosen.payer.createPaymentHeaders(required, chosen.option);
+    return sendSigned(retry, headers, chosen, reservation);
+  };
+  return chosen.payer.exclusive ? chosen.payer.exclusive(task) : task();
+}
+
 /** The receipt of a successful settlement; asset comes from the paid option, amount is the decimal paid. */
 function readReceipt(paid: Response, chosen: Chosen): PaymentReceipt | null {
   const settleHeader = paid.headers.get("payment-response");
@@ -159,8 +176,7 @@ export async function handlePaymentRequired<T>(
   const chosen = await chooseOption(response, required, context);
   const reservation = reserve(chosen);
   try {
-    const headers = await chosen.payer.createPaymentHeaders(required, chosen.option);
-    const paid = await sendSigned(retry, headers, chosen, reservation);
+    const paid = await signAndSend(required, chosen, retry, reservation);
     if (!paid.ok) throw await parseProblem(paid);
     const receipt = readReceipt(paid, chosen);
     if (receipt !== null) chosen.ledger.commit(reservation);

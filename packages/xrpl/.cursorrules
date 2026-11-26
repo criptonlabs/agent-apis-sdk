@@ -11,6 +11,7 @@ Applies when writing XRP Ledger payment or DEX code.
 - Slippage `partial` is true when `filled` is above 0 and below `amount`; a partial fill reports `avg_price`, `slippage_pct` and `avg_price_after_fees` of the filled part.
 - Free routes live under `/v1/xrpl/*`; paid routes under `/v1/pro/xrpl/*`. Credit purchases use `/v1/pro/credits/*`; the price index is `GET /v1/pro/requirements`.
 - Payment is opt-in: `CRIPTON_TIER=pro`, `CRIPTON_XRPL_PAYER_SEED` and a mandatory `CRIPTON_MAX_PER_CALL`; `CRIPTON_SESSION_BUDGET` is optional.
+- Paid calls from one XRPL wallet are paid one at a time in a process: each payment waits for the previous paid retry to answer. A payment that waits more than 20 seconds fails with `payment-busy`, with nothing signed or charged. Payments are not serialized across processes: two processes sharing one wallet can still sign two payments with the same sequence, and one of them is refused and never charged.
 - Never hardcode prices or amounts to pay; read them from the API (`GET /v1/pro/requirements`, `kit.prices()`, `kit.priceOf(resource)`).
 - Prepaid credits: `CRIPTON_CREDITS_TOKEN` (a `clc_...` token, needs `CRIPTON_TIER=pro`) is sent as `Authorization: Bearer` on paid-tier calls. `xrpl_credits_status` reports whether a token is configured and the last known balance, never the token.
 - Never hardcode, log or commit a seed, private key or credit token; read it from the environment only.

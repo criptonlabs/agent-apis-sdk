@@ -10,6 +10,7 @@ import { ExactXrplScheme } from "@x402/xrpl/exact/client";
 import { Wallet } from "xrpl";
 import { selectRlusdOption, type XrplNetworkName } from "../../domain/rlusd-option.js";
 import { XRPL_CAIP2 } from "../../domain/rlusd.js";
+import { accountQueue } from "./account-queue.js";
 
 export interface XrplPayerConfig {
   seed: string;
@@ -38,6 +39,7 @@ export function createXrplPayer(cfg: XrplPayerConfig): X402Payer {
   const http = new x402HTTPClient(client);
   return {
     selectOption: (accepts) => selectRlusdOption(accepts, network),
+    exclusive: accountQueue(caip2, wallet.classicAddress),
     async createPaymentHeaders(paymentRequired: unknown, option: PaymentOption) {
       const required = paymentRequired as PaymentRequired;
       const payload = await client.createPaymentPayload({

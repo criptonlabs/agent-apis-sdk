@@ -158,6 +158,7 @@ The ElizaOS plugin exposes three actions (`PREPARE_XRPL_PAYMENT`, `QUOTE_XRPL_DE
 - A call whose price exceeds `maxPerCall`, or would exceed `sessionBudget`, is refused before any payment is signed.
 - Prices are read from the API at runtime (`GET /v1/pro/requirements`, `kit.priceOf(resource)`); nothing is hardcoded. `kit.spent()` returns the amount spent so far.
 - The kit never switches tier or pays on its own.
+- Paid calls from one XRPL wallet are paid one at a time in a process: each payment waits for the previous paid retry to answer. A payment that waits more than 20 seconds fails with `payment-busy`, with nothing signed or charged. Payments are not serialized across processes: two processes sharing one wallet can still sign two payments with the same sequence, and one of them is refused and never charged.
 
 Programmatic equivalent, with the seed taken from the environment:
 
@@ -210,6 +211,7 @@ Tool and CLI errors have the shape `{ code, message, ... }` (plus `status`, `ret
 | `timeout`, `network-error`                                                                        | Request timed out or failed                                                                                                                      |
 | `payment-disabled`, `no-supported-payment-option`, `payment-over-cap`, `payment-budget-exhausted` | Payment is not configured, unsupported or over a limit                                                                                           |
 | `payment-outcome-unknown`                                                                         | The paid retry got no answer; the amount is counted as spent and the call is not retried                                                         |
+| `payment-busy`                                                                                    | Another payment from this XRPL wallet was still settling after 20 seconds; nothing was signed or charged                                         |
 | `credits-required`                                                                                | The route is paid only with prepaid credits (`details.prepaidOffer`)                                                                             |
 | `payment-not-ready`, `payment-readiness-unknown`, `no-path-found`, `fee-over-cap`                 | `prepare-payment` refused (`details.reasons`)                                                                                                    |
 | `slippage-over-limit`                                                                             | `quote-dex` refused above `maxSlippagePct`                                                                                                       |

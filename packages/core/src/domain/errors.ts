@@ -152,6 +152,7 @@ export class CriptonPaymentError extends CriptonKitError {
       | "no-supported-payment-option"
       | "payment-over-cap"
       | "payment-budget-exhausted"
+      | "payment-busy"
       | "siwx-challenge-mismatch",
     readonly options: readonly PaymentOptionSummary[],
     signals: PrepaidSignals = {},

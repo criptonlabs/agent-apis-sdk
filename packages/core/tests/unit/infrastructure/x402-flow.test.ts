@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vite-plus/test";
 import { z } from "zod";
 import {
+  CriptonNetworkError,
   CriptonPaymentError,
   CriptonProblemError,
   CriptonResponseError,
@@ -42,6 +43,22 @@ function setup(
 const call = (client: ApiClient) => client.request({ route: "fee", schema });
 const signatureRequests = (fake: FakeTransport) =>
   fake.requests.filter((r) => "payment-signature" in r.headers);
+/** One macrotask turn: every continuation that can run without the pending paid retry has run. */
+const nextTurn = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+/** Two paid calls started at once; the first paid retry stays pending until the test releases it. */
+async function twoCallsWithPendingRetry(payer: FakePayer) {
+  const fake = new FakeTransport()
+    .respond(challenge(xrplOption()))
+    .respond(challenge(xrplOption()));
+  const firstRetry = fake.defer();
+  fake.respond(paid());
+  const client = setup(fake, payer, { maxPerCall: "0.05" });
+  const calls = Promise.allSettled([call(client), call(client)]);
+  await firstRetry.reached;
+  await nextTurn();
+  return { fake, client, firstRetry, calls };
+}
 
 describe("x402 flow", () => {
   it("Paid tier without payment configuration", async () => {
@@ -192,6 +209,89 @@ describe("x402 flow", () => {
     const error = await call(client).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(CriptonProblemError);
     expect(error).toMatchObject({ code: "payer-blocked", status: 403 });
+  });
+
+  it("Second payment waits for the first paid retry", async () => {
+    const payer = new FakePayer({ exclusive: true });
+    const { firstRetry, calls } = await twoCallsWithPendingRetry(payer);
+    payer.log.push("release");
+    firstRetry.release(paid());
+    const [first, second] = await calls;
+    expect(payer.log).toEqual(["sign", "release", "sign"]);
+    expect(first.status === "fulfilled" && first.value.data.fee.standard).toBe("10");
+    expect(second.status === "fulfilled" && second.value.data.fee.standard).toBe("10");
+  });
+
+  it("A failed payment releases the next one", async () => {
+    const payer = new FakePayer({ exclusive: true });
+    const { firstRetry, calls } = await twoCallsWithPendingRetry(payer);
+    payer.log.push("release");
+    firstRetry.release(problem("payment-settlement-failed", 402));
+    const [first, second] = await calls;
+    expect(first.status).toBe("rejected");
+    const error = first.status === "rejected" ? first.reason : undefined;
+    expect(error).toBeInstanceOf(CriptonProblemError);
+    expect(error).toMatchObject({ code: "payment-settlement-failed", status: 402 });
+    expect(payer.log).toEqual(["sign", "release", "sign"]);
+    expect(second.status === "fulfilled" && second.value.data.fee.standard).toBe("10");
+  });
+
+  it("A signing error releases the next one", async () => {
+    // A kit error passes through the client unchanged, so the call raises this very error.
+    const signingError = new CriptonNetworkError("network-error", "XRPL server unreachable");
+    const payer = new FakePayer({ exclusive: true, signingErrors: [signingError] });
+    const fake = new FakeTransport()
+      .respond(challenge(xrplOption()))
+      .respond(challenge(xrplOption()))
+      .respond(paid());
+    const client = setup(fake, payer, { maxPerCall: "0.05" });
+    const [first, second] = await Promise.allSettled([call(client), call(client)]);
+    expect(first.status === "rejected" && first.reason).toBe(signingError);
+    expect(payer.log).toEqual(["sign", "sign"]);
+    expect(payer.signed).toHaveLength(1);
+    expect(second.status === "fulfilled" && second.value.data.fee.standard).toBe("10");
+  });
+
+  it("A paid retry without an answer releases the next one", async () => {
+    const payer = new FakePayer({ exclusive: true });
+    const fake = new FakeTransport()
+      .respond(challenge(xrplOption()))
+      .respond(challenge(xrplOption()))
+      .reject(new TypeError("fetch failed"))
+      .respond(paid());
+    const client = setup(fake, payer, { maxPerCall: "0.05" });
+    const [first, second] = await Promise.allSettled([call(client), call(client)]);
+    expect(first.status).toBe("rejected");
+    const error = first.status === "rejected" ? first.reason : undefined;
+    expect(error).toBeInstanceOf(CriptonPaymentError);
+    expect(error).toMatchObject({ code: "payment-outcome-unknown" });
+    expect(payer.signed).toHaveLength(2);
+    expect(second.status === "fulfilled" && second.value.data.fee.standard).toBe("10");
+  });
+
+  it("A refused payment signs nothing", async () => {
+    const payer = new FakePayer({ refuseStart: true });
+    const fake = new FakeTransport().respond(challenge(xrplOption())).respond(paid());
+    const client = setup(fake, payer, { maxPerCall: "0.05" });
+    const error = await call(client).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(CriptonPaymentError);
+    expect(error).toMatchObject({ code: "payment-busy" });
+    expect(payer.log).toEqual([]);
+    expect(payer.signed).toHaveLength(0);
+    expect(fake.requests).toHaveLength(1);
+    expect(client.spent()).toBe("0");
+  });
+
+  it("Payers without exclusive payments are not serialized", async () => {
+    const payer = new FakePayer();
+    expect(payer.exclusive).toBeUndefined();
+    const { firstRetry, calls } = await twoCallsWithPendingRetry(payer);
+    payer.log.push("release");
+    firstRetry.release(paid());
+    const [first, second] = await calls;
+    expect(payer.log).toEqual(["sign", "sign", "release"]);
+    expect(first.status).toBe("fulfilled");
+    expect(second.status).toBe("fulfilled");
   });
 
   it("Secret absent from errors", async () => {

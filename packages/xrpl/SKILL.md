@@ -64,6 +64,8 @@ Payment is off unless configured. The free tier needs no configuration. To use t
 
 The kit never switches to the paid tier on its own and never pays without these variables.
 
+Paid calls from one XRPL wallet are paid one at a time in a process: each payment waits for the previous paid retry to answer. A payment that waits more than 20 seconds fails with `payment-busy`, with nothing signed or charged. Payments are not serialized across processes: two processes sharing one wallet can still sign two payments with the same sequence, and one of them is refused and never charged.
+
 ## Prepaid credits
 
 - `CRIPTON_CREDITS_TOKEN`: a prepaid credit token (`clc_...`, needs `CRIPTON_TIER=pro`). Paid-tier calls then carry it as `Authorization: Bearer`; the balance the API reports on credit-paid answers is what `xrpl_credits_status` shows.
