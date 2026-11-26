@@ -1,5 +1,11 @@
 # @criptonlabs/agent-apis-core
 
+## 0.1.0
+
+### Minor Changes
+
+- 5b79c01: Concurrent XRPL payments no longer collide. Core: the `X402Payer` port gains an optional `exclusive` section that the paid flow (per-call payments and top-ups) runs signing and the paid retry inside, and a new payment error code `payment-busy` for a payment that could not start. XRPL: payments of one wallet and network are signed one at a time per process, and a payment that waits more than 20 seconds fails with `payment-busy`, unsigned and not charged.
+
 ## 0.0.2
 
 ### Patch Changes

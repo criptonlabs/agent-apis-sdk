@@ -1,6 +1,6 @@
 {
   "name": "@criptonlabs/agent-apis-solana",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "Solana client of the Criptonlabs Agent APIs for AI agents: typed data routes, transfer preparation, opt-in USDC or EURC x402 pay-per-call, and tools for MCP, AI SDK, Mastra and ElizaOS.",
   "keywords": [
